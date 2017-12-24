@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleServer", "ConsoleServer\ConsoleServer.csproj", "{6BED2D22-9053-444C-A5E9-AC0EAE49C5B4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packet", "Packet", "{B1932EA4-2633-4F6C-A1F5-E22B06BD842E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Packet", "Packet\Packet.csproj", "{2FB27040-8DC1-441B-87AE-CF052E4952D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +19,16 @@ Global
 		{6BED2D22-9053-444C-A5E9-AC0EAE49C5B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BED2D22-9053-444C-A5E9-AC0EAE49C5B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BED2D22-9053-444C-A5E9-AC0EAE49C5B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FB27040-8DC1-441B-87AE-CF052E4952D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FB27040-8DC1-441B-87AE-CF052E4952D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FB27040-8DC1-441B-87AE-CF052E4952D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FB27040-8DC1-441B-87AE-CF052E4952D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2FB27040-8DC1-441B-87AE-CF052E4952D1} = {B1932EA4-2633-4F6C-A1F5-E22B06BD842E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {11C2CB4D-1D82-41C9-965F-7CFD5A95835E}
