@@ -28,6 +28,6 @@ for /f "delims=" %%i in (%protoListFile%) do (
 
 cd %protoListPath%
 
-del protoList.txt
+
 
 pause

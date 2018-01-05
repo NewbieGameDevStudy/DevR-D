@@ -5,9 +5,15 @@ VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleServer", "ConsoleServer\ConsoleServer.csproj", "{6BED2D22-9053-444C-A5E9-AC0EAE49C5B4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packet", "Packet", "{B1932EA4-2633-4F6C-A1F5-E22B06BD842E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Util", "Util", "{13BB4F38-6512-4EE9-BB14-79B941C5163A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Packet", "Packet\Packet.csproj", "{2FB27040-8DC1-441B-87AE-CF052E4952D1}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{C04551CE-EFB8-461B-AD09-C65277DC34D4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tool", "Tool", "{643415F9-69EA-420F-8EB1-A0A055EBDBA7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetworkShared", "NetworkShared", "{CCB0AF90-4790-4102-B497-8C227DA32473}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocketLib", "SocketLib\SocketLib.csproj", "{F5201978-9DBB-43CE-8DA9-9B5578246F23}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,16 +25,17 @@ Global
 		{6BED2D22-9053-444C-A5E9-AC0EAE49C5B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BED2D22-9053-444C-A5E9-AC0EAE49C5B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BED2D22-9053-444C-A5E9-AC0EAE49C5B4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2FB27040-8DC1-441B-87AE-CF052E4952D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2FB27040-8DC1-441B-87AE-CF052E4952D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2FB27040-8DC1-441B-87AE-CF052E4952D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2FB27040-8DC1-441B-87AE-CF052E4952D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5201978-9DBB-43CE-8DA9-9B5578246F23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5201978-9DBB-43CE-8DA9-9B5578246F23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5201978-9DBB-43CE-8DA9-9B5578246F23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5201978-9DBB-43CE-8DA9-9B5578246F23}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{2FB27040-8DC1-441B-87AE-CF052E4952D1} = {B1932EA4-2633-4F6C-A1F5-E22B06BD842E}
+		{6BED2D22-9053-444C-A5E9-AC0EAE49C5B4} = {C04551CE-EFB8-461B-AD09-C65277DC34D4}
+		{F5201978-9DBB-43CE-8DA9-9B5578246F23} = {CCB0AF90-4790-4102-B497-8C227DA32473}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {11C2CB4D-1D82-41C9-965F-7CFD5A95835E}
