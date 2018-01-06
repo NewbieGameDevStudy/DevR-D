@@ -44,6 +44,16 @@
     <Compile Include="SocketAsyncEventArgsPool.cs" />
     <Compile Include="SocketLib.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SocketLib_Connect.cs" />
+    <Compile Include="SocketLib_Listen.cs" />
+    <Compile Include="UserToken\SocketData.cs" />
+    <Compile Include="UserToken\UserToken.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Packet\Packet.csproj">
+      <Project>{1198D71E-9AB4-410E-BC22-B7D4AF0E3878}</Project>
+      <Name>Packet</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

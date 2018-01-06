@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Packet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -17,6 +18,7 @@ namespace SocketLib {
         public delegate void ReceiveHandler();
         public AcceptHandler acceptHandler;
 
+        Queue<byte[]> sendQueue = new Queue<byte[]>();
 
         #region Receive 함수
         void ReceiveComplete(object sender, SocketAsyncEventArgs e) {
@@ -25,25 +27,22 @@ namespace SocketLib {
                 && e.LastOperation == SocketAsyncOperation.Receive) {
 
                 RecevieByteProcess(e);
+            } else {
+                //TODO : 종료처리를 해야한다.
             }
         }
 
         void RecevieByteProcess(SocketAsyncEventArgs e) {
-            var totalBytes = e.BytesTransferred;
-            if (totalBytes < sizeof(int)) {
-                //여기서 다시 receive를 호출해야할듯함.
-                return;
-            }
+            var userToken = e.UserToken as UserToken;
+            userToken.OnReceive(e.Buffer, e.BytesTransferred);
 
-            int offset = 0;
-            while (true) {
-                if(offset == 0) {
-                    
-                }
-            }
+            e.AcceptSocket.ReceiveAsync(e);
         }
 
         #endregion
+
+        #region Send 함수
+
         void SendComplete(object sender, SocketAsyncEventArgs e) {
             if (e.SocketError == SocketError.Success
                 && e.LastOperation == SocketAsyncOperation.Send
@@ -51,6 +50,8 @@ namespace SocketLib {
 
             }
         }
+
+        #endregion
 
         void CloseSocket(Socket socket) {
             if (socket == null || !socket.Connected)

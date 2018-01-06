@@ -25,20 +25,24 @@ namespace SocketLib {
 
             // 2 : send + recv
             bufferManager = new BufferManager(maxConnection * bufferSize * 2, bufferSize);
+            bufferManager.InitBuffer();
+
             saepRecvPool = new SocketAsyncEventArgsPool(maxConnection);
             saepSendPool = new SocketAsyncEventArgsPool(maxConnection);
 
             //recv, send 각각 초기화
             for (int i = 0; i < maxConnection; ++i) {
+                var userToken = new UserToken();
+
                 SocketAsyncEventArgs recvArgs = new SocketAsyncEventArgs();
-                //recvArgs.Completed = 
+                recvArgs.Completed += ReceiveComplete;
+                recvArgs.UserToken = userToken;
                 bufferManager.SetBuffer(recvArgs);
                 saepRecvPool.Push(recvArgs);
-            }
 
-            for (int i = 0; i < maxConnection; ++i) {
                 SocketAsyncEventArgs sendArgs = new SocketAsyncEventArgs();
-                //sendArgs.Completed = 
+                sendArgs.Completed += SendComplete;
+                sendArgs.UserToken = userToken;
                 bufferManager.SetBuffer(sendArgs);
                 saepSendPool.Push(sendArgs);
             }
@@ -49,11 +53,12 @@ namespace SocketLib {
                 socket.Bind(localEndPoint);
                 socket.Listen(10);
 
-                Console.WriteLine("Waiting for a connection...");
+                Console.WriteLine("GameServer...");
 
                 SocketAsyncEventArgs args = new SocketAsyncEventArgs();
                 args.Completed += AcceptComplete;
                 socket.AcceptAsync(args);
+                Console.ReadLine();
             }
             catch (Exception e) {
                 Console.WriteLine(e.ToString());
@@ -65,6 +70,7 @@ namespace SocketLib {
             acceptHandler?.Invoke(acceptSocket);
 
             SocketAsyncEventArgs receiveEventArgs = saepRecvPool.Pop();
+            receiveEventArgs.AcceptSocket = acceptSocket;
             acceptSocket.ReceiveAsync(receiveEventArgs);
 
             e.AcceptSocket = null;

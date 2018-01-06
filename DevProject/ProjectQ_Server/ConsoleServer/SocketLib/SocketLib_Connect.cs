@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SocketLib {
-    class SocketLib_Client {
+    class SocketLib_Connect {
     }
 }
