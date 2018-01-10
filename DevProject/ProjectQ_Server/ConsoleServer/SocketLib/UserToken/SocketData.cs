@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Packet;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,12 +8,18 @@ using System.Threading.Tasks;
 
 namespace SocketLib {
     public class SocketData {
+        public int PacketId { get; private set; }
+        public long MsLength {
+            get {
+                return ms.Length;
+            }
+        }
 
         MemoryStream ms;
+        byte[] buffer = new byte[1024];
         byte[] packetBuffer;
 
         int headerSize = sizeof(Int32) * 2;
-        int packetId;
         int currentLength;          //현재까지 누적된 바이트
         int totalPacketLength;      //패킷의 전체 바이트 길이
 
@@ -20,7 +27,11 @@ namespace SocketLib {
             ms = new MemoryStream();
         }
 
-        public void ReceiveBuffer(byte[] buffer, int totalBytes) {
+        public void OffSetBuffer(byte[] buffer, int offset, int count) {
+            Array.Copy(buffer, offset, this.buffer, 0, count);
+        }
+
+        public void ReceiveBuffer(int totalBytes) {
             int offset = 0;                 //원본 buffer로부터의 offset 위치
             int requireLength = 0;          //앞으로 받아야할 바이트
             int remainLength = totalBytes;  //현재 받아야할 남은 바이트
@@ -33,13 +44,13 @@ namespace SocketLib {
 
             //가장 처음이라면 먼저 패킷의 헤더를 확인한다.
             if (currentLength == 0) {
-                totalPacketLength = BitConverter.ToInt32(buffer, sizeof(Int32));
-                packetId = BitConverter.ToInt32(buffer, sizeof(Int32));
+                totalPacketLength = PacketParser.Deserializer_GetTotalLength(buffer);
+                PacketId = PacketParser.Deserializer_GetPacketID(buffer);
+
                 packetBuffer = new byte[totalPacketLength];
 
                 offset = headerSize;
                 remainLength -= offset;
-                currentLength += offset;
             } else {
                 offset = currentLength;
             }
@@ -50,7 +61,7 @@ namespace SocketLib {
 
                 if (remainLength >= requireLength) {
                     //헤더사이즈를 뺸 나머지를 구한다
-                    Buffer.BlockCopy(buffer, offset, packetBuffer, currentLength - headerSize, requireLength);
+                    Buffer.BlockCopy(buffer, offset, packetBuffer, currentLength, requireLength);
 
                     offset += requireLength;
                     currentLength += requireLength;
@@ -60,7 +71,7 @@ namespace SocketLib {
                     if (totalPacketLength == currentLength) {
 
                         //메모리 스트림에 기록해두고 나머진 초기화
-                        ms.SetLength(totalPacketLength - headerSize);
+                        ms.SetLength(totalPacketLength);
                         ms.Write(packetBuffer, 0, packetBuffer.Length);
                         ms.Seek(0, SeekOrigin.Begin);
 
@@ -70,11 +81,20 @@ namespace SocketLib {
                         remainLength = 0;
                     }
                 } else {
-                    Buffer.BlockCopy(buffer, offset, packetBuffer, currentLength - headerSize, remainLength);
+                    Buffer.BlockCopy(buffer, offset, packetBuffer, currentLength, remainLength);
                     currentLength += remainLength;
                     remainLength = 0;
                 }
             }
+        }
+
+        public void SendBuffer() {
+
+        }
+
+        public void ReadBuffer(byte[] buffer) {
+            ms.Seek(0, SeekOrigin.Begin);
+            ms.Read(buffer, 0, (int)ms.Length);
         }
     }
 }

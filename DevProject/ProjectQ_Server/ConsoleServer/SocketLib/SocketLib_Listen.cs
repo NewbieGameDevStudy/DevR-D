@@ -11,12 +11,12 @@ namespace SocketLib {
 
         object listenSocket = new object();
         BufferManager bufferManager;
-        SocketAsyncEventArgsPool saepRecvPool;
-        SocketAsyncEventArgsPool saepSendPool;
+        SocketAsyncEventArgsPool saeapRecvPool;
+        SocketAsyncEventArgsPool saeapSendPool;
 
         int maxConnection = 1000;
 
-        public void InitListen() {
+        void InitServer() {
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
             IPAddress ipAddress = ipHostInfo.AddressList[0];
             localEndPoint = new IPEndPoint(ipAddress, 5050);
@@ -27,8 +27,8 @@ namespace SocketLib {
             bufferManager = new BufferManager(maxConnection * bufferSize * 2, bufferSize);
             bufferManager.InitBuffer();
 
-            saepRecvPool = new SocketAsyncEventArgsPool(maxConnection);
-            saepSendPool = new SocketAsyncEventArgsPool(maxConnection);
+            saeapRecvPool = new SocketAsyncEventArgsPool(maxConnection);
+            saeapSendPool = new SocketAsyncEventArgsPool(maxConnection);
 
             //recv, send 각각 초기화
             for (int i = 0; i < maxConnection; ++i) {
@@ -38,17 +38,19 @@ namespace SocketLib {
                 recvArgs.Completed += ReceiveComplete;
                 recvArgs.UserToken = userToken;
                 bufferManager.SetBuffer(recvArgs);
-                saepRecvPool.Push(recvArgs);
+                saeapRecvPool.Push(recvArgs);
 
                 SocketAsyncEventArgs sendArgs = new SocketAsyncEventArgs();
                 sendArgs.Completed += SendComplete;
                 sendArgs.UserToken = userToken;
                 bufferManager.SetBuffer(sendArgs);
-                saepSendPool.Push(sendArgs);
+                saeapSendPool.Push(sendArgs);
             }
         }
 
         public void StartListen() {
+            InitServer();
+
             try {
                 socket.Bind(localEndPoint);
                 socket.Listen(10);
@@ -59,8 +61,7 @@ namespace SocketLib {
                 args.Completed += AcceptComplete;
                 socket.AcceptAsync(args);
                 Console.ReadLine();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Console.WriteLine(e.ToString());
             }
         }
@@ -69,9 +70,14 @@ namespace SocketLib {
             Socket acceptSocket = e.AcceptSocket;
             acceptHandler?.Invoke(acceptSocket);
 
-            SocketAsyncEventArgs receiveEventArgs = saepRecvPool.Pop();
-            receiveEventArgs.AcceptSocket = acceptSocket;
-            acceptSocket.ReceiveAsync(receiveEventArgs);
+            SocketAsyncEventArgs receiveSaea = saeapRecvPool.Pop();
+            SocketAsyncEventArgs sendSaea = saeapSendPool.Pop();
+
+            var userToken = receiveSaea.UserToken as UserToken;
+            userToken.Init(acceptSocket, sendSaea, receiveSaea);
+
+            receiveSaea.AcceptSocket = acceptSocket;
+            acceptSocket.ReceiveAsync(receiveSaea);
 
             e.AcceptSocket = null;
 

@@ -10,6 +10,9 @@ namespace ConsoleClientTool {
     class Program {
         static void Main(string[] args) {
             StartClient();
+
+            Console.ReadLine();
+
         }
 
         private static void StartClient() {
@@ -29,6 +32,23 @@ namespace ConsoleClientTool {
                 // Connect to the remote endpoint.
                 client.BeginConnect(localEndPoint,
                     new AsyncCallback(ConnectCallback), client);
+
+                Console.ReadLine();
+
+                int a = 3;
+                int b = 1;
+                string c = "abc";
+
+                var buffer = BitConverter.GetBytes(a);
+                var d = BitConverter.GetBytes(b);
+                var cc = Encoding.UTF8.GetBytes(c);
+                var ff = new byte[buffer.Length + d.Length + cc.Length];
+
+                Array.Copy(buffer, 0, ff, 0, buffer.Length);
+                Array.Copy(d, 0, ff, buffer.Length, d.Length);
+                Array.Copy(cc, 0, ff, buffer.Length + d.Length, cc.Length);
+
+                client.Send(ff, 0, ff.Length, SocketFlags.None);
 
                 Console.ReadLine();
                 // Release the socket.

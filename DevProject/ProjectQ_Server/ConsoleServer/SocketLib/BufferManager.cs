@@ -26,9 +26,9 @@ namespace SocketLib {
         public void SetBuffer(SocketAsyncEventArgs e) {
             if (e == null)
                 return;
-
-            e.SetBuffer(buffer, bufferSize * currentIndex, bufferSize);
-            currentIndex++;
+            
+            e.SetBuffer(buffer, currentIndex, bufferSize);
+            currentIndex += bufferSize;
         }
 
         //TODO : close해서 버퍼 반납시에 회수하는것도 만들어야한다.

@@ -11,7 +11,6 @@ namespace ConsoleServer {
         static void Main(string[] args)
         {
             SocketLib.SocketLib d = new SocketLib.SocketLib();
-            d.InitListen();
             d.StartListen();
         }
     }

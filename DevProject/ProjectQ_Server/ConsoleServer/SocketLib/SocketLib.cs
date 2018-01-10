@@ -18,7 +18,9 @@ namespace SocketLib {
         public delegate void ReceiveHandler();
         public AcceptHandler acceptHandler;
 
-        Queue<byte[]> sendQueue = new Queue<byte[]>();
+        void InitiInteranl() {
+
+        }
 
         #region Receive 함수
         void ReceiveComplete(object sender, SocketAsyncEventArgs e) {
@@ -26,17 +28,15 @@ namespace SocketLib {
                 && e.SocketError == SocketError.Success
                 && e.LastOperation == SocketAsyncOperation.Receive) {
 
-                RecevieByteProcess(e);
+                var userToken = e.UserToken as UserToken;
+                userToken.OnBufferOffset(e.Buffer, e.Offset, e.Count);
+                userToken.OnReceive(e.BytesTransferred);
+
+                e.AcceptSocket.ReceiveAsync(e);
+
             } else {
                 //TODO : 종료처리를 해야한다.
             }
-        }
-
-        void RecevieByteProcess(SocketAsyncEventArgs e) {
-            var userToken = e.UserToken as UserToken;
-            userToken.OnReceive(e.Buffer, e.BytesTransferred);
-
-            e.AcceptSocket.ReceiveAsync(e);
         }
 
         #endregion
@@ -45,9 +45,9 @@ namespace SocketLib {
 
         void SendComplete(object sender, SocketAsyncEventArgs e) {
             if (e.SocketError == SocketError.Success
-                && e.LastOperation == SocketAsyncOperation.Send
-                ) {
-
+                && e.LastOperation == SocketAsyncOperation.Send) {
+                var userToken = e.UserToken as UserToken;
+                userToken.SendDequeue();
             }
         }
 
