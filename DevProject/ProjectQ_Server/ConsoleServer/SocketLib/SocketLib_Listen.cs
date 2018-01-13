@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SocketLib {
+namespace NetworkSocket {
     public partial class SocketLib {
 
         object listenSocket = new object();
@@ -16,10 +16,10 @@ namespace SocketLib {
 
         int maxConnection = 1000;
 
-        void InitServer() {
+        public void InitServer(int port) {
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
             IPAddress ipAddress = ipHostInfo.AddressList[0];
-            localEndPoint = new IPEndPoint(ipAddress, 5050);
+            localEndPoint = new IPEndPoint(ipAddress, port);
 
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -49,8 +49,6 @@ namespace SocketLib {
         }
 
         public void StartListen() {
-            InitServer();
-
             try {
                 socket.Bind(localEndPoint);
                 socket.Listen(10);

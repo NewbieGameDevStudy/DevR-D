@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SocketLib {
+namespace NetworkSocket {
     public partial class SocketLib {
         Socket socket;
 

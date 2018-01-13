@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SocketLib {
+namespace NetworkSocket {
     public class SocketData {
         public int PacketId { get; private set; }
         public long MsLength {

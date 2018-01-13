@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SocketLib {
+namespace NetworkSocket {
     public class BufferManager {
 
         private byte[] buffer;

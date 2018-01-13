@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetworkSocket {
-    class SocketLib_Connect {
+namespace GameServerClient {
+    public class Client {
+
     }
 }
