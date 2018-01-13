@@ -66,13 +66,13 @@ namespace NetworkSocket {
 
         void AcceptComplete(object sender, SocketAsyncEventArgs e) {
             Socket acceptSocket = e.AcceptSocket;
-            acceptHandler?.Invoke(acceptSocket);
-
             SocketAsyncEventArgs receiveSaea = saeapRecvPool.Pop();
             SocketAsyncEventArgs sendSaea = saeapSendPool.Pop();
 
             var userToken = receiveSaea.UserToken as UserToken;
             userToken.Init(acceptSocket, sendSaea, receiveSaea);
+
+            acceptHandler?.Invoke(userToken);
 
             receiveSaea.AcceptSocket = acceptSocket;
             acceptSocket.ReceiveAsync(receiveSaea);

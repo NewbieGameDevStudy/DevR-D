@@ -53,9 +53,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SocketLib\SocketLib.csproj">
-      <Project>{F5201978-9DBB-43CE-8DA9-9B5578246F23}</Project>
-      <Name>SocketLib</Name>
+    <ProjectReference Include="..\GameServer\GameServer.csproj">
+      <Project>{3379F6D9-5F61-43F3-A082-95042BD00D32}</Project>
+      <Name>GameServer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

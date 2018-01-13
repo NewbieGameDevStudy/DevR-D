@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace NetworkSocket {
-    public class SocketData {
+    public class SocketData : ICloneable {
         public int PacketId { get; private set; }
         public long MsLength {
             get {
@@ -27,8 +27,21 @@ namespace NetworkSocket {
             ms = new MemoryStream();
         }
 
+        protected SocketData(SocketData socketData) {
+            this.PacketId = socketData.PacketId;
+            this.currentLength = socketData.currentLength;
+            this.totalPacketLength = socketData.totalPacketLength;
+            this.ms.Write(socketData.ms.GetBuffer(), 0, (int)socketData.ms.Length);
+        }
+
+        public object Clone() {
+            return new SocketData(this);
+        }
+
         public void OffSetBuffer(byte[] buffer, int offset, int count) {
             Array.Copy(buffer, offset, this.buffer, 0, count);
+
+            ms.Seek(0, SeekOrigin.Begin);
         }
 
         public void ReceiveBuffer(int totalBytes) {
@@ -96,5 +109,6 @@ namespace NetworkSocket {
             ms.Seek(0, SeekOrigin.Begin);
             ms.Read(buffer, 0, (int)ms.Length);
         }
+
     }
 }

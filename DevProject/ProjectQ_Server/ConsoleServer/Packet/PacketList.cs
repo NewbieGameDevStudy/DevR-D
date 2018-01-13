@@ -27,9 +27,47 @@ namespace Packet {
                 index++;
             }
         }
+
+        public static int GetPacketID(Type packetType) {
+            if (reversePacketTypeList.ContainsKey(packetType))
+                return reversePacketTypeList[packetType];
+
+            return -1;
+        }
+
+        public static Dictionary<int, Type> GetTypes() {
+            return packetTypeList;
+        }
     }
 
-    public class PacketPaser {
+    public class PacketMethod {
 
+        Dictionary<int, MethodInfo> methodList = new Dictionary<int, MethodInfo>();
+
+        public bool SetMethod(Type typeClass, string funcName) {
+            var methods = new List<MethodInfo>();
+
+            foreach(var method in typeClass.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)) {
+                if(method.Name == funcName) {
+                    methods.Add(method);
+                }
+            }
+
+            foreach (var method in methods) {
+                var parameters = method.GetParameters();
+                if (parameters.Length != 1) {
+                    continue;
+                }
+
+                var pksId = PacketList.GetPacketID(parameters[0].ParameterType);
+
+                if (pksId == -1)
+                    continue;
+
+                methodList.Add(pksId, method);
+            }
+
+            return true;
+        }
     }
 }

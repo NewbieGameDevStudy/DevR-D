@@ -14,6 +14,7 @@ namespace NetworkSocket {
         SocketAsyncEventArgs receiveSaea;
 
         readonly Queue<byte[]> sendQueue = new Queue<byte[]>();
+        readonly Queue<SocketData> receiveQueue = new Queue<SocketData>();
 
         public UserToken() {
             socketData = new SocketData();
@@ -25,14 +26,28 @@ namespace NetworkSocket {
             receiveSaea = receiveArgs;
         }
 
-        public void OnBufferOffset(byte[] buffer, int offset, int count) {
+        public void OnReceiveBufferOffset(byte[] buffer, int offset, int count) {
             socketData.OffSetBuffer(buffer, offset, count);
         }
 
         public void OnReceive(int totalBytes) {
             socketData.ReceiveBuffer(totalBytes);
+            receiveQueue.Enqueue(socketData.Clone() as SocketData);
+        }
 
-            //패킷에 대한 처리를 하면될듯한데..
+        private void ReceiveProcess() {
+            Queue<SocketData> receiveTemp = null;
+            lock (receiveQueue) {
+                receiveTemp = new Queue<SocketData>(receiveQueue);
+                receiveQueue.Clear();
+            }
+
+            if (receiveTemp == null)
+                return;
+
+            foreach(var data in receiveTemp) {
+                
+            }
         }
 
         public void OnSend(SocketData data) {

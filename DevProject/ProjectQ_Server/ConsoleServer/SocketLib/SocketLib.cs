@@ -14,8 +14,7 @@ namespace NetworkSocket {
         IPEndPoint localEndPoint;
         int bufferSize = 1024;
 
-        public delegate void AcceptHandler(Socket acceptSocket);
-        public delegate void ReceiveHandler();
+        public delegate void AcceptHandler(UserToken userToken);
         public AcceptHandler acceptHandler;
 
         void InitiInteranl() {
@@ -29,7 +28,7 @@ namespace NetworkSocket {
                 && e.LastOperation == SocketAsyncOperation.Receive) {
 
                 var userToken = e.UserToken as UserToken;
-                userToken.OnBufferOffset(e.Buffer, e.Offset, e.Count);
+                userToken.OnReceiveBufferOffset(e.Buffer, e.Offset, e.Count);
                 userToken.OnReceive(e.BytesTransferred);
 
                 e.AcceptSocket.ReceiveAsync(e);

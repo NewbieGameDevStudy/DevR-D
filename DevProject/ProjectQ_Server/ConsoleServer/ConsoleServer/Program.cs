@@ -1,4 +1,4 @@
-﻿using SocketLib;
+﻿using BaseServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +10,8 @@ namespace ConsoleServer {
     class Program {
         static void Main(string[] args)
         {
-            SocketLib.SocketLib d = new SocketLib.SocketLib();
-            d.StartListen();
+            GameServer server = new GameServer();
+            server.InitServer(5050);
         }
     }
 }
