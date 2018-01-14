@@ -11,11 +11,11 @@ namespace NetworkSocket {
         public int PacketId { get; private set; }
         public long MsLength {
             get {
-                return ms.Length;
+                return Ms.Length;
             }
         }
 
-        MemoryStream ms;
+        public MemoryStream Ms { get; private set; }
         byte[] buffer = new byte[1024];
         byte[] packetBuffer;
 
@@ -24,14 +24,15 @@ namespace NetworkSocket {
         int totalPacketLength;      //패킷의 전체 바이트 길이
 
         public SocketData() {
-            ms = new MemoryStream();
+            Ms = new MemoryStream();
         }
 
         protected SocketData(SocketData socketData) {
             this.PacketId = socketData.PacketId;
             this.currentLength = socketData.currentLength;
             this.totalPacketLength = socketData.totalPacketLength;
-            this.ms.Write(socketData.ms.GetBuffer(), 0, (int)socketData.ms.Length);
+            this.Ms = new MemoryStream();
+            this.Ms.Write(socketData.Ms.GetBuffer(), 0, (int)socketData.Ms.Length);
         }
 
         public object Clone() {
@@ -40,8 +41,7 @@ namespace NetworkSocket {
 
         public void OffSetBuffer(byte[] buffer, int offset, int count) {
             Array.Copy(buffer, offset, this.buffer, 0, count);
-
-            ms.Seek(0, SeekOrigin.Begin);
+            Ms.Seek(0, SeekOrigin.Begin);
         }
 
         public void ReceiveBuffer(int totalBytes) {
@@ -84,9 +84,9 @@ namespace NetworkSocket {
                     if (totalPacketLength == currentLength) {
 
                         //메모리 스트림에 기록해두고 나머진 초기화
-                        ms.SetLength(totalPacketLength);
-                        ms.Write(packetBuffer, 0, packetBuffer.Length);
-                        ms.Seek(0, SeekOrigin.Begin);
+                        Ms.SetLength(totalPacketLength);
+                        Ms.Write(packetBuffer, 0, packetBuffer.Length);
+                        Ms.Seek(0, SeekOrigin.Begin);
 
                         packetBuffer = null;
                         currentLength = 0;
@@ -106,8 +106,8 @@ namespace NetworkSocket {
         }
 
         public void ReadBuffer(byte[] buffer) {
-            ms.Seek(0, SeekOrigin.Begin);
-            ms.Read(buffer, 0, (int)ms.Length);
+            Ms.Seek(0, SeekOrigin.Begin);
+            Ms.Read(buffer, 0, (int)Ms.Length);
         }
 
     }

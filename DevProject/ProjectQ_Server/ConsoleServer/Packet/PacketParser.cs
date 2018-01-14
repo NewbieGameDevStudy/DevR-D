@@ -45,8 +45,10 @@ namespace Packet {
         }
 
         public static PK_BASE Parser(int id, MemoryStream ms) {
-            if (!genericParsers.ContainsKey(id))
+            if (!genericParsers.ContainsKey(id)) {
                 Console.WriteLine("Not GenericParser");
+                return null;
+            }
 
             var genericParser = genericParsers[id];
             return genericParser?.Invoke(null, new object[] { ms }) as PK_BASE;

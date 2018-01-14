@@ -69,5 +69,14 @@ namespace Packet {
 
             return true;
         }
+
+        public MethodInfo MethodDispatch(int packetID) {
+            if (!methodList.ContainsKey(packetID)) {
+                Console.WriteLine("패킷함수가 없음");
+                return null;
+            }
+
+            return methodList[packetID];
+        }
     }
 }

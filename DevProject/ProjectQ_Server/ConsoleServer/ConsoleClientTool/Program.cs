@@ -36,7 +36,7 @@ namespace ConsoleClientTool {
                 Console.ReadLine();
 
                 int a = 3;
-                int b = 1;
+                int b = 0;
                 string c = "abc";
 
                 var buffer = BitConverter.GetBytes(a);

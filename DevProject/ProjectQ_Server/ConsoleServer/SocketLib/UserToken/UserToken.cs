@@ -16,6 +16,8 @@ namespace NetworkSocket {
         readonly Queue<byte[]> sendQueue = new Queue<byte[]>();
         readonly Queue<SocketData> receiveQueue = new Queue<SocketData>();
 
+        public Action<int, object[]> ReceiveDispatch;
+
         public UserToken() {
             socketData = new SocketData();
         }
@@ -35,9 +37,12 @@ namespace NetworkSocket {
             receiveQueue.Enqueue(socketData.Clone() as SocketData);
         }
 
-        private void ReceiveProcess() {
+        public void ReceiveProcess() {
             Queue<SocketData> receiveTemp = null;
             lock (receiveQueue) {
+                if (receiveQueue.Count <= 0)
+                    return;
+
                 receiveTemp = new Queue<SocketData>(receiveQueue);
                 receiveQueue.Clear();
             }
@@ -46,7 +51,11 @@ namespace NetworkSocket {
                 return;
 
             foreach(var data in receiveTemp) {
-                
+                var pks = PacketParser.Parser(data.PacketId, data.Ms);
+                if(pks == null) {
+                    Console.WriteLine("패킷오류");
+                }
+                ReceiveDispatch?.Invoke(data.PacketId, new object[] { pks });
             }
         }
 
