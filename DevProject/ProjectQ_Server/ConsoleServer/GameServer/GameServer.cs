@@ -39,9 +39,12 @@ namespace BaseServer {
         }
 
         void AcceptClient(UserToken userToken) {
-            Client client = new Client(userToken);
+            Client client = new Client(userToken, clientAccount);
             client.PacketDispatch = PacketMethodDispatch;
-            addClientList.Add(clientAccount, client);
+            lock (addClientList) {
+                addClientList.Add(clientAccount, client);
+            }
+
             clientAccount++;
         }
 

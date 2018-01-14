@@ -9,10 +9,12 @@ using System.Threading.Tasks;
 namespace ServerClient {
     public partial class Client {
         UserToken userToken;
+        int accountId;
 
         public Action<int, object, object[]> PacketDispatch;
 
-        public Client(UserToken userToken) {
+        public Client(UserToken userToken, int accountValue) {
+            accountId = accountValue;
             this.userToken = userToken;
             userToken.ReceiveDispatch = this.ReceiveDispatch;
         }

@@ -9,7 +9,7 @@ namespace ServerClient {
     public partial class Client {
 
         void OnReceivePacket(PK_TEST pks) {
-
+            int a = 0;
         }
     }
 }
