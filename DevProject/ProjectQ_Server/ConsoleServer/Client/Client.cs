@@ -19,12 +19,24 @@ namespace ServerClient {
             userToken.ReceiveDispatch = this.ReceiveDispatch;
         }
 
+        int a = 0;
         public void Update() {
             userToken.ReceiveProcess();
+
+            a++;
+
+            Console.WriteLine(a);
+            if (a == 10000) {
+                SendPacket(new PK_TEST2 { Id = 1000 });
+            }
         }
 
         public void ReceiveDispatch(int packetId, object[] parameters) {
             PacketDispatch?.Invoke(packetId, this, parameters);
+        }
+
+        public void SendPacket(PK_BASE pks) {
+            userToken.OnSend(pks);
         }
     }
 }

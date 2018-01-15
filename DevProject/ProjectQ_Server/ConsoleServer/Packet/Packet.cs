@@ -15,4 +15,10 @@ namespace Packet {
         [ProtoMember(1)]
         public int Id { get; set; }
     }
+
+    [ProtoContract]
+    public class PK_TEST2 : PK_BASE {
+        [ProtoMember(1)]
+        public int Id { get; set; }
+    }
 }

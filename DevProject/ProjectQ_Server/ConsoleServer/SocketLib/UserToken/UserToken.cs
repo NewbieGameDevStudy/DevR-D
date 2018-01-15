@@ -51,7 +51,7 @@ namespace NetworkSocket {
                 return;
 
             foreach(var data in receiveTemp) {
-                var pks = PacketParser.Parser(data.PacketId, data.Ms);
+                var pks = PacketParser.Deserializer_Parser(data.PacketId, data.Ms);
                 if(pks == null) {
                     Console.WriteLine("패킷오류");
                 }
@@ -59,21 +59,19 @@ namespace NetworkSocket {
             }
         }
 
-        public void OnSend(SocketData data) {
-            if (data == null)
-                return;
-
-            int packetId = data.PacketId;
-            var length = (int)data.MsLength;
+        public void OnSend(PK_BASE pks) {
+            //TODO : 리펙토링이 필요함
+            var packetId = PacketList.GetPacketID(pks.GetType());
+            var ms = PacketParser.Serializer_Parser(pks);
+            var length = (int)ms.Length;
 
             byte[] buffer = null;
             byte[] headerByte = PacketParser.Serializer_ConvertByte(length, packetId);
 
-            //buffer = new byte[headerByte.Length + length];
-            //Buffer.BlockCopy(headerByte, 0, buffer, 0, headerByte.Length);
-            buffer = new byte[headerByte.Length];
+            buffer = new byte[headerByte.Length + length];
             Array.Copy(headerByte, 0, buffer, 0, headerByte.Length);
-            data.ReadBuffer(buffer);
+            ms.Seek(0, System.IO.SeekOrigin.Begin);
+            ms.Read(buffer, headerByte.Length, length);
 
             lock (sendQueue) {
                 if (sendQueue.Count <= 0) {
@@ -89,7 +87,7 @@ namespace NetworkSocket {
         private void SendProcess() {
             lock (sendQueue) {
                 var sendPacket = sendQueue.Peek();
-                Array.Copy(sendPacket, 0, sendSaea.Buffer, 0, sendPacket.Length);
+                Array.Copy(sendPacket, 0, sendSaea.Buffer, sendSaea.Offset, sendPacket.Length);
                 socket.SendAsync(sendSaea);
             }
         }

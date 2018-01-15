@@ -11,5 +11,9 @@ namespace ServerClient {
         void OnReceivePacket(PK_TEST pks) {
             int a = 0;
         }
+
+        void OnReceivePacket(PK_TEST2 pks) {
+            int a = 0;
+        }
     }
 }
