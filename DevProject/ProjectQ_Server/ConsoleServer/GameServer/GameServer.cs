@@ -47,6 +47,7 @@ namespace BaseServer {
             }
 
             clientAccount++;
+            Console.WriteLine("접속된 클라이언트 수 : {0}", clientAccount);
         }
 
         public void Update() {

@@ -15,5 +15,12 @@ namespace ServerClient {
         void OnReceivePacket(PK_TEST2 pks) {
             int a = 0;
         }
+
+        void OnReceivePacket(PK_CS_PING pks) {
+            SendPacket(new PK_SC_PING {
+                receiveId = pks.clientAccountId,
+                str = "Send Server -> Client",
+            });
+        }
     }
 }

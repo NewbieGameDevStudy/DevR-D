@@ -14,7 +14,7 @@ namespace NetworkSocket {
         SocketAsyncEventArgsPool m_saeapRecvPool;
         SocketAsyncEventArgsPool m_saeapSendPool;
 
-        int m_maxConnection = 1000;
+        int m_maxConnection = 5000;
         int m_bufferSize = 1024;
         IPEndPoint m_localEndPoint;
 

@@ -24,10 +24,9 @@ namespace ServerClient {
             userToken.ReceiveProcess();
 
             a++;
-
-            Console.WriteLine(a);
-            if (a == 10000) {
-                SendPacket(new PK_TEST2 { Id = 1000 });
+            if (a == 1000) {
+                SendPacket(new PK_SC_PING { receiveId = accountId, str = "DD" });
+                a = 0;
             }
         }
 
