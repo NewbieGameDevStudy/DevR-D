@@ -9,18 +9,6 @@ using System.Threading.Tasks;
 
 namespace NetworkSocket {
     public partial class SocketLib {
-        Socket socket;
-
-        IPEndPoint localEndPoint;
-        int bufferSize = 1024;
-
-        public delegate void AcceptHandler(UserToken userToken);
-        public AcceptHandler acceptHandler;
-
-        void InitiInteranl() {
-
-        }
-
         #region Receive 함수
         void ReceiveComplete(object sender, SocketAsyncEventArgs e) {
             if (e.BytesTransferred > 0 
@@ -28,13 +16,11 @@ namespace NetworkSocket {
                 && e.LastOperation == SocketAsyncOperation.Receive) {
 
                 var userToken = e.UserToken as UserToken;
-                userToken.OnReceiveBufferOffset(e.Buffer, e.Offset, e.Count);
-                userToken.OnReceive(e.BytesTransferred);
+                userToken.OnReceive(e.Buffer, e.Offset, e.BytesTransferred);
 
                 e.AcceptSocket.ReceiveAsync(e);
-
             } else {
-                //TODO : 종료처리를 해야한다.
+                CloseSocket(e.AcceptSocket);
             }
         }
 
@@ -59,11 +45,9 @@ namespace NetworkSocket {
             try {
                 socket.Shutdown(SocketShutdown.Both);
                 socket.Disconnect(true);
-            }
-            catch (Exception e) {
-
-            }
-            finally {
+            } catch (Exception e) {
+                Console.WriteLine(e);
+            } finally {
                 if (socket.Connected)
                     socket.Close();
             }

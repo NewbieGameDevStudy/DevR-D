@@ -8,66 +8,71 @@ using System.Threading.Tasks;
 
 namespace NetworkSocket {
     public partial class SocketLib {
+        Socket m_socket;
 
-        object listenSocket = new object();
-        BufferManager bufferManager;
-        SocketAsyncEventArgsPool saeapRecvPool;
-        SocketAsyncEventArgsPool saeapSendPool;
+        BufferManager m_bufferManager;
+        SocketAsyncEventArgsPool m_saeapRecvPool;
+        SocketAsyncEventArgsPool m_saeapSendPool;
 
-        int maxConnection = 1000;
+        int m_maxConnection = 1000;
+        int m_bufferSize = 1024;
+        IPEndPoint m_localEndPoint;
+
+        public delegate void AcceptHandler(UserToken userToken);
+        public AcceptHandler acceptHandler { get; set; }
 
         public void InitServer(int port) {
-            IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
-            localEndPoint = new IPEndPoint(ipAddress, port);
+            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+            IPAddress ipAddress = ipHostInfo.AddressList[2];
+            m_localEndPoint = new IPEndPoint(ipAddress, port);
 
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            m_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             // 2 : send + recv
-            bufferManager = new BufferManager(maxConnection * bufferSize * 2, bufferSize);
-            bufferManager.InitBuffer();
+            m_bufferManager = new BufferManager(m_maxConnection * m_bufferSize * 2, m_bufferSize);
+            m_bufferManager.InitBuffer();
 
-            saeapRecvPool = new SocketAsyncEventArgsPool(maxConnection);
-            saeapSendPool = new SocketAsyncEventArgsPool(maxConnection);
+            m_saeapRecvPool = new SocketAsyncEventArgsPool(m_maxConnection);
+            m_saeapSendPool = new SocketAsyncEventArgsPool(m_maxConnection);
 
             //recv, send 각각 초기화
-            for (int i = 0; i < maxConnection; ++i) {
+            for (int i = 0; i < m_maxConnection; ++i) {
                 var userToken = new UserToken();
 
                 SocketAsyncEventArgs recvArgs = new SocketAsyncEventArgs();
                 recvArgs.Completed += ReceiveComplete;
                 recvArgs.UserToken = userToken;
-                bufferManager.SetBuffer(recvArgs);
-                saeapRecvPool.Push(recvArgs);
+                m_bufferManager.SetBuffer(recvArgs);
+                m_saeapRecvPool.Push(recvArgs);
 
                 SocketAsyncEventArgs sendArgs = new SocketAsyncEventArgs();
                 sendArgs.Completed += SendComplete;
                 sendArgs.UserToken = userToken;
-                bufferManager.SetBuffer(sendArgs);
-                saeapSendPool.Push(sendArgs);
+                m_bufferManager.SetBuffer(sendArgs);
+                m_saeapSendPool.Push(sendArgs);
             }
         }
 
         public void StartListen() {
             try {
-                socket.Bind(localEndPoint);
-                socket.Listen(10);
+                m_socket.Bind(m_localEndPoint);
+                m_socket.Listen(100);
 
-                Console.WriteLine("GameServer...");
+                Console.WriteLine("Start GameServer");
 
                 SocketAsyncEventArgs args = new SocketAsyncEventArgs();
                 args.Completed += AcceptComplete;
-                socket.AcceptAsync(args);
-                Console.ReadLine();
+                m_socket.AcceptAsync(args);
+
             } catch (Exception e) {
-                Console.WriteLine(e.ToString());
+                Console.WriteLine(e);
             }
         }
 
         void AcceptComplete(object sender, SocketAsyncEventArgs e) {
             Socket acceptSocket = e.AcceptSocket;
-            SocketAsyncEventArgs receiveSaea = saeapRecvPool.Pop();
-            SocketAsyncEventArgs sendSaea = saeapSendPool.Pop();
+            SocketAsyncEventArgs receiveSaea = m_saeapRecvPool.Pop();
+            SocketAsyncEventArgs sendSaea = m_saeapSendPool.Pop();
 
             var userToken = receiveSaea.UserToken as UserToken;
             userToken.Init(acceptSocket, sendSaea, receiveSaea);
@@ -78,10 +83,7 @@ namespace NetworkSocket {
             acceptSocket.ReceiveAsync(receiveSaea);
 
             e.AcceptSocket = null;
-
-            lock (listenSocket) {
-                socket.AcceptAsync(e);
-            }
+            m_socket.AcceptAsync(e);
         }
     }
 }

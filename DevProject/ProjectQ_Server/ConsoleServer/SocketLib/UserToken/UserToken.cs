@@ -28,13 +28,12 @@ namespace NetworkSocket {
             receiveSaea = receiveArgs;
         }
 
-        public void OnReceiveBufferOffset(byte[] buffer, int offset, int count) {
-            socketData.OffSetBuffer(buffer, offset, count);
-        }
-
-        public void OnReceive(int totalBytes) {
-            socketData.ReceiveBuffer(totalBytes);
-            receiveQueue.Enqueue(socketData.Clone() as SocketData);
+        public void OnReceive(byte[] buffer, int offset, int totalBytes) {
+            socketData.ReceiveBuffer(buffer, offset, totalBytes);
+            lock (receiveQueue) {
+                //TODO : Clone 부하는??
+                receiveQueue.Enqueue(socketData.Clone() as SocketData);
+            }
         }
 
         public void ReceiveProcess() {
@@ -52,8 +51,9 @@ namespace NetworkSocket {
 
             foreach(var data in receiveTemp) {
                 var pks = PacketParser.Deserializer_Parser(data.PacketId, data.Ms);
-                if(pks == null) {
+                if (pks == null) {
                     Console.WriteLine("패킷오류");
+                    continue;
                 }
                 ReceiveDispatch?.Invoke(data.PacketId, new object[] { pks });
             }
@@ -61,35 +61,22 @@ namespace NetworkSocket {
 
         public void OnSend(PK_BASE pks) {
             //TODO : 리펙토링이 필요함
-            var packetId = PacketList.GetPacketID(pks.GetType());
-            var ms = PacketParser.Serializer_Parser(pks);
-            var length = (int)ms.Length;
-
-            byte[] buffer = null;
-            byte[] headerByte = PacketParser.Serializer_ConvertByte(length, packetId);
-
-            buffer = new byte[headerByte.Length + length];
-            Array.Copy(headerByte, 0, buffer, 0, headerByte.Length);
-            ms.Seek(0, System.IO.SeekOrigin.Begin);
-            ms.Read(buffer, headerByte.Length, length);
-
+            var sendBuffer = socketData.SendBuffer(pks);
             lock (sendQueue) {
                 if (sendQueue.Count <= 0) {
-                    sendQueue.Enqueue(buffer);
+                    sendQueue.Enqueue(sendBuffer);
                     SendProcess();
                     return;
                 }
 
-                sendQueue.Enqueue(buffer);
+                sendQueue.Enqueue(sendBuffer);
             }
         }
 
         private void SendProcess() {
-            lock (sendQueue) {
-                var sendPacket = sendQueue.Peek();
-                Array.Copy(sendPacket, 0, sendSaea.Buffer, sendSaea.Offset, sendPacket.Length);
-                socket.SendAsync(sendSaea);
-            }
+            var sendPacket = sendQueue.Peek();
+            Array.Copy(sendPacket, 0, sendSaea.Buffer, sendSaea.Offset, sendPacket.Length);
+            socket.SendAsync(sendSaea);
         }
 
         public void SendDequeue() {

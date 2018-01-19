@@ -17,6 +17,7 @@ namespace BaseServer {
         Dictionary<int, Client> clientList = new Dictionary<int, Client>();
         Dictionary<int, Client> addClientList = new Dictionary<int, Client>();
 
+        //TODO : 임시적 카운트
         int clientAccount;
 
         public void InitServer(int port) {
@@ -61,6 +62,8 @@ namespace BaseServer {
                 foreach (var client in clientList) {
                     client.Value.Update();
                 }
+
+                Thread.Sleep(1);
             }
         }
 

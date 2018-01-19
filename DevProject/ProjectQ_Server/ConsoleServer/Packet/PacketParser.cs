@@ -11,6 +11,8 @@ namespace Packet {
         private static Dictionary<int, MethodInfo> genericDeserializer = new Dictionary<int, MethodInfo>();
         private static Dictionary<Type, MethodInfo> genericSerializer = new Dictionary<Type, MethodInfo>();
 
+        public static int HeaderSize => sizeof(Int32) * 2;
+
         public static void InitGenericParseMethod() {
             foreach (var type in PacketList.GetTypes()) {
                 genericDeserializer.Add(type.Key, typeof(PacketParser).GetMethod("Deserializer_Packet", new[] {

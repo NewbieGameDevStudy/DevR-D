@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 namespace NetworkSocket {
     public class BufferManager {
 
-        private byte[] buffer;
-        private int totalByteSize;
-        private int currentIndex;
-        private int bufferSize;
+        byte[] buffer;
+        int totalByteSize;
+        int currentIndex;
+        int bufferSize;
 
         public BufferManager(int totalByteSize, int bufferSize) {
             this.totalByteSize = totalByteSize;
@@ -26,11 +26,9 @@ namespace NetworkSocket {
         public void SetBuffer(SocketAsyncEventArgs e) {
             if (e == null)
                 return;
-            
+
             e.SetBuffer(buffer, currentIndex, bufferSize);
             currentIndex += bufferSize;
         }
-
-        //TODO : close해서 버퍼 반납시에 회수하는것도 만들어야한다.
     }
 }
