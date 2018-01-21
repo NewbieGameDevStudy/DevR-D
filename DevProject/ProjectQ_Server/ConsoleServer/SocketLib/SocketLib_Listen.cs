@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace NetworkSocket {
-    public partial class SocketLib {
+namespace NetworkSocket
+{
+    public partial class SocketLib
+    {
         Socket m_socket;
 
         BufferManager m_bufferManager;
@@ -21,7 +19,8 @@ namespace NetworkSocket {
         public delegate void AcceptHandler(UserToken userToken);
         public AcceptHandler acceptHandler { get; set; }
 
-        public void InitServer(int port) {
+        public void InitServer(int port)
+        {
             IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
             IPAddress ipAddress = ipHostInfo.AddressList[2];
             m_localEndPoint = new IPEndPoint(ipAddress, port);
@@ -53,7 +52,8 @@ namespace NetworkSocket {
             }
         }
 
-        public void StartListen() {
+        public void StartListen()
+        {
             try {
                 m_socket.Bind(m_localEndPoint);
                 m_socket.Listen(100);
@@ -69,7 +69,8 @@ namespace NetworkSocket {
             }
         }
 
-        void AcceptComplete(object sender, SocketAsyncEventArgs e) {
+        void AcceptComplete(object sender, SocketAsyncEventArgs e)
+        {
             Socket acceptSocket = e.AcceptSocket;
             SocketAsyncEventArgs receiveSaea = m_saeapRecvPool.Pop();
             SocketAsyncEventArgs sendSaea = m_saeapSendPool.Pop();

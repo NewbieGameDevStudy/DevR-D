@@ -5,30 +5,34 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetworkSocket {
-    public class BufferManager {
+namespace NetworkSocket
+{
+    public class BufferManager
+    {
+        byte[] m_buffer;
+        int m_totalByteSize;
+        int m_currentIndex;
+        int m_bufferSize;
 
-        byte[] buffer;
-        int totalByteSize;
-        int currentIndex;
-        int bufferSize;
-
-        public BufferManager(int totalByteSize, int bufferSize) {
-            this.totalByteSize = totalByteSize;
-            this.bufferSize = bufferSize;
-            currentIndex = 0;
+        public BufferManager(int totalByteSize, int bufferSize)
+        {
+            m_totalByteSize = totalByteSize;
+            m_bufferSize = bufferSize;
+            m_currentIndex = 0;
         }
 
-        public void InitBuffer() {
-            buffer = new byte[totalByteSize];
+        public void InitBuffer()
+        {
+            m_buffer = new byte[m_totalByteSize];
         }
 
-        public void SetBuffer(SocketAsyncEventArgs e) {
+        public void SetBuffer(SocketAsyncEventArgs e)
+        {
             if (e == null)
                 return;
 
-            e.SetBuffer(buffer, currentIndex, bufferSize);
-            currentIndex += bufferSize;
+            e.SetBuffer(m_buffer, m_currentIndex, m_bufferSize);
+            m_currentIndex += m_bufferSize;
         }
     }
 }

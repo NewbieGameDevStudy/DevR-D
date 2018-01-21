@@ -1,17 +1,14 @@
-﻿using Packet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace NetworkSocket {
-    public partial class SocketLib {
+namespace NetworkSocket
+{
+    public partial class SocketLib
+    {
         #region Receive 함수
-        void ReceiveComplete(object sender, SocketAsyncEventArgs e) {
-            if (e.BytesTransferred > 0 
+        void ReceiveComplete(object sender, SocketAsyncEventArgs e)
+        {
+            if (e.BytesTransferred > 0
                 && e.SocketError == SocketError.Success
                 && e.LastOperation == SocketAsyncOperation.Receive) {
 
@@ -28,7 +25,8 @@ namespace NetworkSocket {
 
         #region Send 함수
 
-        void SendComplete(object sender, SocketAsyncEventArgs e) {
+        void SendComplete(object sender, SocketAsyncEventArgs e)
+        {
             if (e.SocketError == SocketError.Success
                 && e.LastOperation == SocketAsyncOperation.Send) {
                 var userToken = e.UserToken as UserToken;
@@ -38,7 +36,8 @@ namespace NetworkSocket {
 
         #endregion
 
-        void CloseSocket(Socket socket) {
+        void CloseSocket(Socket socket)
+        {
             if (socket == null || !socket.Connected)
                 return;
 
