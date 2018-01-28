@@ -40,6 +40,7 @@ namespace NetworkSocket
             m_totalPacketLength = socketData.m_totalPacketLength;
             Ms = new MemoryStream();
             Ms.Write(socketData.Ms.GetBuffer(), 0, (int)socketData.Ms.Length);
+            Ms.Seek(0, SeekOrigin.Begin);
         }
 
         public object Clone()
@@ -93,7 +94,7 @@ namespace NetworkSocket
 
                         //메모리 스트림에 기록해두고 나머진 초기화
                         Ms.SetLength(m_totalPacketLength);
-                        Ms.Write(m_packetBuffer, 0, m_packetBuffer.Length);
+                        Ms.Write(m_packetBuffer, 0, m_totalPacketLength);
                         Ms.Seek(0, SeekOrigin.Begin);
 
                         m_currentBufferOffset = 0;

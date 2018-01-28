@@ -40,11 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client.cs" />
-    <Compile Include="Client_Response.cs" />
+    <Compile Include="Client\Client.cs" />
+    <Compile Include="Client\Client_Response.cs" />
+    <Compile Include="PlayerObject\PlayerData.cs" />
+    <Compile Include="PlayerObject\PlayerObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GameObject\GameObject.csproj">
+      <Project>{CAB1FBDD-98F6-44E1-A4EC-A88CABB52602}</Project>
+      <Name>GameObject</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Packet\Packet.csproj">
       <Project>{1198D71E-9AB4-410E-BC22-B7D4AF0E3878}</Project>
       <Name>Packet</Name>

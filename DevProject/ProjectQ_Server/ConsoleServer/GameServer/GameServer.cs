@@ -33,7 +33,7 @@ namespace BaseServer
             m_packetMethod = new PacketMethod();
             m_packetMethod.SetMethod(typeof(Client), "OnReceivePacket");
 
-            m_serverSocket.InitServer(port);
+            m_serverSocket.InitServer(null, port);
             m_updateThread = new Thread(Update);
         }
 
@@ -57,7 +57,15 @@ namespace BaseServer
 
         public void Update()
         {
+            double t = 0.0;
+            var prevTime = DateTime.Now;
+
             while (true) {
+                var nowTime = DateTime.Now;
+                var time = nowTime - prevTime;
+                prevTime = nowTime;
+                t += time.TotalSeconds;
+
                 lock (m_addClientList) {
                     foreach (var client in m_addClientList) {
                         if (!m_clientList.ContainsKey(client.Key))
@@ -67,10 +75,8 @@ namespace BaseServer
                 }
 
                 foreach (var client in m_clientList) {
-                    client.Value.Update();
+                    client.Value.Update(t);
                 }
-
-                Thread.Sleep(1);
             }
         }
 

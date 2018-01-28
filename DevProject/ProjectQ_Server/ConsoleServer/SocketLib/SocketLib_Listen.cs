@@ -19,11 +19,12 @@ namespace NetworkSocket
         public delegate void AcceptHandler(UserToken userToken);
         public AcceptHandler acceptHandler { get; set; }
 
-        public void InitServer(int port)
+        public void InitServer(string ip, int port)
         {
-            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[2];
-            m_localEndPoint = new IPEndPoint(ipAddress, port);
+            if (string.IsNullOrEmpty(ip))
+                ip = "127.0.0.1";
+
+            m_localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
 
             m_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 

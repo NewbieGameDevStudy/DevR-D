@@ -12,7 +12,6 @@ namespace Packet
 
         public static void InitPacketList()
         {
-
             var packets = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assm => assm.GetTypes())
                 .Where(t => t.BaseType == typeof(PK_BASE))

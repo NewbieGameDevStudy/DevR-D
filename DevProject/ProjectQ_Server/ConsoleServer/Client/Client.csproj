@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3379F6D9-5F61-43F3-A082-95042BD00D32}</ProjectGuid>
+    <ProjectGuid>{7CC55B35-1D0F-404E-B48D-2E2F264098CF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GameServer</RootNamespace>
-    <AssemblyName>GameServer</AssemblyName>
+    <RootNamespace>Client</RootNamespace>
+    <AssemblyName>Client</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,25 +40,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameServer.cs" />
+    <Compile Include="Client.cs" />
+    <Compile Include="Client_Response.cs" />
+    <Compile Include="PlayerObject\PlayerData.cs" />
+    <Compile Include="PlayerObject\PlayerObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GameObject\GameObject.csproj">
+      <Project>{CAB1FBDD-98F6-44E1-A4EC-A88CABB52602}</Project>
+      <Name>GameObject</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Packet\Packet.csproj">
       <Project>{1198D71E-9AB4-410E-BC22-B7D4AF0E3878}</Project>
       <Name>Packet</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ServerClient\ServerClient.csproj">
-      <Project>{9F4B1808-47AB-46E2-B4D8-F38FBD18CAED}</Project>
-      <Name>ServerClient</Name>
     </ProjectReference>
     <ProjectReference Include="..\SocketLib\SocketLib.csproj">
       <Project>{F5201978-9DBB-43CE-8DA9-9B5578246F23}</Project>
       <Name>SocketLib</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MatchRoom\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
