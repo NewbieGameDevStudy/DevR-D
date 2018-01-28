@@ -1,10 +1,11 @@
 sys
 PlatformInfo
+_msvc9_suppress_errors
 os
+_augment_exception
 winreg
-msvc14_get_vc_env
 LegacyVersion
-Reg
+msvc14_get_vc_env
 itertools
 filterfalse
 SystemInfo
@@ -14,7 +15,7 @@ distutils
 get_unpatched
 EnvironmentInfo
 msvc14_gen_lib_options
-_augment_exception
+Reg
 platform
 safe_env
 msvc9_find_vcvarsall

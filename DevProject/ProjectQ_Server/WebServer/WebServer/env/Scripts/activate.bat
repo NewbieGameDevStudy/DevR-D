@@ -1,5 +1,5 @@
 @echo off
-set "VIRTUAL_ENV=C:\Users\Park sang hwa\Desktop\WebServer\WebServer\env"
+set "VIRTUAL_ENV=D:\Project\WebServer\WebServer\env"
 
 if not defined PROMPT (
     set "PROMPT=$P$G"

@@ -1,5 +1,6 @@
-upload_docs
-install_egg_info
+alias
+bdist
+dist_info
 install
 saveopts
 bdist_egg
@@ -10,9 +11,9 @@ setopt
 register
 install_lib
 install_scripts
-alias
+build_clib
 test
-bdist
+install_egg_info
 upload
 build_ext
 build_py
@@ -22,4 +23,5 @@ bdist_wininst
 sdist
 sys
 __all__
+upload_docs
 bdist_rpm
