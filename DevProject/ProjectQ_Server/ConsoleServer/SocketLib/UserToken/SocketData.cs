@@ -68,8 +68,8 @@ namespace NetworkSocket
 
                 m_bufferOffset = offset;
 
-                m_totalPacketLength = PacketParser.Deserializer_GetTotalLength(buffer);
-                PacketId = PacketParser.Deserializer_GetPacketID(buffer);
+                m_totalPacketLength = PacketParser.Deserializer_GetTotalLength(buffer, m_bufferOffset);
+                PacketId = PacketParser.Deserializer_GetPacketID(buffer, m_bufferOffset);
 
                 m_currentBufferOffset = m_headerSize;
                 remainLength -= m_currentBufferOffset;
@@ -83,7 +83,7 @@ namespace NetworkSocket
 
                 if (remainLength >= requireLength) {
                     //처음에는 헤더사이즈를 뺸 나머지를 복사한다.
-                    Buffer.BlockCopy(buffer, m_currentBufferOffset, m_packetBuffer, m_currentLength, requireLength);
+                    Buffer.BlockCopy(buffer, m_bufferOffset + m_currentBufferOffset, m_packetBuffer, m_currentLength, requireLength);
 
                     m_currentBufferOffset += requireLength;
                     m_currentLength += requireLength;

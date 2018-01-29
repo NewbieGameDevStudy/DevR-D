@@ -26,14 +26,14 @@ namespace Packet
         }
 
         #region Deserializer
-        public static int Deserializer_GetTotalLength(byte[] buffer)
+        public static int Deserializer_GetTotalLength(byte[] buffer, int offset)
         {
-            return BitConverter.ToInt32(buffer, 0);
+            return BitConverter.ToInt32(buffer, offset);
         }
 
-        public static int Deserializer_GetPacketID(byte[] buffer)
+        public static int Deserializer_GetPacketID(byte[] buffer, int offset)
         {
-            return BitConverter.ToInt32(buffer, sizeof(Int32));
+            return BitConverter.ToInt32(buffer, offset + sizeof(Int32));
         }
 
         public static PK Deserializer_Packet<PK>(MemoryStream ms) where PK : PK_BASE

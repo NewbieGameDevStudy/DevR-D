@@ -9,7 +9,7 @@ namespace BaseClient
     {
         SocketLib m_clientSocket;
         PacketMethod m_packetMethod;
-        UserToken userToken;
+        UserToken m_userToken;
 
         public PlayerObject Player { get; private set; }
 
@@ -32,20 +32,25 @@ namespace BaseClient
 
         public void ConnectedToken(UserToken token)
         {
-            userToken = token;
-            userToken.ReceiveDispatch = ReceiveDispatch;
+            m_userToken = token;
+            m_userToken.ReceiveDispatch = ReceiveDispatch;
             Player = new PlayerObject(this);
         }
 
         public void Update(double deltaTime)
         {
-            userToken.ReceiveProcess();
+            m_userToken.ReceiveProcess();
             Player.Update(deltaTime);
         }
 
         public void ReceiveDispatch(int packetId, object[] parameters)
         {
             m_packetMethod?.MethodDispatch(packetId)?.Invoke(this, parameters);
+        }
+
+        public void SendPacket(PK_BASE pks)
+        {
+            m_userToken.OnSend(pks);
         }
     }
 }
