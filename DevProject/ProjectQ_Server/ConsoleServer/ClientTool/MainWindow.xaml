@@ -11,10 +11,11 @@
             <RowDefinition Height="151*"/>
             <RowDefinition Height="109*"/>
         </Grid.RowDefinitions>
-        <Canvas Margin="0,10,281,0" Height="41" VerticalAlignment="Top" HorizontalAlignment="Right" Width="228">
+        <Canvas Margin="0,10,25,0" Height="41" VerticalAlignment="Top" HorizontalAlignment="Right" Width="484">
             <TextBox Name="InputIDBox" Canvas.Left="10" Canvas.Top="10" Width="78" Height="21"></TextBox>
             <Button Name="ConnectButton" Content="접속" Canvas.Left="93" Canvas.Top="10" Width="45" Click="Button_Connect"/>
             <TextBlock Name="ConnectState" Canvas.Left="153" Canvas.Top="12"> 연결상태</TextBlock>
+            <Button Content="방 입장" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="46" Canvas.Left="218" Canvas.Top="10" Click="Button_RoomEnter"/>
         </Canvas>
 
         <Canvas Margin="0,56,281,0" Height="185" VerticalAlignment="Top" HorizontalAlignment="Right" Width="228" Grid.RowSpan="2">
@@ -28,5 +29,6 @@
             <TextBlock Canvas.Left="81" TextWrapping="Wrap" Canvas.Top="81" Text="Test"/>
 
         </Canvas>
+
     </Grid>
 </Window>

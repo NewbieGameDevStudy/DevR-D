@@ -15,10 +15,6 @@ namespace BaseClient
                 Exp = pks.Exp,
                 Level = pks.Level
             });
-
-            SendPacket(new PK_CS_PING {
-                clientAccountId = 1000,
-            });
         }
     }
 }

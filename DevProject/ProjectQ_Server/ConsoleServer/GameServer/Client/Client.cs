@@ -1,25 +1,29 @@
-﻿using NetworkSocket;
-using Player;
+﻿using GameServer.Player;
+using NetworkSocket;
 using Packet;
+using Server;
 using System;
 
-namespace ServerClient
+namespace GameServer.ServerClient
 {
     public partial class Client
     {
-        public PlayerObject Player { get; private set; }
-        UserToken m_userToken;
         int m_accountId;
 
+        UserToken m_userToken;
+        BaseServer m_baseServer;
+
+        public PlayerObject Player { get; private set; }
         public Action<int, object, object[]> PacketDispatch;
 
-        public Client(UserToken userToken, int accountValue)
+        public Client(UserToken userToken, int accountValue, BaseServer baseServer)
         {
+            m_baseServer = baseServer;
             m_accountId = accountValue;
             m_userToken = userToken;
             userToken.ReceiveDispatch = ReceiveDispatch;
 
-            Player = new PlayerObject(this);
+            Player = new PlayerObject(this, m_baseServer);
 
             //TODO : 여기서 웹서버로 부터 해당 플레이어 정보를 가져오고
             //이후에 LoadPlayerInfo 처리로 플레이어를 서버쪽에 저장해둔다
@@ -30,7 +34,6 @@ namespace ServerClient
         public void Update(double deltaTime)
         {
             m_userToken.ReceiveProcess();
-
             Player.Update(deltaTime);
         }
 

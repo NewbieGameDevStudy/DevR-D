@@ -49,5 +49,12 @@ namespace ClientTool
                 }
             });
         }
+
+        public void Button_RoomEnter(object sender, RoutedEventArgs e)
+        {
+            client.SendPacket(new Packet.PK_CS_ENTERROOM {
+                type = Packet.PK_CS_ENTERROOM.RoomType.GAME,
+            });
+        }
     }
 }

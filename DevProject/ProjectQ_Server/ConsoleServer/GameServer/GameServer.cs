@@ -1,58 +1,28 @@
-﻿using NetworkSocket;
-using Packet;
-using ServerClient;
+﻿using Server;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
-namespace BaseServer
+namespace GameServer
 {
     public class GameServer
     {
-        SocketLib m_serverSocket;
-        PacketMethod m_packetMethod;
+        BaseServer m_baseServer;
+        
         Thread m_updateThread;
 
-        Dictionary<int, Client> m_clientList = new Dictionary<int, Client>();
-        Dictionary<int, Client> m_addClientList = new Dictionary<int, Client>();
-
-        //TODO : 임시적 카운트
-        int clientAccount;
-
-        public void InitServer(int port)
+        public void InitGameServer(int port)
         {
-            m_serverSocket = new SocketLib();
-            m_serverSocket.acceptHandler = AcceptClient;
+            m_baseServer = new BaseServer();
+            m_baseServer.InitServer(port);
 
-            PacketList.InitPacketList();
-            PacketParser.InitGenericParseMethod();  //Parser 함수는 MethodList 생성 이후 호출해야한다
-
-            m_packetMethod = new PacketMethod();
-            m_packetMethod.SetMethod(typeof(Client), "OnReceivePacket");
-
-            m_serverSocket.InitServer(null, port);
+            
             m_updateThread = new Thread(Update);
         }
 
-        public void RunServer()
+        public void RunGameServer()
         {
             m_updateThread.Start();
-            m_serverSocket.StartListen();
-        }
-
-        void AcceptClient(UserToken userToken)
-        {
-            Client client = new Client(userToken, clientAccount);
-            client.PacketDispatch = PacketMethodDispatch;
-            lock (m_addClientList) {
-                m_addClientList.Add(clientAccount, client);
-            }
-
-            clientAccount++;
-            Console.WriteLine("접속된 클라이언트 수 : {0}", clientAccount);
+            m_baseServer.RunServer();
         }
 
         public void Update()
@@ -66,23 +36,9 @@ namespace BaseServer
                 prevTime = nowTime;
                 t += time.TotalSeconds;
 
-                lock (m_addClientList) {
-                    foreach (var client in m_addClientList) {
-                        if (!m_clientList.ContainsKey(client.Key))
-                            m_clientList.Add(client.Key, client.Value);
-                    }
-                    m_addClientList.Clear();
-                }
-
-                foreach (var client in m_clientList) {
-                    client.Value.Update(t);
-                }
+                //서버 업데이트 목록
+                m_baseServer.Update(t);
             }
-        }
-
-        void PacketMethodDispatch(int packetId, object caller, object[] parameters)
-        {
-            m_packetMethod.MethodDispatch(packetId)?.Invoke(caller, parameters);
         }
     }
 }

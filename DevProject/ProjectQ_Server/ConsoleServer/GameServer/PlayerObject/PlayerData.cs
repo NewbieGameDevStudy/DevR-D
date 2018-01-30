@@ -1,6 +1,6 @@
 ﻿using GameObject;
 
-namespace Player
+namespace GameServer.Player
 {
     public class PlayerData : IPlayerInfo
     {

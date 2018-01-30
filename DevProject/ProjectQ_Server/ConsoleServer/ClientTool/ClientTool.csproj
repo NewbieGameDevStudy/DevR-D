@@ -98,6 +98,10 @@
       <Project>{7cc55b35-1d0f-404e-b48d-2e2f264098cf}</Project>
       <Name>Client</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Packet\Packet.csproj">
+      <Project>{1198D71E-9AB4-410E-BC22-B7D4AF0E3878}</Project>
+      <Name>Packet</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
