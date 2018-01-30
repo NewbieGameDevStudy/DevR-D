@@ -9,7 +9,7 @@ ipaddress
 six
 packaging
 pyparsing
-WHEEL_DIR
+distlib
 absolute_import
 distro
 html5lib
@@ -19,6 +19,6 @@ appdirs
 cachecontrol
 lockfile
 ordereddict
-distlib
 sys
+WHEEL_DIR
 vendored

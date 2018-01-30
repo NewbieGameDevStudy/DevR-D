@@ -4,7 +4,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>f46acf78-26a9-4772-aa48-adf4af46a803</ProjectGuid>
+    <ProjectGuid>5017b316-7cc5-4f14-a946-a5a0911eec56</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <ProjectTypeGuids>{789894c7-04a9-4a11-a6b5-3f4435165112};{1b580a1a-fdb3-4b32-83e1-6407eb2722e6};{349c5851-65df-11da-9384-00065b846f21};{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
     <StartupFile>runserver.py</StartupFile>
@@ -29,11 +29,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="runserver.py" />
+    <Compile Include="WebServer\API\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WebServer\config.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WebServer\database.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="WebServer\__init__.py" />
     <Compile Include="WebServer\views.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="WebServer\" />
+    <Folder Include="D:\WorkSpace\DevR-D\DevProject\ProjectQ_Server\WebServer\WebServer\WebServer\API" />
+    <Folder Include="WebServer\API\" />
     <Folder Include="WebServer\static\" />
     <Folder Include="WebServer\static\content\" />
     <Folder Include="WebServer\static\fonts\" />
@@ -42,6 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="requirements.txt" />
+    <Content Include="config.ini">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="WebServer\static\content\bootstrap.css" />
     <Content Include="WebServer\static\content\bootstrap.min.css" />
     <Content Include="WebServer\static\content\site.css" />

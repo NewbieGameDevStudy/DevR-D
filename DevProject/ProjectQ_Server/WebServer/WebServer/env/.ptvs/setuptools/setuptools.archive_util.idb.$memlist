@@ -5,7 +5,6 @@ posixpath
 default_filter
 os
 tarfile
-ContextualZipFile
 unpack_directory
 __all__
 extraction_drivers
