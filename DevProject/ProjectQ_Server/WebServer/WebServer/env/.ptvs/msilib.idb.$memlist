@@ -20,7 +20,7 @@ MSIMODIFY_REPLACE
 type_short
 PID_CHARCOUNT
 len
-Directory
+MSIDBOPEN_PATCHFILE
 set
 OpenDatabase
 type_long
@@ -44,7 +44,7 @@ getattr
 PID_TEMPLATE
 MSIDBOPEN_CREATEDIRECT
 type_localizable
-type_string
+MSIMODIFY_MERGE
 knownbits
 UuidCreate
 MSIDBOPEN_CREATE
@@ -72,7 +72,7 @@ CAB
 MSICOLINFO_TYPES
 add_stream
 datasizemask
-MSIDBOPEN_PATCHFILE
+Directory
 PID_REVNUMBER
 Itanium
 str
@@ -93,4 +93,4 @@ PID_SECURITY
 MSIMODIFY_VALIDATE
 TypeError
 PID_LASTPRINTED
-MSIMODIFY_MERGE
+type_string

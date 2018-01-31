@@ -6,6 +6,7 @@ from WebServer import app
 
 #print(environ.get('SERVER_HOST', 'localhost'))
 #print(environ.get('SERVER_PORT', '5555'))
+#a = app.config['MYSQL_DATABASE_USER']
 
 """
 server host

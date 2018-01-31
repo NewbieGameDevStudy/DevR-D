@@ -43,7 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="WebServer\" />
-    <Folder Include="D:\WorkSpace\DevR-D\DevProject\ProjectQ_Server\WebServer\WebServer\WebServer\API" />
     <Folder Include="WebServer\API\" />
     <Folder Include="WebServer\static\" />
     <Folder Include="WebServer\static\content\" />

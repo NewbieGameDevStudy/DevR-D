@@ -1,0 +1,24 @@
+CREATE TABLE `project_q`.`user_data` (
+`user_seq` INT(11) NOT NULL AUTO_INCREMENT,
+`user_id` INT(11) NOT NULL DEFAULT 0,
+`user_nick` VARCHAR(10) NOT NULL DEFAULT 'QUIZ_KING',
+`create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'ID 생성 일자',
+`recent_login` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '최근 로그인 일자',
+`last_logout` DATETIME NOT NULL,
+PRIMARY KEY (`user_seq`),
+KEY `user_id` (`user_id`),
+KEY `create_date` (`create_date`)
+)ENGINE = innoDB DEFAULT CHARSET = utf8;
+
+CREATE TABLE `project_q`.`game_data` (
+`user_id` int(11) NOT NULL DEFAULT '0',
+`game_point` int(10) NOT NULL DEFAULT '0',
+`win_count` int(10) NOT NULL DEFAULT '0',
+`lose_count` int(10) NOT NULL DEFAULT '0',
+`best_stage` smallint(4) NOT NULL DEFAULT '0',
+PRIMARY KEY (`user_id`),
+KEY `win_count` (`win_count`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+// 유저 테이블 
+// 게임데이터 테이블
