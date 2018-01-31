@@ -1,0 +1,14 @@
+CREATE DATABASE `project_q` default CHARACTER SET utf8;
+CREATE USER `test`@`localhost` IDENTIFIED BY 'projectq1234';
+GRANT ALL PRIVILEGES ON `project_q`.* TO `test`@`localhost`;
+FLUSH PRIVILEGES;
+
+
+// 디비 생성
+// 디비 test 유저 추가
+// 디비 유저 권한 할당
+// 디비에 반영
+
+// root 권한으로 접속 가능하나 만에 하나를 대비해서 유저를 생성하고 권한 할당 하는듯.
+// root 이외에는 모든 권한을 줘도 테이블 삭제할 수는 없음.
+// 단 디비 하나당 권한 설정이기 때문에 필요에 따라 사용해야 할듯함.

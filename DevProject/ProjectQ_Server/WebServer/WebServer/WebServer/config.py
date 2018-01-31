@@ -28,6 +28,14 @@ else:
 #WebServer envifonment Values
 SERVER_HOST = config[str_states]['SERVER_HOST']
 SERVER_PORT = config[str_states]['SERVER_PORT']
-DB_PATH = config[str_states]['DB_PATH']
-DB_ROOT = config[str_states]['DB_ROOT']
+DB_CONNECT = config[str_states]['DB_CONNECT']
+DB_USER = config[str_states]['DB_USER']
 DB_PASSWORD = config[str_states]['DB_PASSWORD']
+DB_NAME = config[str_states]['DB_NAME']
+
+"""
+DB_CONNECT = "localhost"
+DB_USER = "test"
+DB_PASSWORD = "projectq1234"
+DB_NAME = "project_q"
+"""
