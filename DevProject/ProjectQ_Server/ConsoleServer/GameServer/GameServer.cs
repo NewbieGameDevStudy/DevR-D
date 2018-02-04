@@ -1,4 +1,5 @@
-﻿using Server;
+﻿using RestSharp;
+using Server;
 using System;
 using System.Threading;
 
@@ -14,7 +15,6 @@ namespace GameServer
         {
             m_baseServer = new BaseServer();
             m_baseServer.InitServer(port);
-
             
             m_updateThread = new Thread(Update);
         }

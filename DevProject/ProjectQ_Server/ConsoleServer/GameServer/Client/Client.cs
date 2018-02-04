@@ -1,4 +1,5 @@
-﻿using GameServer.Player;
+﻿using GameServer.Connection;
+using GameServer.Player;
 using NetworkSocket;
 using Packet;
 using Server;
@@ -12,6 +13,7 @@ namespace GameServer.ServerClient
 
         UserToken m_userToken;
         BaseServer m_baseServer;
+        HttpConnection m_httpConnection;
 
         public PlayerObject Player { get; private set; }
         public Action<int, object, object[]> PacketDispatch;
@@ -19,6 +21,7 @@ namespace GameServer.ServerClient
         public Client(UserToken userToken, int accountValue, BaseServer baseServer)
         {
             m_baseServer = baseServer;
+            m_httpConnection = baseServer.HttpConnection;
             m_accountId = accountValue;
             m_userToken = userToken;
             userToken.ReceiveDispatch = ReceiveDispatch;

@@ -1,4 +1,5 @@
-﻿using GameServer.MatchRoom;
+﻿using GameServer.Connection;
+using GameServer.MatchRoom;
 using GameServer.ServerClient;
 using NetworkSocket;
 using Packet;
@@ -11,7 +12,6 @@ namespace Server
     {
         SocketLib m_serverSocket;
         PacketMethod m_packetMethod;
-
         Dictionary<int, Client> m_clientList = new Dictionary<int, Client>();
         Dictionary<int, Client> m_addClientList = new Dictionary<int, Client>();
 
@@ -19,6 +19,7 @@ namespace Server
         int clientAccount;
 
         public RoomManager RoomManager { get; private set; }
+        public HttpConnection HttpConnection { get; private set; }
 
         public void InitServer(int port)
         {
@@ -34,6 +35,7 @@ namespace Server
             m_serverSocket.InitServer(null, port);
 
             RoomManager = new RoomManager();
+            HttpConnection = new HttpConnection("http://localhost:5000");
         }
 
         public void RunServer()
