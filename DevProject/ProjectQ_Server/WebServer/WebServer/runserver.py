@@ -3,31 +3,19 @@ This script runs the WebServer application using a development server.
 """
 
 from WebServer import app
+from WebServer.config import SERVER_VALUE
 
-#print(environ.get('SERVER_HOST', 'localhost'))
-#print(environ.get('SERVER_PORT', '5555'))
-#a = app.config['MYSQL_DATABASE_USER']
 
-"""
-server host
-server port
 
-DB host
-DB port
-
-DB root
-DB password
-
-"""
-
-#if __name__ == "__main__":
-#    app.run(debug = __debug__)
+if __name__ == '__main__':
+    app.run(host = SERVER_VALUE.SERVER_HOST, port = SERVER_VALUE.SERVER_PORT, debug = True)
 
 """
 if __name__ == '__main__':
     HOST = environ.get('SERVER_HOST', 'localhost')
     try:
         PORT = int(environ.get('SERVER_PORT', '5555'))
-    except method_name():
+    except ValueError:
         PORT = 5555
-    app.run(HOST, PORT)"""
+    app.run(HOST, PORT)
+"""
