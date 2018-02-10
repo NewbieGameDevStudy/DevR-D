@@ -1,18 +1,36 @@
 ﻿using ProtoBuf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Packet {
-    public class PK_BASE {
+namespace Packet
+{
+    public class PK_BASE
+    {
 
     }
 
+    //클라이언트 -> 서버 패킷
     [ProtoContract]
-    public class PK_TEST : PK_BASE {
+    public class PK_CS_ENTERROOM : PK_BASE
+    {
+        public enum RoomType
+        {
+            COMMON_SENSE,
+            SOCIAL,
+            GAME
+        }
+
         [ProtoMember(1)]
-        public int Id { get; set; }
+        public RoomType type { get; set; }
+    }
+
+    //서버 -> 클라이언트 패킷
+
+    [ProtoContract]
+    public class PK_SC_PLAYERINFO_LOAD : PK_BASE
+    {
+        [ProtoMember(1)]
+        public int Level { get; set; }
+
+        [ProtoMember(2)]
+        public int Exp { get; set; }
     }
 }

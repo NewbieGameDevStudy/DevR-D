@@ -1,40 +1,23 @@
-﻿using Packet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace NetworkSocket {
-    public partial class SocketLib {
-        Socket socket;
-
-        IPEndPoint localEndPoint;
-        int bufferSize = 1024;
-
-        public delegate void AcceptHandler(UserToken userToken);
-        public AcceptHandler acceptHandler;
-
-        void InitiInteranl() {
-
-        }
-
+namespace NetworkSocket
+{
+    public partial class SocketLib
+    {
         #region Receive 함수
-        void ReceiveComplete(object sender, SocketAsyncEventArgs e) {
-            if (e.BytesTransferred > 0 
+        void ReceiveComplete(object sender, SocketAsyncEventArgs e)
+        {
+            if (e.BytesTransferred > 0
                 && e.SocketError == SocketError.Success
                 && e.LastOperation == SocketAsyncOperation.Receive) {
 
                 var userToken = e.UserToken as UserToken;
-                userToken.OnReceiveBufferOffset(e.Buffer, e.Offset, e.Count);
-                userToken.OnReceive(e.BytesTransferred);
+                userToken.OnReceive(e.Buffer, e.Offset, e.BytesTransferred);
 
                 e.AcceptSocket.ReceiveAsync(e);
-
             } else {
-                //TODO : 종료처리를 해야한다.
+                CloseSocket(e.AcceptSocket);
             }
         }
 
@@ -42,7 +25,8 @@ namespace NetworkSocket {
 
         #region Send 함수
 
-        void SendComplete(object sender, SocketAsyncEventArgs e) {
+        void SendComplete(object sender, SocketAsyncEventArgs e)
+        {
             if (e.SocketError == SocketError.Success
                 && e.LastOperation == SocketAsyncOperation.Send) {
                 var userToken = e.UserToken as UserToken;
@@ -52,18 +36,17 @@ namespace NetworkSocket {
 
         #endregion
 
-        void CloseSocket(Socket socket) {
+        void CloseSocket(Socket socket)
+        {
             if (socket == null || !socket.Connected)
                 return;
 
             try {
                 socket.Shutdown(SocketShutdown.Both);
                 socket.Disconnect(true);
-            }
-            catch (Exception e) {
-
-            }
-            finally {
+            } catch (Exception e) {
+                Console.WriteLine(e);
+            } finally {
                 if (socket.Connected)
                     socket.Close();
             }

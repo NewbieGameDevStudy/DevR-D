@@ -30,8 +30,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=106.2.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.106.2.1\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,13 +50,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseServer\BaseServer.cs" />
+    <Compile Include="Client\Client.cs" />
+    <Compile Include="Client\Client_Response.cs" />
+    <Compile Include="Connection\HttpConnection.cs" />
+    <Compile Include="Connection\HttpDTO.cs" />
     <Compile Include="GameServer.cs" />
+    <Compile Include="MatchRoom\Room.cs" />
+    <Compile Include="MatchRoom\RoomManager.cs" />
+    <Compile Include="PlayerObject\PlayerData.cs" />
+    <Compile Include="PlayerObject\PlayerObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Client\ServerClient.csproj">
-      <Project>{9F4B1808-47AB-46E2-B4D8-F38FBD18CAED}</Project>
-      <Name>ServerClient</Name>
+    <ProjectReference Include="..\GameObject\GameObject.csproj">
+      <Project>{CAB1FBDD-98F6-44E1-A4EC-A88CABB52602}</Project>
+      <Name>GameObject</Name>
     </ProjectReference>
     <ProjectReference Include="..\Packet\Packet.csproj">
       <Project>{1198D71E-9AB4-410E-BC22-B7D4AF0E3878}</Project>
@@ -56,6 +75,9 @@
       <Project>{F5201978-9DBB-43CE-8DA9-9B5578246F23}</Project>
       <Name>SocketLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

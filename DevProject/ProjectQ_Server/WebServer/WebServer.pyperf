@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ProfilingTarget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProjectTarget>
+    <TargetProject>5017b316-7cc5-4f14-a946-a5a0911eec56</TargetProject>
+    <FriendlyName>WebServer</FriendlyName>
+  </ProjectTarget>
+  <Reports>
+    <Report>
+      <Filename>C:\Users\Park sang hwa\AppData\Local\Temp\WebServer_20180209.vsp</Filename>
+    </Report>
+  </Reports>
+</ProfilingTarget>

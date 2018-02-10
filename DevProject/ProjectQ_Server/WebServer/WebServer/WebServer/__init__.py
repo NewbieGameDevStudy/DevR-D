@@ -8,5 +8,6 @@ from flask import Flask
 app = Flask(__name__)
 
 from WebServer.API import test
+from WebServer.API import database
 
 #import WebServer.views

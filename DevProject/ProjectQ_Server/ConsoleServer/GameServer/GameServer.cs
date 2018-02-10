@@ -1,39 +1,44 @@
-﻿using NetworkSocket;
-using Packet;
-using ServerClient;
+﻿using RestSharp;
+using Server;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
-namespace BaseServer {
-    public class GameServer {
-        SocketLib serverSocket;
-        PacketMethod packetMethod;
+namespace GameServer
+{
+    public class GameServer
+    {
+        BaseServer m_baseServer;
+        
+        Thread m_updateThread;
 
-        Dictionary<int, Client> clientList = new Dictionary<int, Client>();
-
-        int clientAccount;
-
-        public void InitServer(int port) {
-            serverSocket = new SocketLib();
-            serverSocket.acceptHandler = AcceptClient;
-
-            PacketList.InitPacketList();
-            PacketParser.InitGenericParseMethod();  //Parser 함수는 MethodList 생성 이후 호출해야한다
-            packetMethod = new PacketMethod();
-
-            serverSocket.InitServer(port);
-            packetMethod.SetMethod(typeof(Client), "OnReceivePacket");
+        public void InitGameServer(int port)
+        {
+            m_baseServer = new BaseServer();
+            m_baseServer.InitServer(port);
+            
+            m_updateThread = new Thread(Update);
         }
 
-        void AcceptClient(UserToken userToken) {
-            Client client = new Client(userToken);
-            clientList.Add(clientAccount, client);
-            clientAccount++;
+        public void RunGameServer()
+        {
+            m_updateThread.Start();
+            m_baseServer.RunServer();
         }
 
+        public void Update()
+        {
+            double t = 0.0;
+            var prevTime = DateTime.Now;
 
+            while (true) {
+                var nowTime = DateTime.Now;
+                var time = nowTime - prevTime;
+                prevTime = nowTime;
+                t += time.TotalSeconds;
+
+                //서버 업데이트 목록
+                m_baseServer.Update(t);
+            }
+        }
     }
 }
