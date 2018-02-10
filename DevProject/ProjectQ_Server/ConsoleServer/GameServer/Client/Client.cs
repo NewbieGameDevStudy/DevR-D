@@ -1,5 +1,5 @@
-﻿using GameServer.Connection;
-using GameServer.Player;
+﻿using GameServer.Player;
+using Http;
 using NetworkSocket;
 using Packet;
 using Server;

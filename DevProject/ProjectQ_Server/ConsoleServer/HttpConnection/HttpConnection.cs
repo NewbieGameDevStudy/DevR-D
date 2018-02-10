@@ -3,7 +3,7 @@ using RestSharp;
 using System;
 using System.Linq;
 
-namespace GameServer.Connection
+namespace Http
 {
     public class HttpConnection
     {

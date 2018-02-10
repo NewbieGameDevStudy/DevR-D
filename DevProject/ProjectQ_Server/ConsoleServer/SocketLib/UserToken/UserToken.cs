@@ -12,8 +12,8 @@ namespace NetworkSocket
     {
         SocketData m_socketData;
         Socket m_socket;
-        SocketAsyncEventArgs m_sendSaea;
-        SocketAsyncEventArgs m_receiveSaea;
+        public SocketAsyncEventArgs SendSaea { get; private set; }
+        public SocketAsyncEventArgs ReceiveSaea { get; private set; }
 
         readonly Queue<byte[]> m_sendQueue = new Queue<byte[]>();
         readonly Queue<SocketData> m_receiveQueue = new Queue<SocketData>();
@@ -28,8 +28,8 @@ namespace NetworkSocket
         public void Init(Socket socket, SocketAsyncEventArgs sendArgs, SocketAsyncEventArgs receiveArgs)
         {
             m_socket = socket;
-            m_sendSaea = sendArgs;
-            m_receiveSaea = receiveArgs;
+            SendSaea = sendArgs;
+            ReceiveSaea = receiveArgs;
         }
 
         public void OnReceive(byte[] buffer, int offset, int totalBytes)
@@ -82,8 +82,8 @@ namespace NetworkSocket
         private void SendProcess()
         {
             var sendPacket = m_sendQueue.Peek();
-            Array.Copy(sendPacket, 0, m_sendSaea.Buffer, m_sendSaea.Offset, sendPacket.Length);
-            m_socket.SendAsync(m_sendSaea);
+            Array.Copy(sendPacket, 0, SendSaea.Buffer, SendSaea.Offset, sendPacket.Length);
+            m_socket.SendAsync(SendSaea);
         }
 
         public void SendDequeue()

@@ -17,7 +17,7 @@ namespace NetworkSocket
 
                 e.AcceptSocket.ReceiveAsync(e);
             } else {
-                CloseSocket(e.AcceptSocket);
+                CloseSocket(e.AcceptSocket, e.UserToken as UserToken);
             }
         }
 
@@ -36,10 +36,16 @@ namespace NetworkSocket
 
         #endregion
 
-        void CloseSocket(Socket socket)
+        void CloseSocket(Socket socket, UserToken token)
         {
-            if (socket == null || !socket.Connected)
-                return;
+            //풀링 반납
+            var saeaRecv = token.ReceiveSaea;
+            var saeaSend = token.SendSaea;
+
+            lock (m_saeaLock) {
+                m_saeapSendPool.Push(saeaSend);
+                m_saeapRecvPool.Push(saeaRecv);
+            }
 
             try {
                 socket.Shutdown(SocketShutdown.Both);

@@ -15,6 +15,7 @@ namespace NetworkSocket
         int m_maxConnection = 5000;
         int m_bufferSize = 1024;
         IPEndPoint m_localEndPoint;
+        object m_saeaLock = new object();
 
         public delegate void AcceptHandler(UserToken userToken);
         public AcceptHandler acceptHandler { get; set; }
@@ -73,8 +74,14 @@ namespace NetworkSocket
         void AcceptComplete(object sender, SocketAsyncEventArgs e)
         {
             Socket acceptSocket = e.AcceptSocket;
-            SocketAsyncEventArgs receiveSaea = m_saeapRecvPool.Pop();
-            SocketAsyncEventArgs sendSaea = m_saeapSendPool.Pop();
+
+            SocketAsyncEventArgs receiveSaea;
+            SocketAsyncEventArgs sendSaea;
+
+            lock (m_saeaLock) {
+                 receiveSaea = m_saeapRecvPool.Pop();
+                 sendSaea = m_saeapSendPool.Pop();
+            }
 
             var userToken = receiveSaea.UserToken as UserToken;
             userToken.Init(acceptSocket, sendSaea, receiveSaea);
