@@ -13,10 +13,15 @@ def str_join(*args):
 
 #set environment from .ini file
 config = configparser.ConfigParser()
+
+"""
 path_config = os.getcwd()
 config_filename = "config.ini"
 path_config = str_join(path_config, '\\', config_filename)
 config.read(path_config)
+"""
+config.read(str_join(os.getcwd(), '\\', "config.ini"))
+
 
 if __debug__ == True:
     str_states = 'TEST'
@@ -24,14 +29,18 @@ else:
     str_states = 'DEFAULT'
 
 
-
 #WebServer envifonment Values
-SERVER_HOST = config[str_states]['SERVER_HOST']
-SERVER_PORT = config[str_states]['SERVER_PORT']
-DB_CONNECT = config[str_states]['DB_CONNECT']
-DB_USER = config[str_states]['DB_USER']
-DB_PASSWORD = config[str_states]['DB_PASSWORD']
-DB_NAME = config[str_states]['DB_NAME']
+class SERVER_VALUE:
+    SERVER_HOST = config[str_states]['SERVER_HOST']
+    SERVER_PORT = int(config[str_states]['SERVER_PORT'])
+
+
+class MYSQL:
+    DB_CONNECT = config[str_states]['DB_CONNECT']
+    DB_USER = config[str_states]['DB_USER']
+    DB_PASSWORD = config[str_states]['DB_PASSWORD']
+    DB_NAME = config[str_states]['DB_NAME']
+
 
 """
 DB_CONNECT = "localhost"
