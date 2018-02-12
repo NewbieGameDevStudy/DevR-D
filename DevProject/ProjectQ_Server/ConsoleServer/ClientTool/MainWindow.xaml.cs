@@ -32,6 +32,12 @@ namespace ClientTool
 
         private void Button_Connect(object sender, RoutedEventArgs e)
         {
+            var button = sender as Button;
+            button.IsEnabled = false;
+            DisconnectButton.IsEnabled = true;
+
+            ConnectState.Text = "접속완료";
+
             client.Connect();
 
             double t = 0.0;
@@ -55,6 +61,11 @@ namespace ClientTool
             client.SendPacket(new Packet.PK_CS_ENTERROOM {
                 type = Packet.PK_CS_ENTERROOM.RoomType.GAME,
             });
+        }
+
+        private void Button_Disconnect(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
