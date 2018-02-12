@@ -1,34 +1,31 @@
 import MySQLdb
-from flask import jsonify
-from contextlib import contextmanager
 import json
+from contextlib import contextmanager
 from WebServer.config import MYSQL
 
 
-class DBManager:
+class DBConnection:
     def __init__(self):
-        self.con = MySQLdb.connect(MYSQL.DB_CONNECT, MYSQL.DB_USER, MYSQL.DB_PASSWORD, MYSQL.DB_NAME)
-        self.cursor = self.con.cursor()
-        self.data = None
+        pass
 
     @contextmanager
     def database(self, str):
         try:
+            self.con = MySQLdb.connect(MYSQL.DB_CONNECT, MYSQL.DB_USER, MYSQL.DB_PASSWORD, MYSQL.DB_NAME)
+            self.cursor = self.con.cursor()
             con = self.con
-            cursor = self.cursor           
+            cursor = self.cursor
             yield (con, cursor)
         finally:
             self.cursor.close()
             self.con.close()
 
-    def execute_query(self, str):
+    def select_query(self, str):
         with self.database(str) as (con, cursor):
              cursor.execute(str)
-             self.data = cursor.fetchall()
-        #return jsonify(self.data)
-        return json.dumps(self.data)
+        return json.dumps(cursor.fetchall())
 
-    def select_query(self, str):
+    def execute_query(self, str):
         with self.database(str) as (con, cursor):
              cursor.execute(str)
              con.commit()
