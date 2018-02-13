@@ -11,10 +11,10 @@ namespace GameServer
         
         Thread m_updateThread;
 
-        public void InitGameServer(int port)
+        public void InitGameServer(int port, byte machiedId)
         {
             m_baseServer = new BaseServer();
-            m_baseServer.InitServer(port);
+            m_baseServer.InitServer(port, machiedId);
             
             m_updateThread = new Thread(Update);
         }

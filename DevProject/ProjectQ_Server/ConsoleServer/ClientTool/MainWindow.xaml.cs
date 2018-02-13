@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace ClientTool
 {
@@ -22,12 +23,22 @@ namespace ClientTool
     public partial class MainWindow : Window
     {
         Client client;
+        private DispatcherTimer m_updateTimer;
+        DateTime prevTime;
+        double deltaTime = 0;
 
         public MainWindow()
         {
             InitializeComponent();
-            client = new Client();
-            client.Init();
+        }
+
+        public void Update(object sender, EventArgs e)
+        {
+            var nowTime = DateTime.Now;
+            var time = nowTime - prevTime;
+            prevTime = nowTime;
+            deltaTime += time.TotalSeconds;
+            client.Update(deltaTime);
         }
 
         private void Button_Connect(object sender, RoutedEventArgs e)
@@ -38,29 +49,30 @@ namespace ClientTool
 
             ConnectState.Text = "접속완료";
 
+            client = new Client();
+            client.Init();
             client.Connect();
 
-            double t = 0.0;
-            var prevTime = DateTime.Now;
+            m_updateTimer = new DispatcherTimer {
+                Interval = TimeSpan.FromMilliseconds(33)
+            };
+            m_updateTimer.Tick += Update;
+            m_updateTimer.Start();
 
-            Task.Factory.StartNew(() => {
-                while (true) {
-                    if (client.Player != null) {
-                        var nowTime = DateTime.Now;
-                        var time = nowTime - prevTime;
-                        prevTime = nowTime;
-                        t += time.TotalSeconds;
-                        client.Update(t);
-                    }
-                }
-            });
+            deltaTime = 0.0;
+            prevTime = DateTime.Now;
         }
 
         public void Button_RoomEnter(object sender, RoutedEventArgs e)
         {
-            client.SendPacket(new Packet.PK_CS_ENTERROOM {
-                type = Packet.PK_CS_ENTERROOM.RoomType.GAME,
-            });
+            if (client != null)
+                client.SendPacket(new Packet.PK_CS_ENTERROOM {
+                    type = Packet.PK_CS_ENTERROOM.RoomType.GAME,
+                });
+
+            var gameRender = new GameRender.GameRender();
+            gameRender.SetPlayerObject(client.Player);
+            gameRender.Show();
         }
 
         private void Button_Disconnect(object sender, RoutedEventArgs e)

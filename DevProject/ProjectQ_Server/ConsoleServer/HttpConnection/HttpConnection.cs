@@ -24,10 +24,11 @@ namespace Http
             var type = dto.GetType();
             var attribute = type.GetCustomAttributes(typeof(HttpConnectAttribute), true).FirstOrDefault() as HttpConnectAttribute;
 
-            var request = new RestRequest();
-            request.Method = attribute.RequestMethod;
-            request.Resource = attribute.Resource;
-            request.RequestFormat = DataFormat.Json;
+            var request = new RestRequest {
+                Method = attribute.RequestMethod,
+                Resource = attribute.Resource,
+                RequestFormat = DataFormat.Json
+            };
             request.AddBody(dto);
 
             m_restClient.ExecuteAsync(request, (response) => {
