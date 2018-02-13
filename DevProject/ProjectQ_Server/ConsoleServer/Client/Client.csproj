@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
+    <Compile Include="Client_Request.cs" />
     <Compile Include="Client_Response.cs" />
     <Compile Include="PlayerObject\PlayerData.cs" />
     <Compile Include="PlayerObject\PlayerObject.cs" />

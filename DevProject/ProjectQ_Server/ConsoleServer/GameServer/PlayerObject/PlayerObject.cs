@@ -12,6 +12,7 @@ namespace GameServer.Player
     {
         public Client Client { get; private set; }
         public PlayerData PlayerData { get; private set; }
+        public int Handle => Client.AccountCount;
 
         BaseServer m_baseServer;
 
@@ -44,7 +45,7 @@ namespace GameServer.Player
             PlayerData.Ypos = 20;
 
             Client.SendPacket(new PK_SC_PLAYERINFO_LOAD {
-                handle = Client.AccountCount,
+                handle = Handle,
                 Exp = PlayerData.Exp,
                 Level = PlayerData.Level,
             });

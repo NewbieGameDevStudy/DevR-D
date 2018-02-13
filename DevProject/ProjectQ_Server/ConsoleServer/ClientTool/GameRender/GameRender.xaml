@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="GameRender" Height="493" Width="403">
     <Grid>
-        <Canvas Name="GameCanvans" HorizontalAlignment="Left" Height="399" Margin="10,10,0,0" VerticalAlignment="Top" Width="375" Background="Aqua"/>
+        <Canvas Name="GameCanvans" HorizontalAlignment="Left" Height="399" Margin="10,10,0,0" VerticalAlignment="Top" Width="375" Background="Aqua" MouseLeftButtonDown="GameCanvans_MouseLeftButtonDown"/>
     </Grid>
 </Window>

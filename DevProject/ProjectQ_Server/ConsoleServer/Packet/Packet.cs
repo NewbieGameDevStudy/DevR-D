@@ -73,4 +73,11 @@ namespace Packet
         [ProtoMember(1)]
         public List<PK_SC_OBJECT_INFO> m_objectList { get; set; }
     }
+
+    [ProtoContract]
+    public class PK_SC_OBJECTS_POSITION : PK_BASE
+    {
+        [ProtoMember(1)]
+        public List<PK_SC_TARGET_POSITION> m_objectList { get; set; }
+    }
 }

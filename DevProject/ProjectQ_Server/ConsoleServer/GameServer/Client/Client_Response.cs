@@ -24,7 +24,11 @@ namespace GameServer.ServerClient
 
         void OnReceivePacket(PK_CS_INPUT_POSITION pks)
         {
-
+            Player.Client.m_baseServer.RoomManager.SetMoveInput(new MatchRoom.RoomManager.MoveData {
+                handle = Player.Client.AccountCount,
+                xPos = pks.xPos,
+                yPos = pks.yPos
+            });
         }
     }
 }

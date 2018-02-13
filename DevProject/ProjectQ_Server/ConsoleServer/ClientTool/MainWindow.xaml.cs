@@ -27,6 +27,8 @@ namespace ClientTool
         DateTime prevTime;
         double deltaTime = 0;
 
+        static GameRender.GameRender gameRender;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -39,6 +41,9 @@ namespace ClientTool
             prevTime = nowTime;
             deltaTime += time.TotalSeconds;
             client.Update(deltaTime);
+
+            if (gameRender != null)
+                gameRender.Render();
         }
 
         private void Button_Connect(object sender, RoutedEventArgs e)
@@ -70,7 +75,7 @@ namespace ClientTool
                     type = Packet.PK_CS_ENTERROOM.RoomType.GAME,
                 });
 
-            var gameRender = new GameRender.GameRender();
+            gameRender = new GameRender.GameRender();
             gameRender.SetPlayerObject(client.Player);
             gameRender.Show();
         }

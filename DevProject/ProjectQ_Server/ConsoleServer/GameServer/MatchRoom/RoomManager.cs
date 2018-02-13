@@ -22,8 +22,26 @@ namespace GameServer.MatchRoom
         Dictionary<RoomType, List<Room>> m_roomList = new Dictionary<RoomType, List<Room>>();
         Queue<QueueData> m_enterPlayerQueue = new Queue<QueueData>();
 
+        /// <summary>
+        /// 아래 필드들은 모두 테스트용
+        /// </summary>
         int testCount;
+        public class MoveData
+        {
+            public int handle;
+            public float xPos;
+            public float yPos;
+        }
 
+        Queue<MoveData> m_moveQueue = new Queue<MoveData>();
+
+        public void SetMoveInput(MoveData moveData)
+        {
+            lock (m_moveQueue) {
+                m_moveQueue.Enqueue(moveData);
+            }
+        }
+        
         public void EnterRoom(RoomType type, PlayerObject player)
         {
             m_enterPlayerQueue.Enqueue(new QueueData {
@@ -40,18 +58,18 @@ namespace GameServer.MatchRoom
             PK_SC_OBJECTS_INFO pks = new PK_SC_OBJECTS_INFO();
             pks.m_objectList = new List<PK_SC_OBJECT_INFO>();
 
-            int index = 0;
+            int index = 1;
             foreach (var obj in m_enterPlayerQueue) {
                 var info = new PK_SC_OBJECT_INFO();
-                info.handle = obj.player.Client.AccountCount;
+                info.handle = obj.player.Handle;
                 info.info = new PK_SC_PLAYERINFO_LOAD {
                     Exp = obj.player.PlayerData.Exp,
                     Level = obj.player.PlayerData.Level,
-                    handle = obj.player.Client.AccountCount,
+                    handle = obj.player.Handle,
                 };
 
                 info.position = new PK_SC_TARGET_POSITION {
-                    handle = obj.player.Client.AccountCount,
+                    handle = obj.player.Handle,
                     xPos = 30 * index,
                     yPos = 30 * index,
                 };
@@ -62,13 +80,6 @@ namespace GameServer.MatchRoom
 
             foreach (var obj in m_enterPlayerQueue) {
                 obj.player.Client.SendPacket(pks);
-            }
-        }
-
-        void EnterRoomSerach()
-        {
-            if (m_enterPlayerQueue.Count > 0) {
-
             }
         }
 
@@ -83,6 +94,35 @@ namespace GameServer.MatchRoom
             if(testCount == 3) {
                 testCount++;
                 BroadCastObjectInfo();
+            }
+
+            Queue<MoveData> tempQueue = null;
+            lock (m_moveQueue) {
+                if (m_moveQueue.Count > 0)
+                    tempQueue = new Queue<MoveData>(m_moveQueue);
+                m_moveQueue.Clear();
+            }
+
+            if (tempQueue == null)
+                return;
+
+            BroadCastPosition(tempQueue);
+        }
+
+        public void BroadCastPosition(Queue<MoveData> tempQueue)
+        {
+            var pks = new PK_SC_OBJECTS_POSITION();
+            pks.m_objectList = new List<PK_SC_TARGET_POSITION>();
+            foreach (var data in tempQueue) {
+                var pksPos = new PK_SC_TARGET_POSITION();
+                pksPos.handle = data.handle;
+                pksPos.xPos = data.xPos;
+                pksPos.yPos = data.yPos;
+                pks.m_objectList.Add(pksPos);
+            }
+
+            foreach (var obj in m_enterPlayerQueue) {
+                obj.player.Client.SendPacket(pks);
             }
         }
     }

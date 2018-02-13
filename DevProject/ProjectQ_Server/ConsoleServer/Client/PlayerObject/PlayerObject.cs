@@ -10,7 +10,10 @@ namespace Player
         public PlayerData PlayerData { get; private set; }
         public int Handle { get; private set; }
 
-        Dictionary<int, PlayerObject> m_currentObjList = new Dictionary<int, PlayerObject>();
+        public Dictionary<int, PlayerObject> CurrentObjList { get; private set; }
+
+        //TODO : 임시변수로 삭제될 수 있음
+        public bool isEnterComplete;
 
         public void SetClient(Client client)
         {
@@ -21,6 +24,7 @@ namespace Player
         {
             PlayerData = info;
             Handle = handle;
+            CurrentObjList = new Dictionary<int, PlayerObject>();
         }
 
         public void Update(double deltaTime)
@@ -31,7 +35,7 @@ namespace Player
 
         public void SetCurrentObject(int handle, PlayerObject obj)
         {
-            m_currentObjList.Add(handle, obj);
+            CurrentObjList.Add(handle, obj);
         }
     }
 }

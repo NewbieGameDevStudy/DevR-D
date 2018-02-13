@@ -1,8 +1,7 @@
 ﻿using NetworkSocket;
 using Packet;
 using Player;
-using System;
-using System.Collections.Generic;
+
 namespace BaseClient
 {
     public partial class Client
