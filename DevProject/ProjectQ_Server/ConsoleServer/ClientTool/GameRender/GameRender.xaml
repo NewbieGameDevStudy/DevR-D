@@ -5,8 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClientTool.GameRender"
         mc:Ignorable="d"
-        Title="GameRender" Height="493" Width="403">
+        Title="GameRender" Height="734" Width="426">
     <Grid>
         <Canvas Name="GameCanvans" HorizontalAlignment="Left" Height="399" Margin="10,10,0,0" VerticalAlignment="Top" Width="375" Background="Aqua" MouseLeftButtonDown="GameCanvans_MouseLeftButtonDown"/>
+        <ListView Name="PosListView" HorizontalAlignment="Left" Height="269" Margin="10,424,0,0" VerticalAlignment="Top" Width="375">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Pos" Width="350"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>

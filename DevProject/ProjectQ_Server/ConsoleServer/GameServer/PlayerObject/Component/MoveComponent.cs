@@ -8,8 +8,6 @@ namespace GameServer.Player.Component
 {
     public class MoveComponent : BaseComponent
     {
-        PlayerData playerData;
-
         public MoveComponent(PlayerObject player) : base(player)
         {
             

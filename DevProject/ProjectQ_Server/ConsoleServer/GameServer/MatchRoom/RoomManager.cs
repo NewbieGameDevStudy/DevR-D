@@ -35,7 +35,7 @@ namespace GameServer.MatchRoom
 
         Queue<MoveData> m_moveQueue = new Queue<MoveData>();
 
-        public void SetMoveInput(MoveData moveData)
+        public void AddMoveInput(MoveData moveData)
         {
             lock (m_moveQueue) {
                 m_moveQueue.Enqueue(moveData);
@@ -52,7 +52,7 @@ namespace GameServer.MatchRoom
             testCount++;
         }
 
-        void BroadCastObjectInfo()
+        void BroadCastRoomInObjectInfo()
         {
             //TODO : 현재는 단순히 들어온 큐에 대해서만 나중에 룸이 작업되면 해당 방안에 있는 사람들만 한다
             PK_SC_OBJECTS_INFO pks = new PK_SC_OBJECTS_INFO();
@@ -91,9 +91,10 @@ namespace GameServer.MatchRoom
                 }
             }
 
-            if(testCount == 3) {
+            //TODO : 방에 입장 완료 후 게임시작이 되었을때 보내야한다.
+            if(testCount == 2) {
                 testCount++;
-                BroadCastObjectInfo();
+                BroadCastRoomInObjectInfo();
             }
 
             Queue<MoveData> tempQueue = null;

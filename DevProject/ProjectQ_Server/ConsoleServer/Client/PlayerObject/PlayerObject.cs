@@ -10,7 +10,7 @@ namespace Player
         public PlayerData PlayerData { get; private set; }
         public int Handle { get; private set; }
 
-        public Dictionary<int, PlayerObject> CurrentObjList { get; private set; }
+        public Dictionary<int, PlayerObject> RoomInObjList { get; private set; }
 
         //TODO : 임시변수로 삭제될 수 있음
         public bool isEnterComplete;
@@ -24,18 +24,24 @@ namespace Player
         {
             PlayerData = info;
             Handle = handle;
-            CurrentObjList = new Dictionary<int, PlayerObject>();
+            RoomInObjList = new Dictionary<int, PlayerObject>();
         }
 
         public void Update(double deltaTime)
         {
             if (PlayerData != null)
                 PlayerData.Update(deltaTime);
+
+            if(RoomInObjList != null) {
+                foreach (var obj in RoomInObjList) {
+                    obj.Value.Update(deltaTime);
+                }
+            }
         }
 
-        public void SetCurrentObject(int handle, PlayerObject obj)
+        public void AddRoomInObject(int handle, PlayerObject obj)
         {
-            CurrentObjList.Add(handle, obj);
+            RoomInObjList.Add(handle, obj);
         }
     }
 }

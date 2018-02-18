@@ -40,7 +40,7 @@ namespace ClientTool
             var time = nowTime - prevTime;
             prevTime = nowTime;
             deltaTime += time.TotalSeconds;
-            client.Update(deltaTime);
+            client.Update(time.TotalSeconds);
 
             if (gameRender != null)
                 gameRender.Render();

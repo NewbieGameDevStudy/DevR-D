@@ -24,6 +24,8 @@ namespace ClientTool.GameRender
         PlayerObject playerObject;
         Dictionary<int, Ellipse> objectList = new Dictionary<int, Ellipse>();
         bool isInitPlayer = false;
+        double prevX;
+        double prevY;
 
         public GameRender()
         {
@@ -44,10 +46,10 @@ namespace ClientTool.GameRender
 
         private void ObjectRender()
         {
-            if (playerObject.Client.Player.CurrentObjList.Count == 0)
+            if (playerObject.Client.Player.RoomInObjList.Count == 0)
                 return;
 
-            foreach (var obj in playerObject.CurrentObjList) {
+            foreach (var obj in playerObject.RoomInObjList) {
                 if (!objectList.ContainsKey(obj.Key))
                     continue;
 
@@ -59,6 +61,12 @@ namespace ClientTool.GameRender
             var playerElip = objectList[playerObject.Handle];
             Canvas.SetLeft(playerElip, playerObject.PlayerData.Xpos);
             Canvas.SetTop(playerElip, playerObject.PlayerData.Ypos);
+
+            if (prevX != playerObject.PlayerData.Xpos || prevY != playerObject.PlayerData.Ypos) {
+                prevX = playerObject.PlayerData.Xpos;
+                prevY = playerObject.PlayerData.Ypos;
+                PosListView.Items.Add(playerObject.PlayerData.Xpos + " // " + playerObject.PlayerData.Ypos);
+            }
         }
 
         void ObjectInitRender()
@@ -76,10 +84,10 @@ namespace ClientTool.GameRender
                 objectList.Add(playerObject.Handle, elips);
             }
 
-            if (playerObject.Client.Player.CurrentObjList.Count == 0)
+            if (playerObject.Client.Player.RoomInObjList.Count == 0)
                 return;
 
-            foreach (var obj in playerObject.Client.Player.CurrentObjList) {
+            foreach (var obj in playerObject.Client.Player.RoomInObjList) {
                 if (objectList.ContainsKey(obj.Key))
                     continue;
                 
