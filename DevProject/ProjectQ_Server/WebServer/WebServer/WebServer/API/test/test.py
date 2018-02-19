@@ -1,10 +1,11 @@
-#from WebServer.API import database
-import json
 from WebServer import app
 from WebServer.API import database
 from flask_restful import Resource, Api, fields, marshal_with
 from flask_restful import reqparse, request
-from flask import Flask
+from flask import Flask, jsonify
+import MySQLdb
+import json
+from WebServer.config import MYSQL
 
 print("test.py")
 
@@ -13,28 +14,48 @@ api = Api(app)
 
 class Test(Resource):
     def get(self):
-        return "hello server"
+        odd = [1,2,3]
+        data = {'a':123, 'list':odd, 'strTemp':"hello server"}
+        return jsonify(data)
 
+
+# sample function
+def db_execution_request(**kwagrs):
+    if kwagrs is None:
+        return None
+
+    db_query = database.DBConnection()
+    sql = 'select user_seq from user_data where user_id = %d' % kwagrs['user_id']
+    result = db_query.select_query(sql)
+    print(result)
+    
+    if result is None:
+        sql = 'insert into user_data (user_id, user_nick, create_date, recent_login, last_logout) values (%d, "%s", now(), now(), now())' % (kwagrs['user_id'], kwagrs['user_nick'])
+        print(sql)
+        db_query.execute_query(sql)
+    
 
 class TestPost(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('test', type = str)
-        parser.add_argument('test2', type = str)
+        parser.add_argument('userId', type = int)
+        parser.add_argument('strNick', type = str)
         args = parser.parse_args()
 
-        _data1 = args['test']
-        _data2 = args['test2']
-        print(_data1)
-        print(_data2)
- 
-        return "Success!!"
+        user_id = args['userId']
+        user_nick = args['strNick']
+        print(user_id)
+        print(user_nick)
+        
+        db_execution_request(user_id = user_id, user_nick = user_nick)
+        
+        #return jsonify(data)
+        return jsonify(args)
 
 
 api.add_resource(Test, '/')
 api.add_resource(TestPost, '/test')
 
-print()
 
 #app = Flask(__name__)
 #api = Api(app)
