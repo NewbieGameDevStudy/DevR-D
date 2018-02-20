@@ -1,5 +1,5 @@
-﻿using GameServer.Connection;
-using GameServer.Player;
+﻿using GameServer.Player;
+using Http;
 using NetworkSocket;
 using Packet;
 using Server;
@@ -9,7 +9,8 @@ namespace GameServer.ServerClient
 {
     public partial class Client
     {
-        int m_accountId;
+        public ulong AccountId { get; private set; }
+        public int AccountCount { get; private set; }
 
         UserToken m_userToken;
         BaseServer m_baseServer;
@@ -18,20 +19,17 @@ namespace GameServer.ServerClient
         public PlayerObject Player { get; private set; }
         public Action<int, object, object[]> PacketDispatch;
 
-        public Client(UserToken userToken, int accountValue, BaseServer baseServer)
+        public Client(BaseServer baseServer, UserToken userToken, ulong accountValue, int m_accountCount)
         {
             m_baseServer = baseServer;
             m_httpConnection = baseServer.HttpConnection;
-            m_accountId = accountValue;
             m_userToken = userToken;
             userToken.ReceiveDispatch = ReceiveDispatch;
+            AccountId = accountValue;
+            AccountCount = m_accountCount;
 
             Player = new PlayerObject(this, m_baseServer);
-
-            //TODO : 여기서 웹서버로 부터 해당 플레이어 정보를 가져오고
-            //이후에 LoadPlayerInfo 처리로 플레이어를 서버쪽에 저장해둔다
-            PlayerData d = new PlayerData();
-            Player.LoadPlayerInfo(d);
+            Player.LoadPlayerInfo();
         }
 
         public void Update(double deltaTime)

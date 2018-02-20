@@ -53,11 +53,12 @@
     <Compile Include="BaseServer\BaseServer.cs" />
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\Client_Response.cs" />
-    <Compile Include="Connection\HttpConnection.cs" />
     <Compile Include="Connection\HttpDTO.cs" />
     <Compile Include="GameServer.cs" />
     <Compile Include="MatchRoom\Room.cs" />
     <Compile Include="MatchRoom\RoomManager.cs" />
+    <Compile Include="PlayerObject\Component\BaseComponent.cs" />
+    <Compile Include="PlayerObject\Component\MoveComponent.cs" />
     <Compile Include="PlayerObject\PlayerData.cs" />
     <Compile Include="PlayerObject\PlayerObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -66,6 +67,14 @@
     <ProjectReference Include="..\GameObject\GameObject.csproj">
       <Project>{CAB1FBDD-98F6-44E1-A4EC-A88CABB52602}</Project>
       <Name>GameObject</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GuidGen\GuidGen.csproj">
+      <Project>{e46f552c-d5bb-4721-b983-06d760da85b6}</Project>
+      <Name>GuidGen</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HttpConnection\HttpConnection.csproj">
+      <Project>{1a230189-cec6-43ab-ba95-d8c7f4abab9b}</Project>
+      <Name>HttpConnection</Name>
     </ProjectReference>
     <ProjectReference Include="..\Packet\Packet.csproj">
       <Project>{1198D71E-9AB4-410E-BC22-B7D4AF0E3878}</Project>

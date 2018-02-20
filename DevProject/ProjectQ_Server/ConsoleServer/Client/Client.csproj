@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
+    <Compile Include="Client_Request.cs" />
     <Compile Include="Client_Response.cs" />
     <Compile Include="PlayerObject\PlayerData.cs" />
     <Compile Include="PlayerObject\PlayerObject.cs" />
@@ -58,6 +59,10 @@
     <ProjectReference Include="..\SocketLib\SocketLib.csproj">
       <Project>{F5201978-9DBB-43CE-8DA9-9B5578246F23}</Project>
       <Name>SocketLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Util\Util.csproj">
+      <Project>{35f3331b-959a-406f-8894-61339ecdbf6e}</Project>
+      <Name>Util</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

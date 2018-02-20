@@ -1,9 +1,9 @@
-﻿using GameServer.Connection;
-using GameServer.MatchRoom;
+﻿using GameServer.MatchRoom;
 using GameServer.ServerClient;
+using GuidGen;
+using Http;
 using NetworkSocket;
 using Packet;
-using System;
 using System.Collections.Generic;
 
 namespace Server
@@ -11,20 +11,21 @@ namespace Server
     public class BaseServer
     {
         SocketLib m_serverSocket;
+        Guid m_guid;
         PacketMethod m_packetMethod;
         Dictionary<int, Client> m_clientList = new Dictionary<int, Client>();
         Dictionary<int, Client> m_addClientList = new Dictionary<int, Client>();
 
-        //TODO : 임시적 카운트
-        int clientAccount;
+        int m_accountCount;
 
         public RoomManager RoomManager { get; private set; }
         public HttpConnection HttpConnection { get; private set; }
 
-        public void InitServer(int port)
+        public void InitServer(int port, byte machiedId)
         {
-            m_serverSocket = new SocketLib();
-            m_serverSocket.acceptHandler = AcceptClient;
+            m_serverSocket = new SocketLib {
+                acceptHandler = AcceptClient
+            };
 
             PacketList.InitPacketList();
             PacketParser.InitGenericParseMethod();  //Parser 함수는 MethodList 생성 이후 호출해야한다
@@ -36,6 +37,8 @@ namespace Server
 
             RoomManager = new RoomManager();
             HttpConnection = new HttpConnection("http://localhost:5000");
+
+            m_guid = new Guid(machiedId);
         }
 
         public void RunServer()
@@ -45,14 +48,20 @@ namespace Server
 
         void AcceptClient(UserToken userToken)
         {
-            Client client = new Client(userToken, clientAccount, this);
-            client.PacketDispatch = PacketMethodDispatch;
+            Client client = new Client(this, userToken, m_guid.GuidCreate(), m_accountCount) {
+                PacketDispatch = PacketMethodDispatch
+            };
             lock (m_addClientList) {
-                m_addClientList.Add(clientAccount, client);
+                m_addClientList.Add(m_accountCount, client);
+                m_accountCount++;
             }
 
-            clientAccount++;
-            Console.WriteLine("접속된 클라이언트 수 : {0}", clientAccount);
+            System.Console.WriteLine("접속된 클라이언트 수 : {0}", m_accountCount);
+        }
+
+        void CloseClient()
+        {
+            
         }
 
         public void Update(double deltaTime)
