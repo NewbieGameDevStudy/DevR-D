@@ -56,6 +56,8 @@ namespace NetworkSocket
                 if (socket.Connected)
                     socket.Close();
             }
+
+            closeHandler?.Invoke();
         }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using NetworkSocket;
 using Packet;
 using Player;
-using System;
-using System.Collections.Generic;
+
 namespace BaseClient
 {
     public partial class Client
@@ -34,7 +33,8 @@ namespace BaseClient
         {
             m_userToken = token;
             m_userToken.ReceiveDispatch = ReceiveDispatch;
-            Player = new PlayerObject(this);
+            Player = new PlayerObject();
+            Player.SetClient(this);
         }
 
         public void Update(double deltaTime)

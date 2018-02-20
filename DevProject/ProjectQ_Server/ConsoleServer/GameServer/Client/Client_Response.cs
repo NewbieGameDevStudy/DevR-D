@@ -35,5 +35,14 @@ namespace GameServer.ServerClient
                     break;
             }
         }
+
+        void OnReceivePacket(PK_CS_INPUT_POSITION pks)
+        {
+            Player.Client.m_baseServer.RoomManager.AddMoveInput(new MatchRoom.RoomManager.MoveData {
+                handle = Player.Handle,
+                xPos = pks.xPos,
+                yPos = pks.yPos
+            });
+        }
     }
 }

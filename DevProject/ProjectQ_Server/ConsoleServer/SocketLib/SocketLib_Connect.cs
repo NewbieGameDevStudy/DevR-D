@@ -17,8 +17,9 @@ namespace NetworkSocket
         {
             m_localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
 
-            SocketAsyncEventArgs args = new SocketAsyncEventArgs();
-            args.RemoteEndPoint = m_localEndPoint;
+            SocketAsyncEventArgs args = new SocketAsyncEventArgs {
+                RemoteEndPoint = m_localEndPoint
+            };
             args.Completed += ConnectComplete;
 
             m_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);

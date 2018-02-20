@@ -8,8 +8,8 @@ namespace GameObject
 {
     public interface IPlayerInfo
     {
-        float Xpos { get; }
-        float Ypos { get; }
+        double Xpos { get; }
+        double Ypos { get; }
         int Level { get; }
         int Exp { get; }
     }

@@ -18,6 +18,9 @@ namespace NetworkSocket
         object m_saeaLock = new object();
 
         public delegate void AcceptHandler(UserToken userToken);
+        public delegate void CloseHandler();
+
+        public CloseHandler closeHandler { get; set; }
         public AcceptHandler acceptHandler { get; set; }
 
         public void InitServer(string ip, int port)

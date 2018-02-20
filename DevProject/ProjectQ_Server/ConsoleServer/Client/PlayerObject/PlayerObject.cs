@@ -1,26 +1,47 @@
 ﻿using BaseClient;
 using GameObject;
+using System.Collections.Generic;
 
 namespace Player
 {
     public class PlayerObject : IGameObject
     {
-        Client m_client;
-        PlayerData playerData;
+        public Client Client { get; private set; }
+        public PlayerData PlayerData { get; private set; }
+        public int Handle { get; private set; }
 
-        public PlayerObject(Client client)
+        public Dictionary<int, PlayerObject> RoomInObjList { get; private set; }
+
+        //TODO : 임시변수로 삭제될 수 있음
+        public bool isEnterComplete;
+
+        public void SetClient(Client client)
         {
-            m_client = client;
+            Client = client;
         }
 
-        public void InitPlayerInfo(PlayerData info)
+        public void InitPlayerInfo(PlayerData info, int handle)
         {
-            playerData = info;
+            PlayerData = info;
+            Handle = handle;
+            RoomInObjList = new Dictionary<int, PlayerObject>();
         }
 
         public void Update(double deltaTime)
         {
-            
+            if (PlayerData != null)
+                PlayerData.Update(deltaTime);
+
+            if(RoomInObjList != null) {
+                foreach (var obj in RoomInObjList) {
+                    obj.Value.Update(deltaTime);
+                }
+            }
+        }
+
+        public void AddRoomInObject(int handle, PlayerObject obj)
+        {
+            RoomInObjList.Add(handle, obj);
         }
     }
 }
