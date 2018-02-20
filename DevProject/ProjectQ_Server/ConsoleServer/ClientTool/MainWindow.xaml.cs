@@ -43,7 +43,7 @@ namespace ClientTool
             client.Update(time.TotalSeconds);
 
             if (gameRender != null)
-                gameRender.Render();
+                gameRender.Render(time.TotalSeconds);
         }
 
         private void Button_Connect(object sender, RoutedEventArgs e)

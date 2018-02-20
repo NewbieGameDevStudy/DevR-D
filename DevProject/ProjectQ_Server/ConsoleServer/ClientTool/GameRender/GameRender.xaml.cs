@@ -27,6 +27,8 @@ namespace ClientTool.GameRender
         double prevX;
         double prevY;
 
+        double deltaTimeSave;
+
         public GameRender()
         {
             InitializeComponent();
@@ -38,13 +40,13 @@ namespace ClientTool.GameRender
             playerObject = player;
         }
 
-        public void Render()
+        public void Render(double deltaTime)
         {
             ObjectInitRender();
-            ObjectRender();
+            ObjectRender(deltaTime);
         }
 
-        private void ObjectRender()
+        private void ObjectRender(double deltaTime)
         {
             if (playerObject.Client.Player.RoomInObjList.Count == 0)
                 return;
@@ -54,18 +56,23 @@ namespace ClientTool.GameRender
                     continue;
 
                 var elip = objectList[obj.Key];
-                Canvas.SetLeft(elip, obj.Value.PlayerData.Xpos);
-                Canvas.SetTop(elip, obj.Value.PlayerData.Ypos);
+                Canvas.SetLeft(elip, obj.Value.PlayerData.Xpos - 15);
+                Canvas.SetTop(elip, obj.Value.PlayerData.Ypos - 15);
             }
 
             var playerElip = objectList[playerObject.Handle];
-            Canvas.SetLeft(playerElip, playerObject.PlayerData.Xpos);
-            Canvas.SetTop(playerElip, playerObject.PlayerData.Ypos);
+            Canvas.SetLeft(playerElip, playerObject.PlayerData.Xpos - 15);
+            Canvas.SetTop(playerElip, playerObject.PlayerData.Ypos - 15);
 
             if (prevX != playerObject.PlayerData.Xpos || prevY != playerObject.PlayerData.Ypos) {
                 prevX = playerObject.PlayerData.Xpos;
                 prevY = playerObject.PlayerData.Ypos;
                 PosListView.Items.Add(playerObject.PlayerData.Xpos + " // " + playerObject.PlayerData.Ypos);
+            }
+
+            if (deltaTime > deltaTimeSave) {
+                deltaTimeSave = deltaTime;
+                DeltaTime.Content = deltaTimeSave.ToString();
             }
         }
 

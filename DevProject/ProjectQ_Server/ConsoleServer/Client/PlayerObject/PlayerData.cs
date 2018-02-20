@@ -17,7 +17,7 @@ namespace Player
         public int Level { get; private set; }
         public int Exp { get; private set; }
 
-        int m_speed = 200;
+        int m_speed = 300;
         float m_linearValue;
 
         public PlayerData(int level, int exp)
