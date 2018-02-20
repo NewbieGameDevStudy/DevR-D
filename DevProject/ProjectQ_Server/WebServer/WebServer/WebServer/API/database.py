@@ -8,6 +8,9 @@ class DBConnection:
     def __init__(self):
         pass
 
+    def cursor(self):
+        return self.cursor
+
     @contextmanager
     def database(self, str):
         try:
@@ -23,7 +26,11 @@ class DBConnection:
     def select_query(self, str):
         with self.database(str) as (con, cursor):
              cursor.execute(str)
-        return json.dumps(cursor.fetchall())
+        
+        if cursor.fetchone() :
+            return json.dumps(cursor.fetchall())
+        else:
+            return None
 
     def execute_query(self, str):
         with self.database(str) as (con, cursor):

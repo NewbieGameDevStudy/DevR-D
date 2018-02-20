@@ -7,6 +7,20 @@ namespace GameServer.ServerClient
     {
         void OnReceivePacket(PK_CS_ENTERROOM pks)
         {
+            /*
+            var testDTO = new TestDTO();
+            testDTO.a = 123123;
+            m_httpConnection.HttpConnectAsync(testDTO, (result) => {
+                var dffd = result;
+            });*/
+            
+            var testPOST = new TestDTO_Post();
+            testPOST.userId = 11;
+            testPOST.strNick = "testID";
+            m_httpConnection.HttpConnectAsync(testPOST, (result) => {
+                var dffd = result;
+            });
+
             switch (pks.type) {
                 case PK_CS_ENTERROOM.RoomType.COMMON_SENSE:
                     m_baseServer.RoomManager.EnterRoom(MatchRoom.RoomManager.RoomType.COMMON_SENSE, Player);
