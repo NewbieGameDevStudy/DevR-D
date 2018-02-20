@@ -379,6 +379,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+*.idb
 
 # Spyder project settings
 .spyderproject
