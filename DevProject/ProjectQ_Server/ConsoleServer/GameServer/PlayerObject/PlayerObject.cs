@@ -1,4 +1,5 @@
 ﻿using GameObject;
+using GameServer.Connection;
 using GameServer.Player.Component;
 using GameServer.ServerClient;
 using Packet;
@@ -27,27 +28,24 @@ namespace GameServer.Player
             var moveComp = new MoveComponent(this);
         }
 
-        //TODO : 아래 로드부분도 마찬가지로 늘어난다면 별도로 분리
         public void LoadPlayerInfo()
         {
-            //TODO : 웹서버로 db부분 구현전까진 더미데이터 활용
-            //var testDTO = new TestDTO();
-            //testDTO.a = 123123;
-            //m_httpConnection.HttpConnectAsync(testDTO, (result) => {
-            //    var dffd = result;
-            //});
+            var playerInfo = new ReqPlayerInfo {
+                accountId = 100,
+                accountId2 = 999,
+            };
 
-            //더미데이터
-            PlayerData = new PlayerData();
-            PlayerData.Level = 10;
-            PlayerData.Exp = 100;
-            PlayerData.Xpos = 20;
-            PlayerData.Ypos = 20;
+            Client.HttpConnection.HttpConnectAsync(playerInfo, (RespPlayerInfo result) => {
+                if (result == null)
+                    return;
+                PlayerData.Exp = result.exp;
+                PlayerData.Level = result.level;
 
-            Client.SendPacket(new PK_SC_PLAYERINFO_LOAD {
-                handle = Handle,
-                Exp = PlayerData.Exp,
-                Level = PlayerData.Level,
+                Client.SendPacket(new PK_SC_PLAYERINFO_LOAD {
+                    handle = Handle,
+                    Exp = result.exp,
+                    Level = result.level,
+                });
             });
         }
 

@@ -4,18 +4,18 @@ using System.Collections.Generic;
 
 namespace GameServer.Connection
 {
-    [HttpConnect(Method.GET, "http://localhost:5000/")]
-    public class TestDTO
+    #region 플레이어 관련 요청
+    [HttpConnect(Method.GET, "/playerinfo")]
+    public class ReqPlayerInfo
     {
-        public int a;
-        public List<int> list;
-        public string strTemp;
+        public int accountId;
+        public int accountId2;
     }
 
-    [HttpConnect(Method.POST, "http://localhost:5000/test")]
-    public class TestDTO_Post
+    public class RespPlayerInfo
     {
-        public int userId;
-        public string strNick;
+        public int level;
+        public int exp;
     }
+    #endregion
 }

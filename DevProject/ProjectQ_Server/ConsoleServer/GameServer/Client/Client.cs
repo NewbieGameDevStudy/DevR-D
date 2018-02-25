@@ -9,20 +9,19 @@ namespace GameServer.ServerClient
 {
     public partial class Client
     {
-        public ulong AccountId { get; private set; }
-        public int AccountCount { get; private set; }
-
         UserToken m_userToken;
         BaseServer m_baseServer;
-        HttpConnection m_httpConnection;
 
+        public ulong AccountId { get; private set; }
+        public int AccountCount { get; private set; }
+        public HttpConnection HttpConnection { get; }
         public PlayerObject Player { get; private set; }
         public Action<int, object, object[]> PacketDispatch;
 
         public Client(BaseServer baseServer, UserToken userToken, ulong accountValue, int m_accountCount)
         {
             m_baseServer = baseServer;
-            m_httpConnection = baseServer.HttpConnection;
+            HttpConnection = baseServer.HttpConnection;
             m_userToken = userToken;
             userToken.ReceiveDispatch = ReceiveDispatch;
             AccountId = accountValue;
