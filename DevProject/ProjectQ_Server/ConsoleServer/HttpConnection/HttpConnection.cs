@@ -19,7 +19,9 @@ namespace Http
             m_restClient = new RestClient(url);
         }
 
-        public void HttpConnectAsync<T>(T dto, Action<T> callback) where T : new()
+        public void HttpConnectAsync<REQUEST, RESPONSE>(REQUEST dto, Action<RESPONSE> callback) 
+            where REQUEST : new()
+            where RESPONSE : new()
         {
             var type = dto.GetType();
             var attribute = type.GetCustomAttributes(typeof(HttpConnectAttribute), true).FirstOrDefault() as HttpConnectAttribute;
@@ -29,10 +31,18 @@ namespace Http
                 Resource = attribute.Resource,
                 RequestFormat = DataFormat.Json
             };
-            request.AddBody(dto);
 
+            if (attribute.RequestMethod == Method.GET) {
+                var fields = type.GetFields();
+                foreach (var info in fields) {
+                    request.AddParameter(info.Name, info.GetValue(dto));
+                }
+            } else {
+                request.AddBody(dto);
+            }
+            
             m_restClient.ExecuteAsync(request, (response) => {
-                var result = JsonConvert.DeserializeObject<T>(response.Content);
+                var result = JsonConvert.DeserializeObject<RESPONSE>(response.Content);
                 callback(result);
             });
         }
