@@ -8,14 +8,16 @@ namespace GameServer.Connection
     [HttpConnect(Method.GET, "/playerinfo")]
     public class ReqPlayerInfo
     {
-        public int accountId;
-        public int accountId2;
+        public ulong accountId;
     }
 
     public class RespPlayerInfo
     {
+        public bool result;
         public int level;
         public int exp;
+        public int gameMoney;
+        public string name;
     }
     #endregion
 }

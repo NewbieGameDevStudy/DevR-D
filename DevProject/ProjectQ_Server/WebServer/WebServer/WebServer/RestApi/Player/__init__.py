@@ -1,1 +1,1 @@
-import PlayerInfo
+from .PlayerInfo import *

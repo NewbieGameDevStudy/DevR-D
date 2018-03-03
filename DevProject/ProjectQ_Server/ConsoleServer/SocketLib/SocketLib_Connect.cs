@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetworkSocket
 {
@@ -20,15 +15,17 @@ namespace NetworkSocket
             SocketAsyncEventArgs args = new SocketAsyncEventArgs {
                 RemoteEndPoint = m_localEndPoint
             };
-            args.Completed += ConnectComplete;
-
             m_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            args.Completed += ConnectComplete;
+            args.AcceptSocket = m_socket;
+
             m_socket.ConnectAsync(args);
         }
 
         public void ConnectComplete(object sender, SocketAsyncEventArgs e)
         {
-            Socket connectSocket = e.ConnectSocket;
+            Socket connectSocket = e.AcceptSocket;
 
             //send + receive
             byte[] buffer = new byte[m_bufferSize * 2];
