@@ -5,7 +5,7 @@
     <ProjectGuid>5913a9ce-3c15-49eb-8867-e3375fb4f64e</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>WebServer.py</StartupFile>
-    <SearchPath>..\WebServer;RestApi\Player;RestApi;..\WebServer</SearchPath>
+    <SearchPath>..\WebServer;RestApi\Player;RestApi;..\WebServer;Database</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>WebServer</Name>
@@ -27,6 +27,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Database\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RestApi\AsyncModule.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="RestApi\Player\PlayerInfo.py">

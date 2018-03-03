@@ -32,14 +32,16 @@ namespace GameServer.Player
         {
             var playerInfo = new ReqPlayerInfo {
                 accountId = 100,
-                accountId2 = 999,
             };
 
             Client.HttpConnection.HttpConnectAsync(playerInfo, (RespPlayerInfo result) => {
                 if (result == null)
                     return;
-                PlayerData.Exp = result.exp;
-                PlayerData.Level = result.level;
+
+                PlayerData = new PlayerData {
+                    Exp = result.exp,
+                    Level = result.level,
+                };
 
                 Client.SendPacket(new PK_SC_PLAYERINFO_LOAD {
                     handle = Handle,

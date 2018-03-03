@@ -1,42 +1,32 @@
 import MySQLdb
 import json
 from contextlib import contextmanager
-from .config import MYSQL
+#from config import MYSQL
 
 class DBConnection:
-    def __init__(self):
-        pass
-
-    def cursor(self):
-        return self.cursor
-
     @contextmanager
-    def database(self, str):
+    def database(self):
         try:
-            self.con = MySQLdb.connect(MYSQL.DB_CONNECT, MYSQL.DB_PORT, MYSQL.DB_PASSWORD, MYSQL.DB_NAME)
-            self.cursor = self.con.cursor()
-            con = self.con
-            cursor = self.cursor
-            yield (con, cursor)
+            #self.con = MySQLdb.connect(MYSQL.DB_CONNECT, MYSQL.DB_USER, MYSQL.DB_PASSWORD)
+            self.con = MySQLdb.connect(host="localhost", user="root", passwd="1234567890")
+            self.cur = self.con.cursor()
+            yield (self.cur)
         finally:
-            self.cursor.close()
+            self.cur.close()
             self.con.close()
 
     def select_query(self, str):
-        with self.database(str) as (con, cursor):
-             cursor.execute(str)
-        
-        if cursor.fetchone() :
-            return json.dumps(cursor.fetchall())
-        else:
-            return None
+        with self.database() as (cur):
+             cur.execute(str)
+             result = cur.fetchone()
+        return result
 
     def execute_query(self, str):
-        with self.database(str) as (con, cursor):
+        with self.database() as (con, cursor):
              cursor.execute(str)
              con.commit()
 
-dbConnection = DBConnection()
+
 
 """
 @contextmanager
