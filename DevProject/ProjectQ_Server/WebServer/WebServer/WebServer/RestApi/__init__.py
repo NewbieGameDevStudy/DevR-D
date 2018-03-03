@@ -8,5 +8,8 @@ api = Api(app)
 
 dbConnection = DBConnection()
 
+from . import AsyncIo
+asyncFunc = AsyncIo.AsyncIO()
+
 from .Player import PlayerInfo
 

@@ -4,7 +4,8 @@ from flask import Flask, jsonify
 import MySQLdb
 import json
 
-from RestApi import api, app, dbConnection
+from RestApi import api, app, dbConnection, asyncFunc
+from ..AsyncIo import AsyncIO
 
 parser = reqparse.RequestParser()
 
@@ -25,33 +26,21 @@ class RespPlayerInfo(object):
             'name':self.name,
         }
 
-async def GetInfo(accountId, future):
-    query = "select iLevel, iExp, cName, iGameMoney from gamedb.playerinfo where uAccountId = %s" %(accountId)
-    result = dbConnection.select_query(query)
-    future.set_result(result)
-
 class Info(Resource):
     def get(self):
         parser.add_argument('accountId')
         args = parser.parse_args()
         id = args["accountId"]
-        #query = "select iLevel, iExp, cName, iGameMoney from gamedb.playerinfo where uAccountId = %s" %(id)
-        #result = DataBase.dbConnection.select_query(query)
-        loop = asyncio.get_event_loop()
-        future = asyncio.Future()
-        asyncio.ensure_future(GetInfo(id, future))
-        loop.run_until_complete(future)
-        result = future.result()
-        loop.close()
+        query = "select iLevel, iExp, cName, iGameMoney from gamedb.playerinfo where uAccountId = %s" %(id)
+        
+        result = asyncFunc.asyncSelectMethod(query)
 
         playerInfo = RespPlayerInfo()    
         if result == None:
-            playerInfo.SetInfo(False, -1, -1, 'none', -1)
+            playerInfo.result = False
         else:
             playerInfo.SetInfo(True, result[0], result[1], result[2], result[3])
 
-        rr = json.dumps(playerInfo.__dict__)
-        #return json.dumps(playerInfo.__dict__)
         return jsonify(playerInfo.serialize())
 
     def post(self):
