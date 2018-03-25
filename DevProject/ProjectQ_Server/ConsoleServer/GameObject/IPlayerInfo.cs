@@ -1,4 +1,4 @@
-﻿namespace GameObject
+﻿namespace BaseObject
 {
     public interface IPlayerInfo
     {

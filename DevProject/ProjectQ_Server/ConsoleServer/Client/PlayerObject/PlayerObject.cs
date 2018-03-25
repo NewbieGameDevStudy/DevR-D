@@ -1,10 +1,10 @@
 ﻿using BaseClient;
-using GameObject;
+using BaseObject;
 using System.Collections.Generic;
 
 namespace Player
 {
-    public class PlayerObject : IGameObject
+    public class PlayerObject : IBaseObject
     {
         public Client Client { get; private set; }
         public PlayerData PlayerData { get; private set; }

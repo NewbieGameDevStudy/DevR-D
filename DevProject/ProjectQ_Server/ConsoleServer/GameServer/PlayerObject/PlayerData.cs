@@ -1,4 +1,4 @@
-﻿using GameObject;
+﻿using BaseObject;
 
 namespace GameServer.Player
 {

@@ -11,8 +11,10 @@ namespace BaseClient
         UserToken m_userToken;
 
         public PlayerObject Player { get; private set; }
+        public bool isConnected { get; private set; }
+        public object objectType { get; private set; }
 
-        public void Init()
+        public void Init(object obj, string methodName)
         {
             m_clientSocket = new SocketLib();
             m_clientSocket.connectHandler += ConnectedToken;
@@ -21,18 +23,23 @@ namespace BaseClient
             PacketParser.InitGenericParseMethod();
 
             m_packetMethod = new PacketMethod();
-            m_packetMethod.SetMethod(typeof(Client), "OnReceivePacket");
+            //m_packetMethod.SetMethod(typeof(Client), "OnReceivePacket");
+            m_packetMethod.SetMethod(obj.GetType(), methodName);
+            objectType = obj;
         }
 
-        public void Connect()
+        public void Connect(string connectHost = "127.0.0.1", int port = 5050)
         {
-            m_clientSocket.ConnectAsync("127.0.0.1", 5050);
+            m_clientSocket.ConnectAsync(connectHost, port);
         }
 
-        public void ConnectedToken(UserToken token)
+        void ConnectedToken(UserToken token)
         {
             m_userToken = token;
             m_userToken.ReceiveDispatch = ReceiveDispatch;
+            isConnected = true;
+
+            //툴에서 사용하는 것
             Player = new PlayerObject();
             Player.SetClient(this);
         }
@@ -43,9 +50,9 @@ namespace BaseClient
             Player.Update(deltaTime);
         }
 
-        public void ReceiveDispatch(int packetId, object[] parameters)
+        void ReceiveDispatch(int packetId, object[] parameters)
         {
-            m_packetMethod?.MethodDispatch(packetId)?.Invoke(this, parameters);
+            m_packetMethod?.MethodDispatch(packetId)?.Invoke(objectType, parameters);
         }
 
         public void SendPacket(PK_BASE pks)

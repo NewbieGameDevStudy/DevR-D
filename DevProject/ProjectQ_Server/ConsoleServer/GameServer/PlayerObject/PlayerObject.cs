@@ -1,4 +1,4 @@
-﻿using GameObject;
+﻿using BaseObject;
 using GameServer.Connection;
 using GameServer.Player.Component;
 using GameServer.ServerClient;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace GameServer.Player
 {
-    public class PlayerObject : IGameObject
+    public class PlayerObject : IBaseObject
     {
         public Client Client { get; private set; }
         public PlayerData PlayerData { get; private set; }

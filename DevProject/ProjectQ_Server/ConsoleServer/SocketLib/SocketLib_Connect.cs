@@ -25,7 +25,7 @@ namespace NetworkSocket
 
         public void ConnectComplete(object sender, SocketAsyncEventArgs e)
         {
-            Socket connectSocket = e.ConnectSocket;
+            Socket connectSocket = e.AcceptSocket;
 
             //send + receive
             byte[] buffer = new byte[m_bufferSize * 2];

@@ -55,7 +55,7 @@ namespace ClientTool
             ConnectState.Text = "접속완료";
 
             client = new Client();
-            client.Init();
+            client.Init(client, "OnReceivePacket");
             client.Connect();
 
             m_updateTimer = new DispatcherTimer {

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2024
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleServer", "ConsoleServer\ConsoleServer.csproj", "{6BED2D22-9053-444C-A5E9-AC0EAE49C5B4}"
 EndProject
@@ -29,7 +29,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientTool", "ClientTool\Cl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{7CC55B35-1D0F-404E-B48D-2E2F264098CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameObject", "GameObject\GameObject.csproj", "{CAB1FBDD-98F6-44E1-A4EC-A88CABB52602}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseObject", "GameObject\BaseObject.csproj", "{CAB1FBDD-98F6-44E1-A4EC-A88CABB52602}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuidGen", "GuidGen\GuidGen.csproj", "{E46F552C-D5BB-4721-B983-06D760DA85B6}"
 EndProject
