@@ -14,7 +14,7 @@
 # else:
 #     str_states = 'DEFAULT'
 
-# #WebServer envifonment Values
+# #server envifonment Values
 # class SERVER_VALUE:
 #     SERVER_HOST = config[str_states]['SERVER_HOST']
 #     SERVER_PORT = int(config[str_states]['SERVER_PORT'])
