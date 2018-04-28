@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Client</RootNamespace>
     <AssemblyName>Client</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -40,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
+    <Compile Include="Client_HttpReq.cs" />
     <Compile Include="Client_Request.cs" />
     <Compile Include="Client_Response.cs" />
     <Compile Include="PlayerObject\PlayerData.cs" />
@@ -50,6 +53,10 @@
     <ProjectReference Include="..\GameObject\BaseObject.csproj">
       <Project>{CAB1FBDD-98F6-44E1-A4EC-A88CABB52602}</Project>
       <Name>BaseObject</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HttpConnection\HttpConnection.csproj">
+      <Project>{1a230189-cec6-43ab-ba95-d8c7f4abab9b}</Project>
+      <Name>HttpConnection</Name>
     </ProjectReference>
     <ProjectReference Include="..\Packet\Packet.csproj">
       <Project>{1198D71E-9AB4-410E-BC22-B7D4AF0E3878}</Project>

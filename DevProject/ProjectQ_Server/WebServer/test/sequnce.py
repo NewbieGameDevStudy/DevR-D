@@ -21,6 +21,7 @@ class DBConnection:
             with conn.cursor() as cursor:
                 cursor.execute(queryStr)
                 conn.commit()
+                return result
         finally:
             conn.close() 
             
@@ -30,6 +31,7 @@ class DBConnection:
             with conn.cursor() as cursor:
                 cursor.execute(queryStr)
                 conn.commit()
+                return result
         finally:
             conn.close() 
             
@@ -45,4 +47,6 @@ class DBConnection:
         
 db = DBConnection()
 
-        
+result = db.FindQuery("select iLevel, iExp, cName, iGameMoney from playerinfo where uAccountId = 10")
+db.UpdateQuery("UPDATE playerinfo SET iLevel=%d" %(88))
+print(result)

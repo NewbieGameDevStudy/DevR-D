@@ -17,6 +17,7 @@ namespace Http
         public HttpConnection(string url)
         {
             m_restClient = new RestClient(url);
+            m_restClient.CookieContainer = new System.Net.CookieContainer();
         }
 
         public void HttpConnectAsync<REQUEST, RESPONSE>(REQUEST dto, Action<RESPONSE> callback) 
