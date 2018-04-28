@@ -1,6 +1,7 @@
-from Route.PlayerInfo import Info
+from Route.PlayerInfo import Login
 from Route.PlayerInfo import RespPlayerInfo
+from flask_restful import reqparse
 
-route_dict = {
-    Info:'/playerinfo'
-    }
+route_dict = { Login:'/loginInfo' }
+
+parser = reqparse.RequestParser()

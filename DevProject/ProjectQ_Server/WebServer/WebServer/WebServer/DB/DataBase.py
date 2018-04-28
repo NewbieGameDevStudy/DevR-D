@@ -33,7 +33,7 @@ class DBConnection:
         finally:
             conn.close() 
             
-    def FindQuery(self, queryStr):
+    def _selectQuery(self, queryStr):
         try:
             conn = self._dbPool.connect()
             with conn.cursor() as cursor:
@@ -42,6 +42,20 @@ class DBConnection:
                 return result
         finally:
             conn.close() 
+            
+    def SelectQuery(self, findTable, findDataStr, matchDataStr, *outputArgs):
+        findStr = "select"
+        selectStr = ""
+        lastIdx = len(outputArgs) - 1
+        for idx, str in enumerate(outputArgs):
+            selectStr += str
+            if idx != lastIdx:
+                selectStr += ", "
+        
+        findStr = findStr + " " + selectStr + " from " + findTable + " where " + findDataStr
+        findStr = findStr + " = %s" % matchDataStr 
+        
+        return self._findQuery(findStr)
         
 db = DBConnection()
 
