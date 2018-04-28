@@ -35,6 +35,7 @@ class Login(Resource):
             print(sessionKey)
             cookie = request.cookies.get('name')
             
+        d = 0
         session['name'] = id
         s = session['name']
         playerInfo = RespPlayerInfo()    
@@ -44,7 +45,7 @@ class Login(Resource):
             playerInfo.setInfo(True, result[0], result[1], result[2], result[3])
   
         return jsonify(playerInfo.serialize())
-  
+
     def post(self):
         Route.parser.add_argument('accountId', type=int)
         args = Route.parser.parse_args()
