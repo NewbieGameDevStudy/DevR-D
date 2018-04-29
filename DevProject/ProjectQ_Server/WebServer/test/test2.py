@@ -22,19 +22,41 @@ class dictTest():
         return self.__dict__
     
     def tt(self):
-        for key in self.__dict__.values():
-            print(type(key))
+        for key, value in self.__dict__.items():
+            print(key)
+            print(value)
     
     
-dc = dictTest()
-print(dc.get())
+# dc = dictTest()
+# print(dc.get())
+# 
+# cc = 'i'
+# c = json.dumps(cc)
+# 
+# print(c)
+# d = json.dumps(dc.get())
+# 
+# print(d)
+# 
+# f = dc.tt()
 
-cc = 'i'
-c = json.dumps(cc)
+c = []
+c.append('1')
+c.append('2')
+c.append('3')
 
-print(c)
-d = json.dumps(dc.get())
+d = []
+d.append(1)
+d.append(2)
+d.append(3)
 
-print(d)
+f = dict(zip(c, 0))
 
-f = dc.tt()
+print(type(f))
+print(f)
+
+d = 'ig_dd'
+
+if 'ig' in d:
+    print('find')
+

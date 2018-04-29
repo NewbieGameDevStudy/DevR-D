@@ -15,7 +15,7 @@ class DBConnection:
         conn = pymysql.connect(host='localhost', user='root', password='1234567890', db='gamedb')
         return conn
     
-    def InsertQuery(self, queryStr):
+    def insertQuery(self, queryStr):
         try:
             conn = self._dbPool.connect()
             with conn.cursor() as cursor:
@@ -24,7 +24,7 @@ class DBConnection:
         finally:
             conn.close() 
             
-    def UpdateQuery(self, queryStr):
+    def updateQuery(self, queryStr):
         try:
             conn = self._dbPool.connect()
             with conn.cursor() as cursor:
@@ -43,7 +43,7 @@ class DBConnection:
         finally:
             conn.close() 
             
-    def SelectQuery(self, findTable, findDataStr, matchDataStr, *outputArgs):
+    def selectQuery(self, findTable, findDataStr, matchDataStr, outputArgs):
         findStr = "select"
         selectStr = ""
         lastIdx = len(outputArgs) - 1

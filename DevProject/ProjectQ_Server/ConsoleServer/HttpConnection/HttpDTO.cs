@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 namespace GameServer.Connection
 {
+    public class ResponseBase
+    {
+        public int responseCode;
+    }
+
     #region 오류 코드
     //const int ERROR_
 
@@ -16,7 +21,7 @@ namespace GameServer.Connection
         public ulong accountId;
     }
 
-    public class RespPlayerInfo
+    public class RespPlayerInfo : ResponseBase
     {
         public bool result;
         public int level;
