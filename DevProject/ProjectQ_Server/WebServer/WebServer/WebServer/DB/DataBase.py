@@ -55,7 +55,7 @@ class DBConnection:
         findStr = findStr + " " + selectStr + " from " + findTable + " where " + findDataStr
         findStr = findStr + " = %s" % matchDataStr 
         
-        return self._findQuery(findStr)
+        return self._selectQuery(findStr)
         
 db = DBConnection()
 
