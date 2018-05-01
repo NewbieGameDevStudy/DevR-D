@@ -3,16 +3,22 @@ from time import sleep
 
 class Guid(object):
     
-    def __init__(self, machiedId):
-        self.machieId = machiedId
+    def __init__(self):
+        self.machieId = 0
         self.uniqueCount = 0
+        self.milliSecond = 0
+        self.maxMiliSecond = 0
+        self.maxUniqueCount = 0
+        self.prevMilliSecond = 0
+        print(self.maxMiliSecond)
+        
+    def setGuid(self, macheidId):
+        self.machieId = macheidId
         dtobj = datetime.strptime('20.12.2016 00:00:00',
                                    '%d.%m.%Y %H:%M:%S')
         self.milliSecond = (int)(dtobj.timestamp() * 1000)
         self.maxMiliSecond = pow(2,42)-1
         self.maxUniqueCount = pow(2,14)-1
-        self.prevMilliSecond = 0
-        print(self.maxMiliSecond)
             
     def _getNowMs(self):
         nowDateStr = datetime.now().strftime('%d.%m.%Y %H:%M:%S')
