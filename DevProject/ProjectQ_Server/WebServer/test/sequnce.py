@@ -15,25 +15,27 @@ class DBConnection:
         conn = pymysql.connect(host='localhost', user='root', password='1234567890', db='gamedb')
         return conn
     
-    def _insertQuery(self, queryStr):
+    def InsertQuery(self, queryStr):
         try:
             conn = self._dbPool.connect()
             with conn.cursor() as cursor:
                 cursor.execute(queryStr)
                 conn.commit()
+                return result
         finally:
             conn.close() 
             
-    def updateQuery(self, queryStr):
+    def UpdateQuery(self, queryStr):
         try:
             conn = self._dbPool.connect()
             with conn.cursor() as cursor:
                 cursor.execute(queryStr)
                 conn.commit()
+                return result
         finally:
             conn.close() 
             
-    def _selectQuery(self, queryStr):
+    def FindQuery(self, queryStr):
         try:
             conn = self._dbPool.connect()
             with conn.cursor() as cursor:
@@ -42,25 +44,9 @@ class DBConnection:
                 return result
         finally:
             conn.close() 
-    
-    def insertQuery(self, findTable, findDataStr, matchDataStr, inputArgs):
-        insertStr = "insert into"
-        
-            
-    def selectQuery(self, findTable, findDataStr, matchDataStr, outputArgs):
-        findStr = "select"
-        selectStr = ""
-        lastIdx = len(outputArgs) - 1
-        for idx, str in enumerate(outputArgs):
-            selectStr += str
-            if idx != lastIdx:
-                selectStr += ", "
-        
-        findStr = findStr + " " + selectStr + " from " + findTable + " where " + findDataStr
-        findStr = findStr + " = %s" % matchDataStr 
-        
-        return self._selectQuery(findStr)
         
 db = DBConnection()
 
-        
+result = db.FindQuery("select iLevel, iExp, cName, iGameMoney from playerinfo where uAccountId = 10")
+db.UpdateQuery("UPDATE playerinfo SET iLevel=%d" %(88))
+print(result)

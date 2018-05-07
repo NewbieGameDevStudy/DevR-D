@@ -1,52 +1,42 @@
-from flask_restful import reqparse, Resource
-from flask import jsonify
-from AsyncDB import asyncFunc 
-  
-parser = reqparse.RequestParser()
- 
-class RespPlayerInfo(object):
- 
-    def setInfo(self, result, level, exp, name, gameMoney):
-        self.result = result
-        self.level = level
-        self.exp = exp
-        self.gameMoney = gameMoney
-        self.name = name
-  
-    def serialize(self):
-        return {
-            'result':self.result,
-            'level':self.level,
-            'exp':self.exp,
-            'gameMoney':self.gameMoney,
-            'name':self.name,
-        }
- 
-  
-class Info(Resource):
- 
+from flask_restful import Resource
+from flask import jsonify, request, session
+
+import DB
+import Route.Common
+import Util
+
+class RespPlayerInfo(Route.Common.RespBase):
+    def __init__(self):
+        Route.Common.RespBase.__init__(self)
+        self.level = 0
+        self.exp = 0
+        self.gameMoney = 0
+        self.name = ''
+
+class Login(Resource):
     def get(self):
-        parser.add_argument('accountId')
-        args = parser.parse_args()
-        id = args["accountId"]
-        query = "select iLevel, iExp, cName, iGameMoney from gamedb.playerinfo where uAccountId = %s" % (id)
-          
-        result = asyncFunc.asyncSelectMethod(query)
-  
-        playerInfo = RespPlayerInfo()    
-        if result == None:
-            playerInfo.result = False
-        else:
-            playerInfo.setInfo(True, result[0], result[1], result[2], result[3])
-  
-        return jsonify(playerInfo.serialize())
+        Route.parser.add_argument('accountId')
+        args = Route.parser.parse_args()
+        playerInfo = RespPlayerInfo()   
+                
+        if not 'accountId' in args or not args['accountId']:
+            return jsonify(playerInfo.errorToJson(Route.Define.ERROR_LOGIN_FAILED_PARAM))
+            
+        accountId = args['accountId']
+        result = DB.dbConnection.selectQuery("gamedb.account", "uAccount", str(accountId), playerInfo.convertDBField())
+        if not result:
+            return jsonify(playerInfo.errorToJson(Route.Define.ERROR_LOGIN_NOT_FOUND_ACCOUNT))
+        
+        return jsonify(playerInfo.successToJson(result))
   
     def post(self):
-        parser.add_argument('accountId', type=int)
-        args = parser.parse_args()
-        # id = args["accountId"]
-        # query = 'select NVL(level, -1), NVL(exp, -1) from playerinfo where uAccountId = %d' % id
-        # result = dbConnection.select_query(query)
+        Route.parser.add_argument('accountId', type=int)
+        args = Route.parser.parse_args()
+        
+        for count in range(0, 1000):
+            sessionKey = Util.guidInst.createGuid()
+            dd = sessionKey
+            session[str(sessionKey)] = 10
+            
         return jsonify(1)
-
 
