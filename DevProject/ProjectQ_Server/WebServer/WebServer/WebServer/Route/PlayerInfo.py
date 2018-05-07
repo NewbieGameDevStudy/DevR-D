@@ -4,8 +4,9 @@ from flask import jsonify, request, session
 import DB
 import Route.Common
 import Util
+from Route.Common import RespBase
 
-class RespPlayerInfo(Route.Common.RespBase):
+class PlayerInfo(Route.Common.RespBase):
     def __init__(self):
         Route.Common.RespBase.__init__(self)
         self.level = 0
@@ -17,7 +18,7 @@ class Login(Resource):
     def get(self):
         Route.parser.add_argument('accountId')
         args = Route.parser.parse_args()
-        playerInfo = RespPlayerInfo()   
+        playerInfo = PlayerInfo()   
                 
         if not 'accountId' in args or not args['accountId']:
             return jsonify(playerInfo.errorToJson(Route.Define.ERROR_LOGIN_FAILED_PARAM))
@@ -27,16 +28,20 @@ class Login(Resource):
         if not result:
             return jsonify(playerInfo.errorToJson(Route.Define.ERROR_LOGIN_NOT_FOUND_ACCOUNT))
         
-        return jsonify(playerInfo.successToJson(result))
+        resultJson = playerInfo.successToJson(result)
+        session[str(resultJson['accountId'])] = resultJson['accountId']
+        return jsonify(resultJson)
   
-    def post(self):
-        Route.parser.add_argument('accountId', type=int)
-        args = Route.parser.parse_args()
+    def put(self):
+        accountId = Util.guidInst.createGuid()
+        session[str(accountId)] = accountId;
         
-        for count in range(0, 1000):
-            sessionKey = Util.guidInst.createGuid()
-            dd = sessionKey
-            session[str(sessionKey)] = 10
-            
-        return jsonify(1)
-
+        # 실제 유저객체를 관리하는 것을 만들어야합니다.
+        playerinfo = PlayerInfo()
+        
+        result = DB.dbConnection.insertQuery("gamedb.account", playerinfo.convertDBField())
+        
+        if not result:
+            return jsonify(RespBase.errorResponse(Route.Define.ERROR_CREATE_NOT_LOGIN))
+                    
+        return jsonify(RespBase.successResponse(Route.Define.SUCCESS_CREATE_LOGIN, {'accountId':accountId}))

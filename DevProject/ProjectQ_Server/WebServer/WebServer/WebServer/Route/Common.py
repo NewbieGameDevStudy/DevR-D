@@ -27,7 +27,7 @@ class RespBase(object):
         jsonResult = {}
         if not len(self.ig_responseCache) == len(resultList):
             jsonResult['responseCode'] = responseCode
-            return
+            return jsonResult
         
         jsonResult = dict(zip(self.ig_responseCache, resultList))
         jsonResult['responseCode'] = responseCode
@@ -35,3 +35,17 @@ class RespBase(object):
     
     def errorToJson(self, responseCode):
         return {'responseCode':responseCode}
+    
+    @staticmethod
+    def errorResponse(responseCode):
+        return {'responseCode':responseCode}
+    
+    @staticmethod
+    def successResponse(responseCode, respDict): 
+        dictResp = {}
+        if not respDict is None:
+            for resp in respDict:
+                dictResp[resp] = respDict[resp]
+        
+        dictResp['responseCode'] = responseCode
+        return dictResp
