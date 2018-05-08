@@ -43,30 +43,19 @@ class DBConnection:
         finally:
             conn.close() 
     
-    def insertQuery(self, inputArgs):
-        insertStr = "insert into"
+    def insertQuery(self, insertTable, insertQueryStr, insertValues):
         inputStr = ""
-        lastIdx = len(inputArgs) - 1
-        for idx, str in enumerate(inputArgs):
-            inputStr += str
+        lastIdx = len(insertValues) - 1
+        for idx, data in enumerate(insertValues):
+            inputStr += str(data)
             if idx != lastIdx:
                 inputStr += ", "
-        
-        findStr = findStr + " " + selectStr + " from " + findTable + " where " + findDataStr
-        findStr = findStr + " = %s" % matchDataStr 
+       
+        insertStr = "insert into %s (%s) value (%s)" % (insertTable, insertQueryStr, inputStr)
+        return self._insertQuery(insertStr)
             
-    def selectQuery(self, findTable, findDataStr, matchDataStr, outputArgs):
-        findStr = "select"
-        selectStr = ""
-        lastIdx = len(outputArgs) - 1
-        for idx, str in enumerate(outputArgs):
-            selectStr += str
-            if idx != lastIdx:
-                selectStr += ", "
-        
-        findStr = findStr + " " + selectStr + " from " + findTable + " where " + findDataStr
-        findStr = findStr + " = %s" % matchDataStr 
-        
+    def selectQuery(self, findTable, findDataStr, matchDataStr, selectQueryStr):    
+        findStr = "select %s from %s where %s = %s" % (selectQueryStr, findTable, findDataStr, matchDataStr)        
         return self._selectQuery(findStr)
         
 db = DBConnection()

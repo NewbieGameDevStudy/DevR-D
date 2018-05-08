@@ -25,8 +25,17 @@ DROP TABLE IF EXISTS `account`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `account` (
-  `uAccountId` bigint(8) NOT NULL,
-  PRIMARY KEY (`uAccountId`)
+  `iAccountId` bigint(8) unsigned NOT NULL,
+  `cName` varchar(45) NOT NULL,
+  `iLevel` tinyint(1) NOT NULL DEFAULT '1',
+  `iExp` int(10) unsigned NOT NULL DEFAULT '0',
+  `iGameMoney` int(10) unsigned NOT NULL DEFAULT '0',
+  `iavatarType` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `ibestRecord` int(10) unsigned NOT NULL DEFAULT '0',
+  `iwinRecord` int(10) unsigned NOT NULL DEFAULT '0',
+  `icontinueRecord` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`iAccountId`),
+  UNIQUE KEY `uAccount_UNIQUE` (`iAccountId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -36,38 +45,9 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
+INSERT INTO `account` VALUES (100,'A',1,11,111,0,0,0,0),(183033101549568769,'abb',0,0,0,2,0,0,0);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `playerinfo`
---
-
-DROP TABLE IF EXISTS `playerinfo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `playerinfo` (
-  `uAccountId` bigint(8) NOT NULL,
-  `iLevel` tinyint(1) NOT NULL DEFAULT '1',
-  `iExp` int(11) NOT NULL DEFAULT '1',
-  `cName` varchar(45) NOT NULL,
-  PRIMARY KEY (`uAccountId`),
-  CONSTRAINT `uAccountId` FOREIGN KEY (`uAccountId`) REFERENCES `account` (`uAccountId`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `playerinfo`
---
-
-LOCK TABLES `playerinfo` WRITE;
-/*!40000 ALTER TABLE `playerinfo` DISABLE KEYS */;
-/*!40000 ALTER TABLE `playerinfo` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping routines for database 'gamedb'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -78,4 +58,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-02-21  0:30:44
+-- Dump completed on 2018-05-09  1:53:43

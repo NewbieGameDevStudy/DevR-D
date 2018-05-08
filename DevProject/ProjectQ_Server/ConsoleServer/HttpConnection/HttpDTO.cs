@@ -24,8 +24,7 @@ namespace GameServer.Connection
         #region Login 프로토콜
         //ERROR
         public const int ERROR_LOGIN_NOT_FOUND_ACCOUNT = 101;
-        public const int ERROR_LOGIN_FAILED_PARAM = 102;
-        public const int ERROR_CREATE_NOT_LOGIN = 103;
+        public const int ERROR_CREATE_LOGIN_PARAM = 102;
 
         //SUCCESS
         public const int SUCCESS_CREATE_LOGIN = 2001;
