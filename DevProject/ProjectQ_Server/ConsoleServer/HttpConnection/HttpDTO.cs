@@ -4,24 +4,35 @@ using System.Collections.Generic;
 
 namespace GameServer.Connection
 {
-    public class Protocol
+    #region 공용 프로토콜 정의
+    public class ResponseBase
     {
-        #region 공용 프로토콜 정의
-        public class ResponseBase
-        {
-            public int responseCode;
-        }
+        public int responseCode;
+    }
 
+    [HttpConnect(Method.GET, "/loginInfo")]
+    public class ReqPlayerInfo
+    {
+        public ulong accountId;
+    }
+
+    public class RespPlayerInfo : ResponseBase
+    {
+        public bool result;
+        public int level;
+        public int exp;
+        public int gameMoney;
+        public string name;
+    }
+    #endregion
+
+    public static class ResponseCode
+    {
         #region 응답값
         public const int RESPONSE_OK = 201;
         #endregion
 
-        #endregion
-
-
-        #region 컨텐츠별 프로토콜
-
-        #region Login 프로토콜
+        #region Login 응답값
         //ERROR
         public const int ERROR_LOGIN_NOT_FOUND_ACCOUNT = 101;
         public const int ERROR_LOGIN_FAILED_PARAM = 102;
@@ -29,22 +40,6 @@ namespace GameServer.Connection
 
         //SUCCESS
         public const int SUCCESS_CREATE_LOGIN = 2001;
-
-        [HttpConnect(Method.GET, "/loginInfo")]
-        public class ReqPlayerInfo
-        {
-            public ulong accountId;
-        }
-
-        public class RespPlayerInfo : ResponseBase
-        {
-            public bool result;
-            public int level;
-            public int exp;
-            public int gameMoney;
-            public string name;
-        }
-        #endregion
 
         #endregion
     }
