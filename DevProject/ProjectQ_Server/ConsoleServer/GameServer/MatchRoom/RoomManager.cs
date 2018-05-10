@@ -22,6 +22,10 @@ namespace GameServer.MatchRoom
         Dictionary<RoomType, List<Room>> m_roomList = new Dictionary<RoomType, List<Room>>();
         Queue<QueueData> m_enterPlayerQueue = new Queue<QueueData>();
 
+        // 인원 감소 주기, 초기 필요 인원.
+        const double WaitTimeInterval = 5;
+        const byte NeedUserCount = 100;
+
         /// <summary>
         /// 아래 필드들은 모두 테스트용
         /// </summary>
@@ -35,6 +39,17 @@ namespace GameServer.MatchRoom
 
         Queue<MoveData> m_moveQueue = new Queue<MoveData>();
 
+        public RoomManager()
+        {
+            // 방 리스트는 어차피 타입의 개수만큼 있다. - 미리 만들어 둔다...
+            foreach (RoomType eType in Enum.GetValues(typeof(RoomType)))
+            {
+                List<Room> TempRoomList = new List<Room>();
+                m_roomList.Add(eType, TempRoomList);
+            }
+        }
+
+
         public void AddMoveInput(MoveData moveData)
         {
             lock (m_moveQueue) {
@@ -42,7 +57,7 @@ namespace GameServer.MatchRoom
             }
         }
         
-        public void EnterRoom(RoomType type, PlayerObject player)
+        public void EnterWaitRoom(RoomType type, PlayerObject player)
         {
             m_enterPlayerQueue.Enqueue(new QueueData {
                 player = player,
@@ -50,6 +65,37 @@ namespace GameServer.MatchRoom
             });
 
             testCount++;
+        }
+
+        public void FindMatchingRoom()
+        {
+            if (m_enterPlayerQueue.Count == 0)
+                return;
+
+            QueueData playerQueue = m_enterPlayerQueue.Dequeue();
+            List<Room> TempRoomList = m_roomList[playerQueue.type].FindAll(room => room.CurrentRoomState.Equals(Room.RoomState.ROOM_WAITING));
+
+            if (TempRoomList.Count == 0)
+            {
+                // 대기중인 방이 없을 때
+                MakeNewRoom(ref playerQueue);
+                return;
+            }
+
+            TempRoomList.Sort(delegate (Room a, Room b)
+            {
+                return a.CurrentUserCount.CompareTo(b.CurrentUserCount);
+            });
+
+            TempRoomList[0].EnterRoom(playerQueue.player);
+            Console.WriteLine("RoomEnter {0}", playerQueue.type);
+        }
+
+        public void MakeNewRoom(ref QueueData playerQueue)
+        {
+            Room TempRoom = new Room(WaitTimeInterval, NeedUserCount);
+            TempRoom.EnterRoom(playerQueue.player);
+            m_roomList[playerQueue.type].Add(TempRoom);
         }
 
         void BroadCastRoomInObjectInfo()
@@ -85,6 +131,9 @@ namespace GameServer.MatchRoom
 
         public void Update(double deltaTime)
         {
+            FindMatchingRoom();
+
+            // 
             foreach (var roomTypes in m_roomList) {
                 foreach (var room in roomTypes.Value) {
                     room.Update(deltaTime);

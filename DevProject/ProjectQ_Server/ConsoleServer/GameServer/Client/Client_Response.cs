@@ -7,17 +7,17 @@ namespace GameServer.ServerClient
     {
         void OnReceivePacket(PK_CS_ENTERROOM pks)
         {
-            switch (pks.type) {
+            switch (pks.type) { 
                 case PK_CS_ENTERROOM.RoomType.COMMON_SENSE:
-                    m_baseServer.RoomManager.EnterRoom(MatchRoom.RoomManager.RoomType.COMMON_SENSE, Player);
+                    m_baseServer.RoomManager.EnterWaitRoom(MatchRoom.RoomManager.RoomType.COMMON_SENSE, Player);
                     break;
 
                 case PK_CS_ENTERROOM.RoomType.GAME:
-                    m_baseServer.RoomManager.EnterRoom(MatchRoom.RoomManager.RoomType.GAME, Player);
+                    m_baseServer.RoomManager.EnterWaitRoom(MatchRoom.RoomManager.RoomType.GAME, Player);
                     break;
 
                 case PK_CS_ENTERROOM.RoomType.SOCIAL:
-                    m_baseServer.RoomManager.EnterRoom(MatchRoom.RoomManager.RoomType.SOCIAL, Player);
+                    m_baseServer.RoomManager.EnterWaitRoom(MatchRoom.RoomManager.RoomType.SOCIAL, Player);
                     break;
             }
         }
