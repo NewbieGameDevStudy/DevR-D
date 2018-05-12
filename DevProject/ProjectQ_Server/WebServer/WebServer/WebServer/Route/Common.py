@@ -61,21 +61,20 @@ class RespHandler(object):
     def __init__(self):
         self.collectReponse = {}
     
-    def GetResponse(self, responseKey, responseDatas):
+    def getResponse(self, responseCode, responseKey, responseDatas):
         respDict = {}
         if responseKey == "base":
             respDict = responseDatas
             return respDict
         
+        respDict['responseCode'] = responseCode
         respDict[responseKey] = responseDatas
         return respDict
     
-    @staticmethod
-    def errorResponse(responseCode):
+    def errorResponse(self, responseCode):
         return {'responseCode':responseCode}
     
-    @staticmethod
-    def successResponse(responseCode, respDict): 
+    def customeResponse(self, responseCode, respDict): 
         dictResp = {}
         if not respDict is None:
             for resp in respDict:

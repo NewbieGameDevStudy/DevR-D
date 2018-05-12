@@ -16,14 +16,10 @@ class PlayerInfo(Common.ObjRespBase):
         self.db_exp = 0
         self.db_gameMoney = 0
         self.db_name = ''
-        self.db_avatarType = 0
+        self.db_portrait = 0
         self.db_bestRecord = 0
         self.db_winRecord = 0
         self.db_continueRecord = 0
-        self.testDict = {"a":1,"b":2, "c":3}
-        self.testList = [1,2,3]
-        self.a = [{"a":1, "b":[1,2,3]}, {"a":2, "b":[3,2,1]}]
-        self.b = {"a":1, "b":[1,2,3]}
         
         super(PlayerInfo, self).initFieldDBQueryCache()
 
@@ -42,26 +38,26 @@ class Login(Resource):
         except:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_LOGIN_NOT_FOUND_ACCOUNT))
         
-        return jsonify(Common.respHandler.GetResponse("base", playerInfo.getConvertToResponse(result)))
+        return jsonify(Common.respHandler.getResponse("base", Route.Define.OK_LOGIN_CONNECT, playerInfo.getConvertToResponse(result)))
                 
     def put(self):
         Route.parser.add_argument("nickName")
-        Route.parser.add_argument("avatarType")
+        Route.parser.add_argument("portrait")
         args = Route.parser.parse_args()
         
         if not "nickName" in args or not args["nickName"]:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_LOGIN_PARAM))
         
-        if not "avatarType" in args or not args["avatarType"]:
+        if not "portrait" in args or not args["portrait"]:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_LOGIN_PARAM))
         
         nickName = args["nickName"]
-        avatarType = args["avatarType"]
+        portrait = args["portrait"]
         
         nickNameCheck = DB.dbConnection.customSelectQuery("select cname from gamedb.account where cname = %s" % nickName)
         
-        if not nickName is None:
-            return jsonify(Common.respHandler.errorResponse(Route.Define.ALREADY_CREATE_NICKNAME))
+        if not nickNameCheck is None:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_ALREADY_CREATE_NICKNAME))
         
         accountId = Util.guidInst.createGuid()
         
@@ -71,9 +67,9 @@ class Login(Resource):
         playerinfo = PlayerInfo()
         
         try:
-            result = DB.dbConnection.insertQuery("gamedb.account", playerinfo.ig_queryStr, playerinfo.getRenewFieldDBCache({"accountId":accountId, "name":nickName, "avatarType":avatarType}))
+            result = DB.dbConnection.insertQuery("gamedb.account", playerinfo.ig_queryStr, playerinfo.getRenewFieldDBCache({"accountId":accountId, "name":nickName, "portrait":portrait}))
         except:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_NOT_LOGIN))
         
         playerinfo.getConvertToResponse(result)
-        return jsonify(Common.respHandler.successResponse(Route.Define.SUCCESS_CREATE_LOGIN, {'accountId':accountId}))
+        return jsonify(Common.respHandler.customeResponse(Route.Define.OK_CREATE_LOGIN, {'accountId':accountId}))
