@@ -16,13 +16,26 @@ namespace GameServer.Connection
         public ulong accountId;
     }
 
+    public class A {
+        public int a;
+        public List<int> b;
+    }
     public class RespPlayerInfo : ResponseBase
     {
+        public int accountId;
+        public int avatarType;
+        public int bestRecord;
+        public int winRecord;
+        public Dictionary<string, int> testDict;
+        public List<int> testList;
+        public int continueRecord;
         public bool result;
         public int level;
         public int exp;
         public int gameMoney;
         public string name;
+        public A[] a;
+        public A b;
     }
     #endregion
 

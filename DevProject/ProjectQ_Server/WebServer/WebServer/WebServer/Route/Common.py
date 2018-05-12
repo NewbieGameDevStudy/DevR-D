@@ -1,5 +1,6 @@
 from linecache import cache
 import Route.Define
+import json
 
 class RespBase(object):
     def __init__(self):
@@ -8,6 +9,8 @@ class RespBase(object):
         self.ig_responseCache = []
         self.ig_fieldValueCache = {}
         self.ig_queryStr = ""
+        
+        self.ig_resp = {}
         
     #db convert fields
     def convertDBField(self):
@@ -19,9 +22,11 @@ class RespBase(object):
                 self.ig_dbCache.append('c%s' % key)
             elif convertType.__name__ == 'int':
                 self.ig_dbCache.append('i%s' % key)
-                       
+                                 
             self.ig_responseCache.append(key)
             self.ig_fieldValueCache[key] = value
+              
+            self.ig_resp[key] = value
         
         lastIdx = len(self.ig_dbCache) - 1
         for idx, str in enumerate(self.ig_dbCache):
@@ -39,15 +44,24 @@ class RespBase(object):
         
         return self.ig_fieldValueCache.values()
     
-    def successToJson(self, resultList, responseCode = Route.Define.RESPONSE_OK):
-        jsonResult = {}
-        if not len(self.ig_responseCache) == len(resultList):
-            jsonResult['responseCode'] = responseCode
-            return jsonResult
-        
-        jsonResult = dict(zip(self.ig_responseCache, resultList))
-        jsonResult['responseCode'] = responseCode
-        return jsonResult
+#     def successToJson(self, resultList, responseCode = Route.Define.RESPONSE_OK):
+#         jsonResult = {}
+#         if not len(self.ig_responseCache) == len(resultList):
+#             jsonResult['responseCode'] = responseCode
+#             return jsonResult
+#         
+#         jsonResult = dict(zip(self.ig_responseCache, resultList))
+#         jsonResult['responseCode'] = responseCode
+#         return jsonResult
+    
+    def dbFieldToJson(self, resultList, responseCode = Route.Define.RESPONSE_OK):
+        convertList = list(resultList)
+        for key in self.ig_resp.keys():
+            if not convertList:
+                break
+            self.ig_resp[key] = convertList.pop(0)
+            
+        return self.ig_resp
     
     def errorToJson(self, responseCode):
         return {'responseCode':responseCode}
@@ -65,3 +79,5 @@ class RespBase(object):
         
         dictResp['responseCode'] = responseCode
         return dictResp
+
+        

@@ -19,6 +19,10 @@ class PlayerInfo(Route.Common.RespBase):
         self.bestRecord = 0
         self.winRecord = 0
         self.continueRecord = 0
+        self.testDict = {"a":1,"b":2, "c":3}
+        self.testList = [1,2,3]
+        self.a = [{"a":1, "b":[1,2,3]}, {"a":2, "b":[3,2,1]}]
+        self.b = {"a":1, "b":[1,2,3]}
         
         super(PlayerInfo, self).convertDBField()
 
@@ -36,7 +40,7 @@ class Login(Resource):
         if not result:
             return jsonify(playerInfo.errorToJson(Route.Define.ERROR_LOGIN_NOT_FOUND_ACCOUNT))
         
-        return jsonify(playerInfo.successToJson(result))
+        return jsonify(playerInfo.dbFieldToJson(result))
   
     def put(self):
         Route.parser.add_argument("nickName")
