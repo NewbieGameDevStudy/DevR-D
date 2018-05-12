@@ -9,10 +9,10 @@ class QueryType(enum.Enum):
     
 class DBConnection:
     def __init__(self):
-        self._dbPool = pool.QueuePool(self._getconn, max_overflow=20, pool_size=10)
+        self._dbPool = pool.QueuePool(self._getconn, max_overflow=30, pool_size=30)
          
     def _getconn(self):
-        conn = pymysql.connect(host='localhost', user='root', password='1234567890', db='gamedb')
+        conn = pymysql.connect(host="localhost", user="root", password="1234567890", db="gamedb")
         return conn
     
     def _insertQuery(self, queryStr):
