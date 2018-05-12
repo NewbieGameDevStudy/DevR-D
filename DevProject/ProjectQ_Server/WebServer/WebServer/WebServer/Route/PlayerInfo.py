@@ -38,20 +38,20 @@ class Login(Resource):
         except:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_LOGIN_NOT_FOUND_ACCOUNT))
         
-        return jsonify(Common.respHandler.getResponse("base", Route.Define.OK_LOGIN_CONNECT, playerInfo.getConvertToResponse(result)))
+        return jsonify(Common.respHandler.getResponse("base", playerInfo.getConvertToResponse(result, Route.Define.OK_LOGIN_CONNECT)))
                 
     def put(self):
-        Route.parser.add_argument("nickName")
+        Route.parser.add_argument("nickname")
         Route.parser.add_argument("portrait")
         args = Route.parser.parse_args()
         
-        if not "nickName" in args or not args["nickName"]:
+        if not "nickname" in args or not args["nickname"]:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_LOGIN_PARAM))
         
         if not "portrait" in args or not args["portrait"]:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_LOGIN_PARAM))
         
-        nickName = args["nickName"]
+        nickName = args["nickname"]
         portrait = args["portrait"]
         
         nickNameCheck = DB.dbConnection.customSelectQuery("select cname from gamedb.account where cname = %s" % nickName)

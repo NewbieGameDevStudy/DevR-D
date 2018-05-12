@@ -6,4 +6,4 @@ Created on 2018. 5. 13.
 
 class Player(object):
     def __init__(self):
-        
+        self.

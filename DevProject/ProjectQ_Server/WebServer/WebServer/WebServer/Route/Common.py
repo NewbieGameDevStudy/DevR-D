@@ -46,7 +46,7 @@ class ObjRespBase(object):
         
         return self.ig_fieldValueCache.values()
     
-    def getConvertToResponse(self, resultList, responseCode = Route.Define.RESPONSE_OK):
+    def getConvertToResponse(self, resultList, responseCode):
         convertList = list(resultList)
         for key in self.ig_resp.keys():
             if not convertList:
@@ -61,13 +61,12 @@ class RespHandler(object):
     def __init__(self):
         self.collectReponse = {}
     
-    def getResponse(self, responseCode, responseKey, responseDatas):
+    def getResponse(self, responseKey, responseDatas):
         respDict = {}
         if responseKey == "base":
             respDict = responseDatas
             return respDict
         
-        respDict['responseCode'] = responseCode
         respDict[responseKey] = responseDatas
         return respDict
     
