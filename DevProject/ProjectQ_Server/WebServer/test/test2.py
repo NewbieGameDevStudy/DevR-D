@@ -40,23 +40,33 @@ class dictTest():
 # 
 # f = dc.tt()
 
-c = []
-c.append('1')
-c.append('2')
-c.append('3')
+# c = []
+# c.append('1')
+# c.append('2')
+# c.append('3')
+# 
+# d = []
+# d.append(1)
+# d.append(2)
+# d.append(3)
+# 
+# f = dict(zip(c, 0))
+# 
+# print(type(f))
+# print(f)
+# 
+# d = 'ig_dd'
+# 
+# if 'ig' in d:
+#     print('find')
 
-d = []
-d.append(1)
-d.append(2)
-d.append(3)
+d = [183033101549568769, 0, 0, 0, 'abb', 2, 0, 0]
 
-f = dict(zip(c, 0))
+df = d.pop(0)
 
-print(type(f))
-print(f)
+print(df)
 
-d = 'ig_dd'
+df = d.pop(0)
 
-if 'ig' in d:
-    print('find')
-
+print(df)
+print(d)

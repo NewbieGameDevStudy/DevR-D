@@ -9,10 +9,10 @@ class QueryType(enum.Enum):
     
 class DBConnection:
     def __init__(self):
-        self._dbPool = pool.QueuePool(self._getconn, max_overflow=20, pool_size=10)
+        self._dbPool = pool.QueuePool(self._getconn, max_overflow=30, pool_size=30)
          
     def _getconn(self):
-        conn = pymysql.connect(host='localhost', user='root', password='1234567890', db='gamedb')
+        conn = pymysql.connect(host="localhost", user="root", password="1234567890", db="gamedb")
         return conn
     
     def _insertQuery(self, queryStr):
@@ -43,31 +43,26 @@ class DBConnection:
         finally:
             conn.close() 
     
-    def insertQuery(self, inputArgs):
-        insertStr = "insert into"
+    def insertQuery(self, insertTable, insertQueryStr, insertValues):
         inputStr = ""
-        lastIdx = len(inputArgs) - 1
-        for idx, str in enumerate(inputArgs):
-            inputStr += str
+        lastIdx = len(insertValues) - 1
+        for idx, data in enumerate(insertValues):
+            inputStr += str(data)
             if idx != lastIdx:
                 inputStr += ", "
-        
-        findStr = findStr + " " + selectStr + " from " + findTable + " where " + findDataStr
-        findStr = findStr + " = %s" % matchDataStr 
+       
+        insertStr = "insert into %s (%s) value (%s)" % (insertTable, insertQueryStr, inputStr)
+        return self._insertQuery(insertStr)
             
-    def selectQuery(self, findTable, findDataStr, matchDataStr, outputArgs):
-        findStr = "select"
-        selectStr = ""
-        lastIdx = len(outputArgs) - 1
-        for idx, str in enumerate(outputArgs):
-            selectStr += str
-            if idx != lastIdx:
-                selectStr += ", "
-        
-        findStr = findStr + " " + selectStr + " from " + findTable + " where " + findDataStr
-        findStr = findStr + " = %s" % matchDataStr 
-        
+    def selectQuery(self, table, matchDataStr, matchInDataStr, selectQueryStr):    
+        findStr = "select %s from %s where %s = %s" % (selectQueryStr, table, matchDataStr, matchInDataStr)        
         return self._selectQuery(findStr)
+    
+    def customSelectQuery(self, queryStr):
+        return self._selectQuery(queryStr)
+    
+    def customInsertQuery(self, queryStr):
+        return self._insertQuery(queryStr)
         
 db = DBConnection()
 

@@ -1,40 +1,74 @@
 from linecache import cache
 import Route.Define
+import json
 
-class RespBase(object):
+class ObjRespBase(object):
     def __init__(self):
         self.responseCode = 0
         self.ig_dbCache = []
         self.ig_responseCache = []
-                
-    #db convert fields
-    def convertDBField(self):
-        if self.ig_dbCache:
-            return self.ig_dbCache
+        self.ig_fieldValueCache = {}
+        self.ig_queryStr = ""
+        
+        self.ig_resp = {}
+        
+    def initFieldDBQueryCache(self):
         for key, value in self.__dict__.items():
             if 'ig' in key or key == 'responseCode':
                 continue
-            if type(value).__name__ == 'str':
-                self.ig_dbCache.append('c%s' % key)
-            elif type(value).__name__ == 'int':
-                self.ig_dbCache.append('i%s' % key)
-                
-            self.ig_responseCache.append(key)
-                
-        return self.ig_dbCache  
-    
-    def successToJson(self, resultList, responseCode = Route.Define.RESPONSE_OK):
-        jsonResult = {}
-        if not len(self.ig_responseCache) == len(resultList):
-            jsonResult['responseCode'] = responseCode
-            return jsonResult
+            
+            if 'db_' in key:
+                convertType = type(value)
+                convertStr = key[3:]
+                if convertType.__name__ == 'str':
+                    self.ig_dbCache.append('c%s' % convertStr)
+                elif convertType.__name__ == 'int':
+                    self.ig_dbCache.append('i%s' % convertStr)
+                                     
+                self.ig_responseCache.append(convertStr)
+                self.ig_fieldValueCache[convertStr] = value
+
+            self.ig_resp[key] = value
         
-        jsonResult = dict(zip(self.ig_responseCache, resultList))
-        jsonResult['responseCode'] = responseCode
-        return jsonResult
+        lastIdx = len(self.ig_dbCache) - 1
+        for idx, str in enumerate(self.ig_dbCache):
+            self.ig_queryStr += str
+            if idx != lastIdx:
+                self.ig_queryStr += ", "
     
-    def errorToJson(self, responseCode):
-        return {'responseCode':responseCode}
+    def getRenewFieldDBCache(self, fieldChangeDict = None):       
+        if fieldChangeDict is None:
+            return self.ig_fieldValueCache.values()
+        
+        for key, value in fieldChangeDict.items():
+            if key in self.ig_fieldValueCache:
+                self.ig_fieldValueCache[key] = value
+        
+        return self.ig_fieldValueCache.values()
+    
+    def getConvertToResponse(self, resultList, responseCode = Route.Define.RESPONSE_OK):
+        convertList = list(resultList)
+        for key in self.ig_resp.keys():
+            if not convertList:
+                break
+            self.ig_resp[key] = convertList.pop(0)
+            
+        return self.ig_resp
+    
+    
+class RespHandler(object):
+    
+    def __init__(self):
+        self.collectReponse = {}
+    
+    def GetResponse(self, responseKey, responseDatas):
+        respDict = {}
+        if responseKey == "base":
+            respDict = responseDatas
+            return respDict
+        
+        respDict[responseKey] = responseDatas
+        return respDict
     
     @staticmethod
     def errorResponse(responseCode):
@@ -49,3 +83,6 @@ class RespBase(object):
         
         dictResp['responseCode'] = responseCode
         return dictResp
+
+respHandler = RespHandler()
+        
