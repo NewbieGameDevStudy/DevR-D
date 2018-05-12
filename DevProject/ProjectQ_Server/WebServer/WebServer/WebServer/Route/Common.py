@@ -27,8 +27,11 @@ class ObjRespBase(object):
                                      
                 self.ig_responseCache.append(convertStr)
                 self.ig_fieldValueCache[convertStr] = value
-
-            self.ig_resp[key] = value
+                
+                dbKey = key[3:]
+                self.ig_resp[dbKey] = value
+            else:                  
+                self.ig_resp[key] = value
         
         lastIdx = len(self.ig_dbCache) - 1
         for idx, str in enumerate(self.ig_dbCache):
