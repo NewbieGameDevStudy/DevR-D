@@ -72,5 +72,4 @@ class Login(Resource):
         except:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_NOT_LOGIN))
         
-        playerinfo.getConvertToResponse(result)
         return jsonify(Common.respHandler.customeResponse(Route.Define.OK_CREATE_LOGIN, {'accountId':accountId}))
