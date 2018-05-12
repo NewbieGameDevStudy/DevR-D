@@ -72,32 +72,32 @@ namespace ClientTool
 
         public void TestSession(object sender, EventArgs e)
         {
-            Random r = new Random();
-            id = (ulong)r.Next(0, 100);
-            var playerInfo = new ReqPlayerInfo {
-                accountId = (ulong)id,
-            };
+            //Random r = new Random();
+            //id = (ulong)r.Next(0, 100);
+            //var playerInfo = new ReqPlayerInfo {
+            //    accountId = (ulong)id,
+            //};
 
-            playerInfo.accountId = id;
-            client.HttpConnect();
-            client.HttpConnection.HttpConnectAsync(playerInfo, (RespPlayerInfo result) => {
-                if (result == null)
-                    return;
+            //playerInfo.accountId = id;
+            //client.HttpConnect();
+            //client.HttpConnection.HttpConnectAsync(playerInfo, (RespPlayerInfo result) => {
+            //    if (result == null)
+            //        return;
 
-            });
+            //});
         }
 
         public void TestSession2(object sender, EventArgs e)
         {
-            var playerInfo = new ReqPlayerInfo {
-                accountId = id,
-            };
+            //var playerInfo = new ReqPlayerInfo {
+            //    accountId = id,
+            //};
 
-            client.HttpConnection.HttpConnectAsync(playerInfo, (RespPlayerInfo result) => {
-                if (result == null)
-                    return;
+            //client.HttpConnection.HttpConnectAsync(playerInfo, (RespPlayerInfo result) => {
+            //    if (result == null)
+            //        return;
 
-            });
+            //});
         }
 
         public void Button_RoomEnter(object sender, RoutedEventArgs e)

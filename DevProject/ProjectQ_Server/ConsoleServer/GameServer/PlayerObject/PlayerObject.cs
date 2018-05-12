@@ -30,25 +30,25 @@ namespace GameServer.Player
 
         public void LoadPlayerInfo()
         {
-            var playerInfo = new ReqPlayerInfo {
-                accountId = 100,
-            };
+            //var playerInfo = new ReqPlayerInfo {
+            //    accountId = 100,
+            //};
 
-            Client.HttpConnection.HttpConnectAsync(playerInfo, (RespPlayerInfo result) => {
-                if (result == null)
-                    return;
+            //Client.HttpConnection.HttpConnectAsync(playerInfo, (RespPlayerInfo result) => {
+            //    if (result == null)
+            //        return;
 
-                PlayerData = new PlayerData {
-                    Exp = result.exp,
-                    Level = result.level,
-                };
+            //    PlayerData = new PlayerData {
+            //        Exp = result.exp,
+            //        Level = result.level,
+            //    };
 
-                Client.SendPacket(new PK_SC_PLAYERINFO_LOAD {
-                    handle = Handle,
-                    Exp = result.exp,
-                    Level = result.level,
-                });
-            });
+            //    Client.SendPacket(new PK_SC_PLAYERINFO_LOAD {
+            //        handle = Handle,
+            //        Exp = result.exp,
+            //        Level = result.level,
+            //    });
+            //});
         }
 
         public void Update(double deltaTime)
