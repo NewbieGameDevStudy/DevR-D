@@ -54,9 +54,15 @@ class DBConnection:
         insertStr = "insert into %s (%s) value (%s)" % (insertTable, insertQueryStr, inputStr)
         return self._insertQuery(insertStr)
             
-    def selectQuery(self, findTable, matchDataStr, matchInDataStr, selectQueryStr):    
-        findStr = "select %s from %s where %s = %s" % (selectQueryStr, findTable, matchDataStr, matchInDataStr)        
+    def selectQuery(self, table, matchDataStr, matchInDataStr, selectQueryStr):    
+        findStr = "select %s from %s where %s = %s" % (selectQueryStr, table, matchDataStr, matchInDataStr)        
         return self._selectQuery(findStr)
+    
+    def customSelectQuery(self, queryStr):
+        return self._selectQuery(queryStr)
+    
+    def customInsertQuery(self, queryStr):
+        return self._insertQuery(queryStr)
         
 db = DBConnection()
 
