@@ -52,9 +52,10 @@ class Login(Resource):
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_LOGIN_PARAM))
         
         nickName = args["nickname"]
+        nickName = "\"%s\"" % nickName
         portrait = args["portrait"]
         
-        nickNameCheck = DB.dbConnection.customSelectQuery("select cname from gamedb.account where cname = \"%s\"" % str(nickName))
+        nickNameCheck = DB.dbConnection.customSelectQuery("select cname from gamedb.account where cname = %s" % nickName)
         
         if not nickNameCheck is None:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_ALREADY_CREATE_NICKNAME))
