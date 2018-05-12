@@ -54,7 +54,7 @@ class Login(Resource):
         nickName = args["nickname"]
         portrait = args["portrait"]
         
-        nickNameCheck = DB.dbConnection.customSelectQuery("select cname from gamedb.account where cname = %s" % nickName)
+        nickNameCheck = DB.dbConnection.customSelectQuery("select cname from gamedb.account where cname = \"%s\"" % str(nickName))
         
         if not nickNameCheck is None:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_ALREADY_CREATE_NICKNAME))
