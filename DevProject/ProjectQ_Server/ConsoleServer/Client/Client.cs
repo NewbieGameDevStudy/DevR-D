@@ -46,8 +46,9 @@ namespace BaseClient
 
         public void Update(double deltaTime)
         {
-            m_userToken.ReceiveProcess();
-            Player.Update(deltaTime);
+            m_userToken?.ReceiveProcess();
+            Player?.Update(deltaTime);
+            HttpReqUpdate();
         }
 
         void ReceiveDispatch(int packetId, object[] parameters)

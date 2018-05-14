@@ -2,6 +2,7 @@
 using RestSharp;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Http
 {
@@ -41,11 +42,16 @@ namespace Http
             } else {
                 request.AddBody(dto);
             }
-            
+
             m_restClient.ExecuteAsync(request, (response) => {
                 var result = JsonConvert.DeserializeObject<RESPONSE>(response.Content);
-                callback(result);
+                callback.Invoke(result);
             });
+        }
+
+        public void HttpExecuteAsync(RestRequest request, Action<IRestResponse> response)
+        {
+            m_restClient.ExecuteAsync(request, response);
         }
     }
 }
