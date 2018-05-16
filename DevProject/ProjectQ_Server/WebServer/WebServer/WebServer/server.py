@@ -18,4 +18,4 @@ if __name__ == '__main__':
     for routeClass, routeString in Route.route_dict.items():
         api.add_resource(routeClass, routeString)
     
-    app.run('localhost', 5000)
+    app.run('0.0.0.0', 5000)
