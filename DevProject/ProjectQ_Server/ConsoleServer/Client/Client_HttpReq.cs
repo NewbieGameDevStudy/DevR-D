@@ -27,9 +27,9 @@ namespace BaseClient
             public CommandState state;
         }
 
-        public void HttpConnect()
+        public void HttpConnect(string ip = "localhost")
         {
-            HttpConnection = new HttpConnection("http://localhost:5000");
+            HttpConnection = new HttpConnection(string.Format("http://{0}:5000", ip));
         }
 
         public void WebReqEnqueue<REQUEST, RESPONSE>(REQUEST dto, Action<RESPONSE> callback)

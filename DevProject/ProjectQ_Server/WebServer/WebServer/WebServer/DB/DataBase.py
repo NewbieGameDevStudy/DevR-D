@@ -12,7 +12,10 @@ class DBConnection:
         self._dbPool = pool.QueuePool(self._getconn, max_overflow=30, pool_size=30)
          
     def _getconn(self):
-        conn = pymysql.connect(host="localhost", user="root", password="1234567890", db="gamedb")
+        try:
+            conn = pymysql.connect(host="localhost", user="root", password="1234567890", db="gamedb")
+        except:
+            print("DB not Connect")
         return conn
     
     def _insertQuery(self, queryStr):
