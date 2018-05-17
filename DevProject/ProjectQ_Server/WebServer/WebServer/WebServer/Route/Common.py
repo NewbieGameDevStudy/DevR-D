@@ -9,7 +9,7 @@ class ObjRespBase(object):
         self.ig_responseCache = []
         self.ig_fieldValueCache = {}
         self.ig_queryStr = ""
-        
+        self.ig_fieldType = {}
         self.ig_resp = {}
         
     def initFieldDBQueryCache(self):
@@ -22,9 +22,12 @@ class ObjRespBase(object):
                 convertStr = key[3:]
                 if convertType.__name__ == 'str':
                     self.ig_dbCache.append('c%s' % convertStr)
+
                 elif convertType.__name__ == 'int':
                     self.ig_dbCache.append('i%s' % convertStr)
                                      
+                self.ig_fieldType[convertStr] = convertType
+                
                 self.ig_responseCache.append(convertStr)
                 self.ig_fieldValueCache[convertStr] = value
                 
@@ -58,7 +61,16 @@ class ObjRespBase(object):
             
         return self.ig_resp
     
-    
+    def getConvertToDBField(self, checkField, targetField):
+        if not checkField in self.ig_fieldType:
+            return None
+        
+        type = self.ig_fieldType[checkField]
+        if type is str:
+            return "\"%s\"" % targetField
+        else:
+            return targetField
+            
 class RespHandler(object):
     
     def __init__(self):

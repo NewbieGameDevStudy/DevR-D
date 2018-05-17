@@ -51,24 +51,23 @@ class Login(Resource):
         if not "portrait" in args or not args["portrait"]:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_LOGIN_PARAM))
         
-        nickName = args["nickname"]
-        nickName = "\"%s\"" % nickName
+        nickname = "\"%s\"" % args["nickname"] 
         portrait = args["portrait"]
         
-        nickNameCheck = DB.dbConnection.customSelectQuery("select cname from gamedb.account where cname = %s" % nickName)
+        nickNameCheck = DB.dbConnection.customSelectQuery("select cname from gamedb.account where cname = %s" % nickname)
         
         if not nickNameCheck is None:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_ALREADY_CREATE_NICKNAME))
         
         accountId = Util.guidInst.createGuid()
         
-        session[str(accountId)] = nickName;
+        session[str(accountId)] = nickname;
         
         # 실제 유저객체를 관리하는 것을 만들어야합니다.
         playerinfo = PlayerInfo()
         
         try:
-            result = DB.dbConnection.insertQuery("gamedb.account", playerinfo.ig_queryStr, playerinfo.getRenewFieldDBCache({"accountId":accountId, "name":nickName, "portrait":portrait}))
+            DB.dbConnection.insertQuery("gamedb.account", playerinfo.ig_queryStr, playerinfo.getRenewFieldDBCache({"accountId":accountId, "name":nickname, "portrait":portrait}))
         except:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_NOT_LOGIN))
         
