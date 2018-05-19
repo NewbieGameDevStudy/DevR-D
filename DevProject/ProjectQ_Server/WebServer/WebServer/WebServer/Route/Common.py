@@ -58,7 +58,8 @@ class ObjRespBase(object):
             if not convertList:
                 break
             self.ig_resp[key] = convertList.pop(0)
-            
+        
+        self.ig_resp["responseCode"] = responseCode    
         return self.ig_resp
     
     def getConvertToDBField(self, checkField, targetField):
