@@ -3,36 +3,28 @@ from flask import jsonify, request, session
 
 import DB
 import Util
-import sys
 import Route.Common
 from Route import Common
-from Route.Common import ObjRespBase
-
-class PlayerInfo(Common.ObjRespBase):
-    def __init__(self):
-        super(PlayerInfo, self).__init__()
-        self.db_accountId = 0
-        self.db_level = 1
-        self.db_exp = 0
-        self.db_gameMoney = 0
-        self.db_name = ''
-        self.db_portrait = 0
-        self.db_bestRecord = 0
-        self.db_winRecord = 0
-        self.db_continueRecord = 0
-        
-        super(PlayerInfo, self).initFieldDBQueryCache()
+import Entity.User
 
 class Login(Resource):
     def get(self):
         Route.parser.add_argument("accountId")
         args = Route.parser.parse_args()
-        playerInfo = PlayerInfo()   
-                
+                                    
         if not "accountId" in args or not args["accountId"]:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_LOGIN_PARAM))
             
         accountId = args["accountId"]
+        
+        accountIdStr = str(accountId)
+        if not accountIdStr in Entity.userCachedObjects:
+            userObject = Entity.User.UserObject()
+            Entity.userCachedObjects[accountIdStr] = userObject
+            playerInfo = userObject.getData(Entity.Define.PLAYER_INFO)
+        else:
+            playerInfo = Entity.userCachedObjects[accountIdStr].getData(Entity.Define.PLAYER_INFO)
+        
         try:
             result = DB.dbConnection.selectQuery("gamedb.account", "iAccountId", str(accountId), playerInfo.ig_queryStr)
         except:
@@ -51,24 +43,25 @@ class Login(Resource):
         if not "portrait" in args or not args["portrait"]:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_LOGIN_PARAM))
         
-        nickName = args["nickname"]
-        nickName = "\"%s\"" % nickName
+        nickname = "\"%s\"" % args["nickname"] 
         portrait = args["portrait"]
         
-        nickNameCheck = DB.dbConnection.customSelectQuery("select cname from gamedb.account where cname = %s" % nickName)
+        nickNameCheck = DB.dbConnection.customSelectQuery("select cname from gamedb.account where cname = %s" % nickname)
         
         if not nickNameCheck is None:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_ALREADY_CREATE_NICKNAME))
         
         accountId = Util.guidInst.createGuid()
         
-        session[str(accountId)] = nickName;
-        
-        # 실제 유저객체를 관리하는 것을 만들어야합니다.
-        playerinfo = PlayerInfo()
+        accountIdStr = str(accountId)
+        session[accountIdStr] = nickname;
+
+        userObject = Entity.User.UserObject()
+        Entity.userCachedObjects[accountIdStr] = userObject
+        playerInfo = userObject.getData(Entity.Define.PLAYER_INFO)
         
         try:
-            result = DB.dbConnection.insertQuery("gamedb.account", playerinfo.ig_queryStr, playerinfo.getRenewFieldDBCache({"accountId":accountId, "name":nickName, "portrait":portrait}))
+            DB.dbConnection.insertQuery("gamedb.account", playerInfo.ig_queryStr, playerInfo.getRenewFieldDBCache({"accountId":accountId, "name":nickname, "portrait":portrait}))
         except:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_NOT_LOGIN))
         
