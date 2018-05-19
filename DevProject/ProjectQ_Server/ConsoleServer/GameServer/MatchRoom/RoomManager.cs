@@ -8,10 +8,27 @@ namespace GameServer.MatchRoom
 {
     public class RoomManager
     {
+        /* 클라이언트 섹션 바뀌면 여기도 바꿔줘야함.
+        public enum eQuestionType
+        {
+            Society,        //사회
+            Entertainment,  //연예
+            General,        //일반
+            Common,         //상식
+            History,        //역사
+            Science,        //과학
+            Sports,         //스포츠
+            Animal,         //동물
+        }*/
         public enum RoomType {
-            COMMON_SENSE,
-            SOCIAL,
-            GAME,
+            SOCIETY,
+            ENTERTAINMENT,
+            GENERAL,
+            COMMON,
+            HISTORY,
+            SCIENCE,
+            SPORTS,
+            ANIMAL
         }
 
         public class QueueData {
@@ -19,12 +36,13 @@ namespace GameServer.MatchRoom
             public PlayerObject player;
         }
 
+        // 대기인원 & 룸 풀링...? 재활용 하냐 마느냐
         Dictionary<RoomType, List<Room>> m_roomList = new Dictionary<RoomType, List<Room>>();
         Queue<QueueData> m_enterPlayerQueue = new Queue<QueueData>();
 
         // 인원 감소 주기, 초기 필요 인원.
-        const double WaitTimeInterval = 5;
-        const byte NeedUserCount = 100;
+        const double WAIT_TIME_INTERVAL = 5;
+        const byte NEED_USER_COUNT = 100;
 
         /// <summary>
         /// 아래 필드들은 모두 테스트용
@@ -59,12 +77,14 @@ namespace GameServer.MatchRoom
         
         public void EnterWaitRoom(RoomType type, PlayerObject player)
         {
+            // 중복 예외 필요
             m_enterPlayerQueue.Enqueue(new QueueData {
                 player = player,
                 type = type
             });
 
             testCount++;
+            Console.WriteLine("WaitUserCount {0}", testCount);
         }
 
         public void FindMatchingRoom()
@@ -72,6 +92,7 @@ namespace GameServer.MatchRoom
             if (m_enterPlayerQueue.Count == 0)
                 return;
 
+            // 매칭중 connection 끊긴 클라이언트 예외 처리 필요.
             QueueData playerQueue = m_enterPlayerQueue.Dequeue();
             List<Room> TempRoomList = m_roomList[playerQueue.type].FindAll(room => room.CurrentRoomState.Equals(Room.RoomState.ROOM_WAITING));
 
@@ -87,15 +108,17 @@ namespace GameServer.MatchRoom
                 return a.CurrentUserCount.CompareTo(b.CurrentUserCount);
             });
 
-            TempRoomList[0].EnterRoom(playerQueue.player);
+            TempRoomList[0]?.EnterRoom(playerQueue.player);
             Console.WriteLine("RoomEnter {0}", playerQueue.type);
         }
 
         public void MakeNewRoom(ref QueueData playerQueue)
         {
-            Room TempRoom = new Room(WaitTimeInterval, NeedUserCount);
+            Room TempRoom = new Room(WAIT_TIME_INTERVAL, NEED_USER_COUNT);
             TempRoom.EnterRoom(playerQueue.player);
             m_roomList[playerQueue.type].Add(TempRoom);
+
+            Console.WriteLine("Make New Room Player : {0} ", playerQueue.player.Client.AccountId);
         }
 
         void BroadCastRoomInObjectInfo()
@@ -141,6 +164,7 @@ namespace GameServer.MatchRoom
             }
 
             //TODO : 방에 입장 완료 후 게임시작이 되었을때 보내야한다.
+            /*
             if(testCount == 2) {
                 testCount++;
                 BroadCastRoomInObjectInfo();
@@ -156,7 +180,7 @@ namespace GameServer.MatchRoom
             if (tempQueue == null)
                 return;
 
-            BroadCastPosition(tempQueue);
+            BroadCastPosition(tempQueue);*/
         }
 
         public void BroadCastPosition(Queue<MoveData> tempQueue)

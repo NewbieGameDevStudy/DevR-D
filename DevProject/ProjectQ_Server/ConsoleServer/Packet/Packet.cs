@@ -12,11 +12,28 @@ namespace Packet
     [ProtoContract]
     public class PK_CS_ENTERROOM : PK_BASE
     {
+        /* 클라이언트 섹션 바뀌면 여기도 바꿔줘야함.
+       public enum eQuestionType
+       {
+           Society,        //사회
+           Entertainment,  //연예
+           General,        //일반
+           Common,         //상식
+           History,        //역사
+           Science,        //과학
+           Sports,         //스포츠
+           Animal,         //동물
+       }*/
         public enum RoomType
         {
-            COMMON_SENSE,
-            SOCIAL,
-            GAME
+            SOCIETY,
+            ENTERTAINMENT,
+            GENERAL,
+            COMMON,
+            HISTORY,
+            SCIENCE,
+            SPORTS,
+            ANIMAL
         }
 
         [ProtoMember(1)]
@@ -79,5 +96,25 @@ namespace Packet
     {
         [ProtoMember(1)]
         public List<PK_SC_TARGET_POSITION> m_objectList { get; set; }
+    }
+
+    [ProtoContract]
+    public class PK_SC_CANNOT_MATCHING_GAME : PK_BASE
+    {
+        public enum MatchingErrorType
+        {
+            MAX_WAIT_TIME,
+            TEST2,
+            TEST3
+        }
+
+        [ProtoMember(1)]
+        public MatchingErrorType type { get; set; }
+    }
+
+    [ProtoContract]
+    public class PK_SC_MATCHING_ROOM_INFO : PK_BASE
+    {
+        
     }
 }
