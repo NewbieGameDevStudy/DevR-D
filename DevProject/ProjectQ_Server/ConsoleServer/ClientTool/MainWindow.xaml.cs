@@ -102,10 +102,10 @@ namespace ClientTool
 
         public void Button_RoomEnter(object sender, RoutedEventArgs e)
         {
-            if (client != null)
-                client.SendPacket(new Packet.PK_CS_ENTERROOM {
-                    type = Packet.PK_CS_ENTERROOM.RoomType.GAME,
-                });
+            //if (client != null)
+            //    client.SendPacket(new Packet.PK_CS_ENTERROOM {
+            //        type = Packet.PK_CS_ENTERROOM.RoomType.GAME,
+            //    });
 
             gameRender = new GameRender.GameRender();
             gameRender.SetPlayerObject(client.Player);

@@ -2,6 +2,7 @@
 using GameServer.ServerClient;
 using GuidGen;
 using Http;
+using MetaData;
 using NetworkSocket;
 using Packet;
 using System.Collections.Generic;
@@ -34,6 +35,12 @@ namespace Server
             m_packetMethod.SetMethod(typeof(Client), "OnReceivePacket");
 
             m_serverSocket.InitServer(null, port);
+
+            try {
+                MetaDataMgr.Inst.InitCSVMetaData("MetaData.Data", @"\..\..\..\CsvDataTable");
+            } catch {
+                System.Console.WriteLine("MetaData File not found");
+            }
 
             RoomManager = new RoomManager();
             HttpConnection = new HttpConnection("http://localhost:5000");

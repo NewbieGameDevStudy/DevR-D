@@ -76,6 +76,10 @@
       <Project>{1a230189-cec6-43ab-ba95-d8c7f4abab9b}</Project>
       <Name>HttpConnection</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MetaData\MetaData.csproj">
+      <Project>{c32a833a-9234-43a6-aed9-86ebecc6f013}</Project>
+      <Name>MetaData</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Packet\Packet.csproj">
       <Project>{1198D71E-9AB4-410E-BC22-B7D4AF0E3878}</Project>
       <Name>Packet</Name>
@@ -83,6 +87,10 @@
     <ProjectReference Include="..\SocketLib\SocketLib.csproj">
       <Project>{F5201978-9DBB-43CE-8DA9-9B5578246F23}</Project>
       <Name>SocketLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Util\Util.csproj">
+      <Project>{35F3331B-959A-406F-8894-61339ECDBF6E}</Project>
+      <Name>Util</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
