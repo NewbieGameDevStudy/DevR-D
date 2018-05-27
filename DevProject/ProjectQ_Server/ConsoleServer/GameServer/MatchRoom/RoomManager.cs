@@ -36,13 +36,13 @@ namespace GameServer.MatchRoom
             public PlayerObject player;
         }
 
-        // 대기인원 & 룸 풀링...? 재활용 하냐 마느냐
         Dictionary<RoomType, List<Room>> m_roomList = new Dictionary<RoomType, List<Room>>();
-        Queue<QueueData> m_enterPlayerQueue = new Queue<QueueData>();
+        Dictionary<ulong, PlayerObject> m_connectionPlayerList = new Dictionary<ulong, PlayerObject>();
+        Queue<QueueData> m_waitingPlayerQueue = new Queue<QueueData>();
 
-        // 인원 감소 주기, 초기 필요 인원.
-        const double WAIT_TIME_INTERVAL = 5;
-        const byte NEED_USER_COUNT = 100;
+
+        const double WAIT_TIME_INTERVAL = 5;        // 대기 반감기
+        const byte NEED_USER_COUNT = 100;           // 초기 필요 인원
 
         /// <summary>
         /// 아래 필드들은 모두 테스트용
@@ -59,7 +59,6 @@ namespace GameServer.MatchRoom
 
         public RoomManager()
         {
-            // 방 리스트는 어차피 타입의 개수만큼 있다. - 미리 만들어 둔다...
             foreach (RoomType eType in Enum.GetValues(typeof(RoomType)))
             {
                 List<Room> TempRoomList = new List<Room>();
@@ -77,23 +76,25 @@ namespace GameServer.MatchRoom
         
         public void EnterWaitRoom(RoomType type, PlayerObject player)
         {
-            // 중복 예외 필요
-            m_enterPlayerQueue.Enqueue(new QueueData {
+            m_waitingPlayerQueue.Enqueue(new QueueData {
                 player = player,
                 type = type
             });
 
             testCount++;
             Console.WriteLine("WaitUserCount {0}", testCount);
+
+            // 입장 플레이어 정보 웹서버로 요청.
+            // 이시점에 할지 receive쪽에서 할지...?
         }
 
         public void FindMatchingRoom()
         {
-            if (m_enterPlayerQueue.Count == 0)
+            if (m_waitingPlayerQueue.Count == 0)
                 return;
 
             // 매칭중 connection 끊긴 클라이언트 예외 처리 필요.
-            QueueData playerQueue = m_enterPlayerQueue.Dequeue();
+            QueueData playerQueue = m_waitingPlayerQueue.Dequeue();
             List<Room> TempRoomList = m_roomList[playerQueue.type].FindAll(room => room.CurrentRoomState.Equals(Room.RoomState.ROOM_WAITING));
 
             if (TempRoomList.Count == 0)
@@ -128,7 +129,7 @@ namespace GameServer.MatchRoom
             pks.m_objectList = new List<PK_SC_OBJECT_INFO>();
 
             int index = 1;
-            foreach (var obj in m_enterPlayerQueue) {
+            foreach (var obj in m_waitingPlayerQueue) {
                 var info = new PK_SC_OBJECT_INFO();
                 info.handle = obj.player.Handle;
                 info.info = new PK_SC_PLAYERINFO_LOAD {
@@ -147,7 +148,7 @@ namespace GameServer.MatchRoom
                 index++;
             }
 
-            foreach (var obj in m_enterPlayerQueue) {
+            foreach (var obj in m_waitingPlayerQueue) {
                 obj.player.Client.SendPacket(pks);
             }
         }
@@ -195,7 +196,7 @@ namespace GameServer.MatchRoom
                 pks.m_objectList.Add(pksPos);
             }
 
-            foreach (var obj in m_enterPlayerQueue) {
+            foreach (var obj in m_waitingPlayerQueue) {
                 obj.player.Client.SendPacket(pks);
             }
         }
