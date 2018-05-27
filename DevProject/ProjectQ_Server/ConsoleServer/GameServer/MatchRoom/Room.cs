@@ -19,6 +19,8 @@ namespace GameServer.MatchRoom
             ROOM_GAME_ENDED
         }
 
+        public byte RoomNo { get; set; }
+
         public byte GameNeedUserCount { get; private set; }
         public RoomState CurrentRoomState { get; private set; }
         public int CurrentUserCount
@@ -47,6 +49,8 @@ namespace GameServer.MatchRoom
             this.GameWaitTime = waitTime;
             this.GameNeedUserCount = gameNeedUserCount;
 
+            RoomNo = 0;
+
             WaitElapsedTime = 0;
             CheckedTime = 0;
             CurrentRoomState = Room.RoomState.ROOM_WAITING;
@@ -58,12 +62,51 @@ namespace GameServer.MatchRoom
             isGameStarted = false;
         }
 
+        public void ResetRoomPlayerListIndex()
+        {
+            int iIndex = m_roomPlayerList.Count;
+            for (int i = 0; i < iIndex; ++i)
+            {
+                m_roomPlayerList[i].PlayerIndex = (byte)(i + 1);
+            }
+        }
+
         public void EnterRoom(PlayerObject player)
         {
             if (m_roomPlayerList.Contains(player))
                 return;
-            
+
+            // 신규 참가 인원 : 기존 방인원 정보 send
+            // 기존 참가 인원 : 신규 인원 정보 send
+
+            PK_SC_MATCHING_ROOM_INFO pks = new PK_SC_MATCHING_ROOM_INFO();
+            pks.m_memberList = new List<PK_SC_MATCHING_MEMBER_INFO>();
+
+            PK_SC_MATCHING_MEMBER_INFO newInfo = new PK_SC_MATCHING_MEMBER_INFO
+            {
+                strNickName = "test1",
+                portRaitNo = 1
+            };
+
+            foreach (var info in m_roomPlayerList)
+            {
+                info.Client?.SendPacket(newInfo);
+
+                PK_SC_MATCHING_MEMBER_INFO tempInfo = new PK_SC_MATCHING_MEMBER_INFO
+                {
+                    strNickName = "info" + info.AccountID,           // info 닉네임
+                    portRaitNo = 2              // info 초상화
+                };
+
+                pks.m_memberList.Add(tempInfo);
+            }
+
+            player.Client?.SendPacket(pks);
+
             m_roomPlayerList.Add(player);
+            player.EnteredRoomNo = this.RoomNo;
+            player.PlayerIndex = (byte)m_roomPlayerList.Count;
+
         }
 
         public void MatchimgGame(double deltaTime)
@@ -78,7 +121,6 @@ namespace GameServer.MatchRoom
 
         public void BeginTheGame(double deltaTime)
         {
-            // 게임 시작 - 방정보 send
             isGameStarted = true;
             GameBeginTime = deltaTime;
         }
@@ -139,18 +181,38 @@ namespace GameServer.MatchRoom
         {
             var info = new PK_SC_CANNOT_MATCHING_GAME
             {
-                type = PK_SC_CANNOT_MATCHING_GAME.MatchingErrorType.TEST2
+                type = PK_SC_CANNOT_MATCHING_GAME.MatchingErrorType.MAX_WAIT_TIME
             };
 
             foreach (var player in m_roomPlayerList)
             {
+                info.accountID = player.AccountID;
                 player.Client?.SendPacket(info);
             }
         }
 
-        public void RemoveUserFromRoom()
+        public void RemoveUserFromRoom(PlayerObject player)
         {
+            m_roomPlayerList.Remove(player);
+            player.EnteredRoomNo = 0;
+            player.PlayerIndex = 0;
 
+            // 다른 인원들한테 방 나간 사람 보내줌.
+            // 방 나간 인원한테는 그냥 보내줌.
+
+            var info = new PK_SC_CANNOT_MATCHING_GAME
+            {
+                type = PK_SC_CANNOT_MATCHING_GAME.MatchingErrorType.CANCEL_ROOM,
+                accountID = player.AccountID
+            };
+            player.Client?.SendPacket(info);
+
+            foreach (var user in m_roomPlayerList)
+            {
+                user.Client?.SendPacket(info);
+            }
+            
+            ResetRoomPlayerListIndex();
         }
 
         public void ClearRoomData()

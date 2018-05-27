@@ -14,7 +14,10 @@ namespace GameServer.Player
         public Client Client { get; private set; }
         public PlayerData PlayerData { get; private set; }
         public int Handle => Client.AccountCount;
-        public ulong AccountID => Client.AccountId; 
+        public ulong AccountID => Client.AccountId;
+
+        public byte EnteredRoomNo { get; set; }             // 게임 참가 방번호
+        public byte PlayerIndex { get; set; }               // 방에서 몇번째로 들어왔는지
 
         BaseServer m_baseServer;
 
@@ -24,6 +27,9 @@ namespace GameServer.Player
         {
             Client = client;
             m_baseServer = baseServer;
+
+            EnteredRoomNo = 0;
+            PlayerIndex = 0;
 
             //TODO : 컴퍼넌트가 늘어난다면 별도의 Create로 분리하는것도 고려해볼것
             var moveComp = new MoveComponent(this);

@@ -76,6 +76,20 @@ namespace GameServer.MatchRoom
         
         public void EnterWaitRoom(RoomType type, PlayerObject player)
         {
+            if (m_connectionPlayerList.ContainsKey(player.AccountID))
+            {
+                //중복 접속.
+                var info = new PK_SC_CANNOT_MATCHING_GAME
+                {
+                    type = PK_SC_CANNOT_MATCHING_GAME.MatchingErrorType.PLAYER_OVERLAPPED,
+                    accountID = player.AccountID
+                };
+
+                player.Client?.SendPacket(info);
+                return;
+            }
+
+            m_connectionPlayerList.Add(player.AccountID, player);
             m_waitingPlayerQueue.Enqueue(new QueueData {
                 player = player,
                 type = type
@@ -93,8 +107,13 @@ namespace GameServer.MatchRoom
             if (m_waitingPlayerQueue.Count == 0)
                 return;
 
-            // 매칭중 connection 끊긴 클라이언트 예외 처리 필요.
             QueueData playerQueue = m_waitingPlayerQueue.Dequeue();
+            if (m_connectionPlayerList.ContainsKey(playerQueue.player.AccountID) == false)
+            {
+                // 이미 대기중 취소한 녀석.
+                return;
+            }
+
             List<Room> TempRoomList = m_roomList[playerQueue.type].FindAll(room => room.CurrentRoomState.Equals(Room.RoomState.ROOM_WAITING));
 
             if (TempRoomList.Count == 0)
@@ -118,8 +137,36 @@ namespace GameServer.MatchRoom
             Room TempRoom = new Room(WAIT_TIME_INTERVAL, NEED_USER_COUNT);
             TempRoom.EnterRoom(playerQueue.player);
             m_roomList[playerQueue.type].Add(TempRoom);
+            TempRoom.RoomNo = (byte)m_roomList[playerQueue.type].Count;
 
             Console.WriteLine("Make New Room Player : {0} ", playerQueue.player.Client.AccountId);
+        }
+
+        public void CancelMatching(RoomType eRoomType, PlayerObject player)
+        {
+            if (m_connectionPlayerList.Remove(player.AccountID) == false)
+            {
+                // 이미 제거된 녀석.
+                return;
+            }
+
+            if (player.EnteredRoomNo == 0)
+            {
+                // 대기실에서 제거됨.
+                var info = new PK_SC_CANNOT_MATCHING_GAME
+                {
+                    type = PK_SC_CANNOT_MATCHING_GAME.MatchingErrorType.CANCEL_WAIT,
+                    accountID = player.AccountID
+                };
+
+                player.Client?.SendPacket(info);
+                return;
+            }
+            else
+            {
+                Room tempRoom = m_roomList[eRoomType][player.EnteredRoomNo];
+                tempRoom?.RemoveUserFromRoom(player);
+            }
         }
 
         void BroadCastRoomInObjectInfo()

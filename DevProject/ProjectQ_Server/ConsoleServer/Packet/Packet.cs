@@ -41,6 +41,25 @@ namespace Packet
     }
 
     [ProtoContract]
+    public class PK_CS_CANCEL_MATCHING : PK_BASE
+    {
+        public enum RoomType
+        {
+            SOCIETY,
+            ENTERTAINMENT,
+            GENERAL,
+            COMMON,
+            HISTORY,
+            SCIENCE,
+            SPORTS,
+            ANIMAL
+        }
+
+        [ProtoMember(1)]
+        public RoomType type { get; set; }
+    }
+
+    [ProtoContract]
     public class PK_CS_INPUT_POSITION : PK_BASE
     {
         [ProtoMember(1)]
@@ -103,18 +122,31 @@ namespace Packet
     {
         public enum MatchingErrorType
         {
-            MAX_WAIT_TIME,
-            TEST2,
-            TEST3
+            PLAYER_OVERLAPPED,                  // 중복 매칭 시도
+            MAX_WAIT_TIME,                      // 대기 시간 초과 (현재 2명이므로 1명이서 초과시간 대기)
+            CANCEL_WAIT,                        // 대기실에서 방 찾는중 취소
+            CANCEL_ROOM                         // 방에 입장후 경기 시작전 취소
         }
 
         [ProtoMember(1)]
         public MatchingErrorType type { get; set; }
+        [ProtoMember(2)]
+        public ulong accountID { get; set; }
+    }
+
+    [ProtoContract]
+    public class PK_SC_MATCHING_MEMBER_INFO : PK_BASE
+    {
+        [ProtoMember(1)]
+        public string strNickName { get; set; }
+        [ProtoMember(2)]
+        public int portRaitNo { get; set; }
     }
 
     [ProtoContract]
     public class PK_SC_MATCHING_ROOM_INFO : PK_BASE
     {
-        
+        [ProtoMember(1)]
+        public List<PK_SC_MATCHING_MEMBER_INFO> m_memberList { get; set; }
     }
 }

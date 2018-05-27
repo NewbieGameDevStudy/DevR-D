@@ -11,6 +11,12 @@ namespace GameServer.ServerClient
             m_baseServer.RoomManager.EnterWaitRoom(eRoomType, Player);
         }
 
+        void onReceivePacket(PK_CS_CANCEL_MATCHING pks)
+        {
+            MatchRoom.RoomManager.RoomType eRoomType = (MatchRoom.RoomManager.RoomType)pks.type;
+            m_baseServer.RoomManager.CancelMatching(eRoomType, Player);
+        }
+
         void OnReceivePacket(PK_CS_INPUT_POSITION pks)
         {
             Player.Client.m_baseServer.RoomManager.AddMoveInput(new MatchRoom.RoomManager.MoveData {
