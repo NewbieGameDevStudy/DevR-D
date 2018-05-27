@@ -1,4 +1,5 @@
-﻿using MetaData.Data;
+﻿using CsvHelper;
+using MetaData.Data;
 using RGiesecke.PlainCsv;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,6 @@ using System.Text.RegularExpressions;
 
 namespace MetaData
 {
-    //using CachedBaseMetaData = Dictionary<string, BaseMetaData>;
-
-    using CachedIntTable = Dictionary<int, MetaDataGroup>;
-    using CachedStringTable = Dictionary<string, Dictionary<string, MetaDataGroup>>;
-
     public class MetaDataMgr
     {
         static MetaDataMgr inst;
@@ -24,84 +20,64 @@ namespace MetaData
             }
         }
 
-        Dictionary<string, CachedTable> tableMetaDatas = new Dictionary<string, CachedTable>();
 
-        class CachedTable
-        {
-            public CachedIntTable cachedIntTable = new CachedIntTable();
-            public CachedStringTable cachedStringTable = new CachedStringTable();
-        }
+        public Dictionary<Type, object> cachedMetaDatas = new Dictionary<Type, object>();
 
-        public CachedIntTable GetTable(string tableName)
-        {
-            if (tableMetaDatas.ContainsKey(tableName))
-                return tableMetaDatas[tableName].cachedIntTable;
-
-            return null;
-        }
-
-        public MetaDataGroup GetMetaDataGroup(string tableName, int index)
-        {
-            if (!tableMetaDatas.ContainsKey(tableName))
-                return null;
-
-            if (!tableMetaDatas[tableName].cachedIntTable.ContainsKey(index))
-                return null;
-
-            return tableMetaDatas[tableName].cachedIntTable[index];
-        }
-
-        public void InitCSVMetaData(string namespaceStr, string path)
+        public void InitMetaData(string namespaceStr, string path)
         {
             var csvList = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assm => assm.GetTypes())
                 .Where(t => t.Namespace == namespaceStr);
 
-            var csvClassDict = csvList.Where(t => t.IsClass == true)
+            var csvClassDict = csvList.Where(t => t.IsClass == true && t.IsGenericType == false && !t.Name.Contains("Base"))
                 .OrderBy(t => t.Name)
-                .ToDictionary(x => x.Name, x => x);
+                .ToDictionary(x => x.Name, x => new Tuple<Type, String>(x, x.BaseType.Name));
 
-            //전체 파일의 주소를 확보
-            var dirPath = System.Environment.CurrentDirectory + @path;
-            //var dirPath = System.Environment.CurrentDirectory + @"\..\CsvDataTable";
+            var genericDict = csvList.Where(t => t.IsClass == true && t.IsGenericType == true && t.CustomAttributes.Count() == 1)
+                .OrderBy(t => t.Name)
+                .ToDictionary(x => x.CustomAttributes.FirstOrDefault().ConstructorArguments.FirstOrDefault().Value, x => x);
+
+            var dirPath = Environment.CurrentDirectory + @path;
             var di = new DirectoryInfo(dirPath);
 
             var parser = new PlainCsvReader();
             foreach (var fileInfo in di.GetFiles()) {
-                var csv = File.ReadAllText(fileInfo.FullName);
-                var result = parser.CsvToDictionaries(csv).ToList();
-
-                var tableNames = fileInfo.Name.Split('.');
-                tableMetaDatas[tableNames[0]] = new CachedTable();
-                var twoTypeMetaDatas = tableMetaDatas[tableNames[0]];
-
-                bool isFirst = true;
-                int index = 0;
-                foreach (var row in result) {
-                    foreach (var info in row) {
-
-                        var match = Regex.Match(info.Value, @"\d");
-
-                        if (isFirst) {
-                            index = Convert.ToInt32(info.Value);
-                            twoTypeMetaDatas.cachedIntTable.Add(index, new MetaDataGroup(index));
-                            isFirst = false;
-                            continue;
-                        } else {
-                            var metaDataGroup = twoTypeMetaDatas.cachedIntTable[index];
-
-
-                            if (!match.Success || match.Index != match.Length - 1) { //string
-                                metaDataGroup.SetBaseData(info.Key, new BaseData(strValue: info.Value));
-                            } else {
-                                metaDataGroup.SetBaseData(info.Key, new BaseData(countValue: Convert.ToDouble(info.Value)));
-                            }
-                        }
+                using (var reader = new StreamReader(fileInfo.FullName, System.Text.Encoding.GetEncoding(51949))) {
+                    var tableNames = fileInfo.Name.Split('.');
+                    if (!csvClassDict.ContainsKey(tableNames[0])) {
+                        Console.WriteLine("Not Found MetaData Key : {0}", tableNames[0]);
+                        continue;
                     }
 
-                    isFirst = true;
+                    var csvType = csvClassDict[tableNames[0]];
+                    if (!genericDict.ContainsKey(csvType.Item2)) {
+                        Console.WriteLine("Not Found MetaData BaseName Key : {0}", csvType);
+                        continue;
+                    }
+
+                    var mapType = genericDict[csvType.Item2];
+
+                    var csv = new CsvReader(reader);
+                    csv.Read();
+                    csv.Configuration.HasHeaderRecord = true;
+                    var generic = Activator.CreateInstance(mapType.MakeGenericType(csvType.Item1), true);
+                    csv.Configuration.RegisterClassMap(generic.GetType());
+                    try {
+                        var records = csv.GetRecord(csvType.Item1);
+                        cachedMetaDatas.Add(csvType.Item1, records);
+                    } catch {
+                        Console.WriteLine("Error Parse MetaData : {0}", fileInfo.Name);
+                    }
+
+                    Console.WriteLine("MetaData Load : {0}", fileInfo.Name);
                 }
             }
+        }
+
+        public T GetMetaData<T>()
+        {
+            var type = typeof(T);
+            return (T)cachedMetaDatas[type];
         }
     }
 }
