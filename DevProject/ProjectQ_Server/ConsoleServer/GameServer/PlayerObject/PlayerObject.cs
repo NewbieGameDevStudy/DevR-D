@@ -14,6 +14,7 @@ namespace GameServer.Player
         public Client Client { get; private set; }
         public PlayerData PlayerData { get; private set; }
         public int Handle => Client.AccountCount;
+        public ulong AccountID => Client.AccountId; 
 
         BaseServer m_baseServer;
 
