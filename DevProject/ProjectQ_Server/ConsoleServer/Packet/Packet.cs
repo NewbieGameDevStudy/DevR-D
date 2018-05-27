@@ -68,6 +68,13 @@ namespace Packet
         public float yPos { get; set; }
     }
 
+    [ProtoContract]
+    public class PK_CS_LOAD_PLAYERINFO : PK_BASE
+    {
+        [ProtoMember(1)]
+        public ulong accountId { get; set; }
+    }
+
     //서버 -> 클라이언트 패킷
 
     [ProtoContract]

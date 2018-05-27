@@ -11,8 +11,8 @@ namespace BaseClient
         UserToken m_userToken;
 
         public PlayerObject Player { get; private set; }
-        public bool isConnected { get; private set; }
-        public object objectType { get; private set; }
+        public bool IsConnected { get; private set; }
+        public object ObjectType { get; private set; }
 
         public void Init(object obj, string methodName)
         {
@@ -25,7 +25,7 @@ namespace BaseClient
             m_packetMethod = new PacketMethod();
             //m_packetMethod.SetMethod(typeof(Client), "OnReceivePacket");
             m_packetMethod.SetMethod(obj.GetType(), methodName);
-            objectType = obj;
+            ObjectType = obj;
         }
 
         public void Connect(string connectHost = "127.0.0.1", int port = 5050)
@@ -37,23 +37,23 @@ namespace BaseClient
         {
             m_userToken = token;
             m_userToken.ReceiveDispatch = ReceiveDispatch;
-            isConnected = true;
+            IsConnected = true;
 
-            //툴에서 사용하는 것
-            Player = new PlayerObject();
-            Player.SetClient(this);
+            ////툴에서 사용하는 것
+            //Player = new PlayerObject();
+            //Player.SetClient(this);
         }
 
         public void Update(double deltaTime)
         {
             m_userToken?.ReceiveProcess();
-            Player?.Update(deltaTime);
+            //Player?.Update(deltaTime);
             HttpReqUpdate();
         }
 
         void ReceiveDispatch(int packetId, object[] parameters)
         {
-            m_packetMethod?.MethodDispatch(packetId)?.Invoke(objectType, parameters);
+            m_packetMethod?.MethodDispatch(packetId)?.Invoke(ObjectType, parameters);
         }
 
         public void SendPacket(PK_BASE pks)
