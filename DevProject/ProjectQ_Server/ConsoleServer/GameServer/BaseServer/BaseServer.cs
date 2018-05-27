@@ -84,6 +84,7 @@ namespace Server
         {
             UpdateClient(deltaTime);
             RoomManager.Update(deltaTime);
+            
         }
 
         void UpdateClient(double deltaTime)
