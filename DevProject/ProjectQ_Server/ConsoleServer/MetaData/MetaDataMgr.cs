@@ -11,6 +11,7 @@ namespace MetaData
 {
     public class MetaDataMgr
     {
+        //var testGet = MetaDataMgr.Inst.GetMetaData<ShopItem>(0);
         static MetaDataMgr inst;
         public static MetaDataMgr Inst {
             get {
@@ -20,8 +21,7 @@ namespace MetaData
             }
         }
 
-
-        public Dictionary<Type, object> cachedMetaDatas = new Dictionary<Type, object>();
+        Dictionary<Type, List<IBaseMeta>> cachedMetaDatas = new Dictionary<Type, List<IBaseMeta>>();
 
         public void InitMetaData(string namespaceStr, string path)
         {
@@ -63,8 +63,12 @@ namespace MetaData
                     var generic = Activator.CreateInstance(mapType.MakeGenericType(csvType.Item1), true);
                     csv.Configuration.RegisterClassMap(generic.GetType());
                     try {
-                        var records = csv.GetRecord(csvType.Item1);
-                        cachedMetaDatas.Add(csvType.Item1, records);
+                        cachedMetaDatas[csvType.Item1] = new List<IBaseMeta>();
+                        do {
+                            var record = csv.GetRecord(csvType.Item1);
+                            cachedMetaDatas[csvType.Item1].Add((IBaseMeta)record);
+                        } while (csv.Read());
+
                     } catch {
                         Console.WriteLine("Error Parse MetaData : {0}", fileInfo.Name);
                     }
@@ -74,10 +78,12 @@ namespace MetaData
             }
         }
 
-        public T GetMetaData<T>()
+        public T GetMetaData<T>(int id)
         {
             var type = typeof(T);
-            return (T)cachedMetaDatas[type];
+            var objectList = cachedMetaDatas[type];
+            var find = objectList.Find(x => x.Index == id);
+            return (T)find;
         }
     }
 }
