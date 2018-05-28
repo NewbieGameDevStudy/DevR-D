@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 
 namespace MetaData.Data
 {
+    public interface IBaseMeta
+    {
+        int Index { get; set; }
+    }
+
     public class BaseMetaAttribute : Attribute
     {
         private string name;
@@ -21,13 +26,22 @@ namespace MetaData.Data
         }
     }
 
-    public class BaseQuizMeta
+    public class BaseQuizMeta : IBaseMeta
     {
         public int Index { get; set; }
         public string QuestText { get; set; }
         public bool Result { get; set; }
         public int GetExp { get; set; }
         public int Difficult { get; set; }
+    }
+
+    public class BaseItemMeta : IBaseMeta
+    {
+        public int Index { get; set; }
+        public string Desc { get; set; }
+        public int ItemType { get; set; }
+        public int Price { get; set; }
+        public int GetExp { get; set; }
     }
 
     #region 퀴즈 데이터
@@ -84,6 +98,26 @@ namespace MetaData.Data
             Map(m => m.Difficult).Index(4);
         }
     }
+
+    [BaseMeta("BaseItemMeta")]
+    public class ItemMapping<T> : ClassMap<T> where T : BaseItemMeta
+    {
+        public ItemMapping()
+        {
+            Map(m => m.Index).Index(0);
+            Map(m => m.Desc).Index(1);
+            Map(m => m.ItemType).Index(2);
+            Map(m => m.Price).Index(3);
+            Map(m => m.GetExp).Index(4);
+        }
+    }
+
+    #region 아이템 데이터
+    public class ShopItem : BaseItemMeta
+    {
+
+    }
+    #endregion
 
 
     //Map(m => m.Index).Index(0);

@@ -47,7 +47,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data.cs" />
     <Compile Include="MetaData.cs" />
     <Compile Include="MetaDataMgr.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

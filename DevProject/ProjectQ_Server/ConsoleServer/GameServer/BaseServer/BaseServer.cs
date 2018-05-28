@@ -43,8 +43,6 @@ namespace Server
                 System.Console.WriteLine("MetaData File not found : {0}", e.ToString());
             }
 
-            var testGet = MetaDataMgr.Inst.GetMetaData<AnimalDataTable>();
-
             RoomManager = new RoomManager();
             HttpConnection = new HttpConnection("http://localhost:5000");
 
