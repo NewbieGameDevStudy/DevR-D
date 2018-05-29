@@ -129,6 +129,7 @@ namespace MetaData.Data
     //                row.GetField<int>(5),
     //            });
     //        Map(m => m.dict).ConvertUsing(row => new Dictionary<int, int> {
+
     //                { row.GetField<int>(3), row.GetField<int>(3) }
 
     //            });

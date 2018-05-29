@@ -44,7 +44,17 @@ class DBConnection:
                 result = cursor.fetchone()
                 return result
         finally:
-            conn.close() 
+            conn.close()
+            
+    def _selectListQuery(self, queryStr):
+        try:
+            conn = self._dbPool.connect()
+            with conn.cursor() as cursor:
+                cursor.execute(queryStr)
+                result = cursor.fetchall()
+                return result
+        finally:
+            conn.close()  
     
     def insertQuery(self, insertTable, insertQueryStr, insertValues):
         inputStr = ""
@@ -63,6 +73,9 @@ class DBConnection:
     
     def customSelectQuery(self, queryStr):
         return self._selectQuery(queryStr)
+    
+    def customeSelectListQuery(self, queryStr):
+        return self._selectListQuery(queryStr)
     
     def customInsertQuery(self, queryStr):
         return self._insertQuery(queryStr)

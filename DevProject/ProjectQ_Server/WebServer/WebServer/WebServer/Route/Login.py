@@ -6,6 +6,7 @@ import Util
 import Route.Common
 from Route import Common
 import Entity.User
+import time
 
 class Login(Resource):
     def get(self):
@@ -16,21 +17,36 @@ class Login(Resource):
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_LOGIN_PARAM))
             
         accountId = args["accountId"]
-        
+                
         accountIdStr = str(accountId)
-        if not accountIdStr in Entity.userCachedObjects:
+        
+        if not accountId in Entity.userCachedObjects:
             userObject = Entity.User.UserObject()
-            Entity.userCachedObjects[accountIdStr] = userObject
-            playerInfo = userObject.getData(Entity.Define.PLAYER_INFO)
-        else:
-            playerInfo = Entity.userCachedObjects[accountIdStr].getData(Entity.Define.PLAYER_INFO)
+            Entity.userCachedObjects[accountId] = userObject
         
         try:
-            result = DB.dbConnection.selectQuery("gamedb.account", "iAccountId", str(accountId), playerInfo.ig_queryStr)
+            playerStatus = self._getPlayerStatus(accountIdStr)
+            
         except:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_LOGIN_NOT_FOUND_ACCOUNT))
         
-        return jsonify(Common.respHandler.getResponse("base", playerInfo.getConvertToResponse(result, Route.Define.OK_LOGIN_CONNECT)))
+        #return jsonify(Common.respHandler.getResponse("base", playerInfo.getConvertToResponse(result, Route.Define.OK_LOGIN_CONNECT)))
+    
+    def _getPlayerStatus(self, accountId):
+        accountDB = DB.dbConnection.customSelectQuery("select * from gamedb.account where iAccountId = %s" % accountId)
+        accountInfo = Entity.userCachedObjects[accountId].getData(Entity.Define.ACCOUNT_INFO)
+        accountInfo.updateAccount(accountDB)
+        
+        itemDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.item where iAccountId = %s" % accountId)
+        itemContanier = Entity.userCachedObjects[accountId].getData(Entity.Define.ITEM_CONTANIER)
+        itemContanier.updateContainer(itemDB)
+        
+        mailDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.mailBox where iAccountId = %s" % accountId)        
+        
+        Common.respHandler.getResponse("PlayerStatus", itemInfo.getConvertToResponse(itemDB))
+        #resp = itemInfo.getContainerResp()
+        
+        
                 
     def put(self):
         Route.parser.add_argument("nickname")
