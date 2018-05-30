@@ -25,17 +25,15 @@ class Login(Resource):
             Entity.userCachedObjects[accountId] = userObject
         
         try:
-            playerStatus = self._getPlayerStatus(accountIdStr)
+            return jsonify(self._getPlayerStatus(accountIdStr))
             
         except:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_LOGIN_NOT_FOUND_ACCOUNT))
-        
-        #return jsonify(Common.respHandler.getResponse("base", playerInfo.getConvertToResponse(result, Route.Define.OK_LOGIN_CONNECT)))
     
     def _getPlayerStatus(self, accountId):
         accountDB = DB.dbConnection.customSelectQuery("select * from gamedb.account where iAccountId = %s" % accountId)
         accountInfo = Entity.userCachedObjects[accountId].getData(Entity.Define.ACCOUNT_INFO)
-        accountInfo.updateAccount(accountDB)
+        accountInfo.updateValue(accountDB)
         
         itemDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.item where iAccountId = %s" % accountId)
         itemContanier = Entity.userCachedObjects[accountId].getData(Entity.Define.ITEM_CONTANIER)
@@ -43,10 +41,10 @@ class Login(Resource):
         
         mailDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.mailBox where iAccountId = %s" % accountId)        
         
-        Common.respHandler.getResponse("PlayerStatus", itemInfo.getConvertToResponse(itemDB))
-        #resp = itemInfo.getContainerResp()
+        Common.respHandler.mergeResp(accountInfo.getResp())
+        Common.respHandler.mergeResp(itemContanier.getContainerResp())
         
-        
+        return Common.respHandler.getResponse(Route.Define.OK_LOGIN_CONNECT)
                 
     def put(self):
         Route.parser.add_argument("nickname")
@@ -74,7 +72,7 @@ class Login(Resource):
 
         userObject = Entity.User.UserObject()
         Entity.userCachedObjects[accountIdStr] = userObject
-        playerInfo = userObject.getData(Entity.Define.PLAYER_INFO)
+        playerInfo = userObject.getData(Entity.Define.ACCOUNT_INFO)
         
         try:
             DB.dbConnection.insertQuery("gamedb.account", playerInfo.ig_queryStr, playerInfo.getRenewFieldDBCache({"accountId":accountId, "name":nickname, "portrait":portrait}))

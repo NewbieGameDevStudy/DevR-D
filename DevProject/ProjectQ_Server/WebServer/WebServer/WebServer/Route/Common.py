@@ -8,7 +8,7 @@ class ObjRespBase(object):
         
     def initRespCache(self):
         for key, value in self.__dict__.items():
-            if 'resp' in key:
+            if 'resp' in key or 'ig' in key:
                 continue
             
             self.respDict[key] = value
@@ -21,24 +21,24 @@ class ObjRespBase(object):
             self.respDict[key] = convertList.pop(0)
         return self.respDict
     
-    def getResp(self):
-        return self.respDict
+    def getResp(self):        
+        pass
     
             
 class RespHandler(object):
     
     def __init__(self):
         self.collectReponse = {}
-    
-    def addResponse
-    
-    def getResponse(self, responseKey, responseDatas):
-        respDict = {}
-        if responseKey == "base":
-            respDict = responseDatas
-            return respDict
         
-        respDict[responseKey] = responseDatas
+    def mergeResp(self, mergeDict):        
+        primaryDict = self.collectReponse
+        for key, value in mergeDict.items():
+            primaryDict[key]= value
+                     
+    def getResponse(self, responseCode):
+        respDict = self.collectReponse.copy()
+        self.collectReponse.clear()
+        respDict['responseCode'] = responseCode
         return respDict
     
     def errorResponse(self, responseCode):

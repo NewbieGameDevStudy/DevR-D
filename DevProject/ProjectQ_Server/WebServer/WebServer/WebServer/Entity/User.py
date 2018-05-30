@@ -27,17 +27,20 @@ class UserObject(object):
 
 class Account(Common.ObjRespBase):
     def __init__(self):
+        super(Account, self).__init__()
         self.accountId = 0
+        self.name = ''
         self.level = 1
         self.exp = 0
         self.gameMoney = 0
-        self.name = ''
         self.portrait = 0
         self.bestRecord = 0
         self.winRecord = 0
         self.continueRecord = 0
+        
+        self.initRespCache()
     
-    def updateAccount(self, updateList):
+    def updateValue(self, updateList):
         convertList = list(updateList)
         self.accountId = convertList[0]
         self.name = convertList[1]
@@ -48,30 +51,33 @@ class Account(Common.ObjRespBase):
         self.bestRecord = convertList[6]
         self.winRecord = convertList[7]
         self.continueRecord = convertList[8]
+        
+        self.updateResp(convertList)
+        
+    def getResp(self):
+        return {self.__class__.__name__ : self.respDict}
 
 class ItemContainer(object):
-    def __init__(self):       
+    def __init__(self):
         self.itemContainer = {}
         
     def updateContainer(self, updateList):
         convertList = list(updateList)
         
-        for data in convertList:
-            dataIdx = data[0]
+        for datas in convertList:
+            dataIdx = datas[0]
             if not 0 in self.itemContainer:
-                self.itemContainer[dataIdx] = Item(data[0], data[2])
+                self.itemContainer[dataIdx] = Item()
             
             item = self.itemContainer[dataIdx]
-            item.itemInfo.updateResp(data)
-            
-            #TODO : valueUpdate detail
-            item.updateValue()
+            item.updateValue(datas[0], datas[2])
+            item.updateResp(datas)
                 
     def getContainerResp(self):
-        baseName = self.__class__.__name__
-        resp = {baseName:{}}
-        respList = resp[baseName]
-        for key, value in self.itemContainer.items():
-            respList[key] = value.itemInfo.getResp()
+        resp = {}
+        for value in self.itemContainer.values():
+            if not value.__class__.__name__ in resp:
+                resp[value.__class__.__name__] = []
+            resp[value.__class__.__name__].append(value.getResp())
             
         return resp
