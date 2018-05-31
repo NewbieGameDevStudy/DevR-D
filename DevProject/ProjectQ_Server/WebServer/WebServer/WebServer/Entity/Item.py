@@ -10,7 +10,7 @@ class Item(Common.BaseObjResp):
         self.itemType = 0 
         self.initRespCache()
     
-    def updateValue(self, itemIdx, itemId):
+    def loadValueFromDB(self, itemIdx, itemId):
         self.itemIdx = itemIdx
         
         if self.itemId != itemId:
@@ -19,4 +19,4 @@ class Item(Common.BaseObjResp):
             self.itemType = self.ig_metaDict['ItemType']            
              
     def getResp(self):
-        return self.respDict
+        return self.ig_respDict

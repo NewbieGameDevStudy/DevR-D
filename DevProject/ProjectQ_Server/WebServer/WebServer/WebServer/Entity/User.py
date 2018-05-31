@@ -24,7 +24,7 @@ class UserObject(object):
         if dataType in self.cachedDict:
             return self.cachedDict[dataType]
         return None
-
+    
 class Account(Common.BaseObjResp):
     def __init__(self):
         super(Account, self).__init__()
@@ -40,7 +40,7 @@ class Account(Common.BaseObjResp):
         
         self.initRespCache()
     
-    def updateValue(self, updateList):
+    def loadValueFromDB(self, updateList):
         convertList = list(updateList)
         self.accountId = convertList[0]
         self.name = convertList[1]
@@ -52,13 +52,14 @@ class Account(Common.BaseObjResp):
         self.winRecord = convertList[7]
         self.continueRecord = convertList[8]
         
-        self.updateResp(convertList)
+        self.initResp(convertList)
         
     def getResp(self):
-        return {self.__class__.__name__ : self.respDict}
+        return {self.__class__.__name__ : self.ig_respDict}
+            
 
 class ItemContainer(Common.BaseContainerResp):
-    def updateContainer(self, updateList):
+    def loadValueFromDB(self, updateList):
         convertList = list(updateList)
         
         for datas in convertList:
@@ -67,5 +68,5 @@ class ItemContainer(Common.BaseContainerResp):
                 self.container[dataIdx] = Item()
             
             item = self.container[dataIdx]
-            item.updateValue(datas[0], datas[2])
-            item.updateResp(datas)
+            item.loadValueFromDB(datas[0], datas[2])
+            item.initResp(datas)

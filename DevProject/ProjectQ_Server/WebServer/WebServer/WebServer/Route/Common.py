@@ -5,26 +5,35 @@ from abc import ABC, abstractmethod, abstractclassmethod
 
 class BaseObjResp(ABC):
     def __init__(self):
-        self.respDict = {}
+        self.ig_respDict = {}
         
     def initRespCache(self):
         for key, value in self.__dict__.items():
             if 'resp' in key or 'ig' in key:
                 continue
             
-            self.respDict[key] = value
+            self.ig_respDict[key] = value
             
-    def updateResp(self, resultList):
+    def initResp(self, resultList):
         convertList = list(resultList)
-        for key in self.respDict.keys():
+        for key in self.ig_respDict.keys():
             if not convertList:
                 break
-            self.respDict[key] = convertList.pop(0)
-        return self.respDict
+            self.ig_respDict[key] = convertList.pop(0)
+        return self.ig_respDict
     
     @abstractclassmethod
     def getResp(self):        
         pass
+    
+    def syncToResp(self):
+        syncFields = self.__dict__.items()
+        
+        self.ig_respDict.clear()
+        for key, value in syncFields:
+            if "ig" in key:
+                continue
+            self.ig_respDict[key] = value
     
 class BaseContainerResp(ABC):
     def __init__(self):
@@ -40,9 +49,13 @@ class BaseContainerResp(ABC):
         return resp
     
     @abstractclassmethod
-    def updateContainer(self, updateList):
+    def loadValueFromDB(self, updateList):
         pass
-            
+
+class BaseRoute(object):
+    def getSession(self, request):
+        session = request.cookies.get("Session")
+        return session                        
             
 class RespHandler(object):
     

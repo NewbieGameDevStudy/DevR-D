@@ -35,15 +35,20 @@ class MetaDataMgr(SingletonInstane):
                     csvlist[idx] = rowDict
                     
     def getMetaData(self, metaStr, metaId):
-        if not metaStr in self.metaDataDict:
+        findDict = self.getMetaDatas(metaStr)
+        if findDict is None:
             return None
-        
-        findDict = self.metaDataDict[metaStr]
         
         if not metaId in findDict:
             return None
         
         return findDict[metaId]
+    
+    def getMetaDatas(self, metaStr):
+        if not metaStr in self.metaDataDict:
+            return None
+        
+        return self.metaDataDict[metaStr]
 
 metaData = MetaDataMgr.instance()
 metaData.loadData()

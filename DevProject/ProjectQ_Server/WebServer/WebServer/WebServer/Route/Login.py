@@ -7,25 +7,20 @@ import Route.Common
 from Route import Common
 import Entity.User
 import time
+from flask.helpers import make_response
 
-class Login(Resource):
+class Login(Resource, Common.BaseRoute):
     def get(self):
-        Route.parser.add_argument("accountId")
-        args = Route.parser.parse_args()
-                                    
-        if not "accountId" in args or not args["accountId"]:
-            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_LOGIN_PARAM))
+        session = self.getSession(request)
+        if session is None:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
             
-        accountId = args["accountId"]
-                
-        accountIdStr = str(accountId)
-        
-        if not accountId in Entity.userCachedObjects:
+        if not session in Entity.userCachedObjects:
             userObject = Entity.User.UserObject()
-            Entity.userCachedObjects[accountId] = userObject
+            Entity.userCachedObjects[session] = userObject
         
         try:
-            return jsonify(self._getPlayerStatus(accountIdStr))
+            return jsonify(self._getPlayerStatus(session))
         except Exception as e:
             print(str(e))
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_LOGIN_NOT_FOUND_ACCOUNT))
@@ -33,11 +28,11 @@ class Login(Resource):
     def _getPlayerStatus(self, accountId):
         accountDB = DB.dbConnection.customSelectQuery("select * from gamedb.account where iAccountId = %s" % accountId)
         accountInfo = Entity.userCachedObjects[accountId].getData(Entity.Define.ACCOUNT_INFO)
-        accountInfo.updateValue(accountDB)
+        accountInfo.loadValueFromDB(accountDB)
         
         itemDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.item where iAccountId = %s" % accountId)
         itemContanier = Entity.userCachedObjects[accountId].getData(Entity.Define.ITEM_CONTANIER)
-        itemContanier.updateContainer(itemDB)
+        itemContanier.loadValueFromDB(itemDB)
         
         mailDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.mailBox where iAccountId = %s" % accountId)        
         
@@ -53,10 +48,10 @@ class Login(Resource):
         args = Route.parser.parse_args()
         
         if not "nickname" in args or not args["nickname"]:
-            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_LOGIN_PARAM))
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INPUT_PARAMS))
         
         if not "portrait" in args or not args["portrait"]:
-            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_LOGIN_PARAM))
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INPUT_PARAMS))
         
         nickname = "\"%s\"" % args["nickname"] 
         portrait = args["portrait"]

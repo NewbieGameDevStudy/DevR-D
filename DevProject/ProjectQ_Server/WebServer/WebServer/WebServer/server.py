@@ -4,6 +4,12 @@ import Util
 
 from flask import Flask
 from flask_restful import Api
+from Entity.Define import SHOP
+from Entity import Shop
+import Entity
+
+def serverInit():
+    Entity.serverCachedObject[Entity.Define.SHOP] = Shop.ShopBase()
 
 if __name__ == '__main__':
     app = Flask(__name__)
@@ -14,8 +20,11 @@ if __name__ == '__main__':
     
     #setting
     Util.guidInst.setGuid(1)
+    serverInit()
        
     for routeClass, routeString in Route.route_dict.items():
         api.add_resource(routeClass, routeString)
     
     app.run('0.0.0.0', 5000)
+    
+    
