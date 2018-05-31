@@ -25,7 +25,7 @@ class UserObject(object):
             return self.cachedDict[dataType]
         return None
 
-class Account(Common.ObjRespBase):
+class Account(Common.BaseObjResp):
     def __init__(self):
         super(Account, self).__init__()
         self.accountId = 0
@@ -57,27 +57,15 @@ class Account(Common.ObjRespBase):
     def getResp(self):
         return {self.__class__.__name__ : self.respDict}
 
-class ItemContainer(object):
-    def __init__(self):
-        self.itemContainer = {}
-        
+class ItemContainer(Common.BaseContainerResp):
     def updateContainer(self, updateList):
         convertList = list(updateList)
         
         for datas in convertList:
             dataIdx = datas[0]
-            if not 0 in self.itemContainer:
-                self.itemContainer[dataIdx] = Item()
+            if not 0 in self.container:
+                self.container[dataIdx] = Item()
             
-            item = self.itemContainer[dataIdx]
+            item = self.container[dataIdx]
             item.updateValue(datas[0], datas[2])
             item.updateResp(datas)
-                
-    def getContainerResp(self):
-        resp = {}
-        for value in self.itemContainer.values():
-            if not value.__class__.__name__ in resp:
-                resp[value.__class__.__name__] = []
-            resp[value.__class__.__name__].append(value.getResp())
-            
-        return resp

@@ -1,8 +1,9 @@
 from linecache import cache
 import Route.Define
 import json
+from abc import ABC, abstractmethod, abstractclassmethod
 
-class ObjRespBase(object):
+class BaseObjResp(ABC):
     def __init__(self):
         self.respDict = {}
         
@@ -21,9 +22,27 @@ class ObjRespBase(object):
             self.respDict[key] = convertList.pop(0)
         return self.respDict
     
+    @abstractclassmethod
     def getResp(self):        
         pass
     
+class BaseContainerResp(ABC):
+    def __init__(self):
+        self.container = {}
+        
+    def getContainerResp(self):
+        resp = {}
+        for value in self.container.values():
+            if not value.__class__.__name__ in resp:
+                resp[value.__class__.__name__] = []
+            resp[value.__class__.__name__].append(value.getResp())
+            
+        return resp
+    
+    @abstractclassmethod
+    def updateContainer(self, updateList):
+        pass
+            
             
 class RespHandler(object):
     

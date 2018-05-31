@@ -1,7 +1,7 @@
 from MetaDataMgr import metaData
 from Route import Common
 
-class Item(Common.ObjRespBase):
+class Item(Common.BaseObjResp):
     def __init__(self):
         super(Item, self).__init__()
         self.itemIdx = 0

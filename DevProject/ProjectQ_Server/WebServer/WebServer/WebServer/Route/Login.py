@@ -26,8 +26,8 @@ class Login(Resource):
         
         try:
             return jsonify(self._getPlayerStatus(accountIdStr))
-            
-        except:
+        except Exception as e:
+            print(str(e))
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_LOGIN_NOT_FOUND_ACCOUNT))
     
     def _getPlayerStatus(self, accountId):
@@ -45,6 +45,7 @@ class Login(Resource):
         Common.respHandler.mergeResp(itemContanier.getContainerResp())
         
         return Common.respHandler.getResponse(Route.Define.OK_LOGIN_CONNECT)
+                
                 
     def put(self):
         Route.parser.add_argument("nickname")
@@ -75,8 +76,9 @@ class Login(Resource):
         playerInfo = userObject.getData(Entity.Define.ACCOUNT_INFO)
         
         try:
-            DB.dbConnection.insertQuery("gamedb.account", playerInfo.ig_queryStr, playerInfo.getRenewFieldDBCache({"accountId":accountId, "name":nickname, "portrait":portrait}))
-        except:
+            DB.dbConnection.customInsertQuery("insert into gamedb.account (iaccountid, cname, iportrait) values(%d, %s, %d)" % (int(accountId), nickname, int(portrait)))
+        except Exception as e:
+            print(str(e))
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_NOT_LOGIN))
         
         return jsonify(Common.respHandler.customeResponse(Route.Define.OK_CREATE_LOGIN, {'accountId':accountId}))
