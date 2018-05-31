@@ -1,0 +1,6 @@
+Index,QuestText,Result,GetExp,Difficult
+0,과학문제1,TRUE,1,5
+1,과학문제2,TRUE,2,4
+2,과학문제3,FALSE,3,3
+3,과학문제4,TRUE,4,2
+4,과학문제5,FALSE,5,1

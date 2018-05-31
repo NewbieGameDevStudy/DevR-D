@@ -6,6 +6,7 @@ import Util
 import Route.Common
 from Route import Common
 import Entity.User
+import time
 
 class Login(Resource):
     def get(self):
@@ -16,21 +17,35 @@ class Login(Resource):
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_LOGIN_PARAM))
             
         accountId = args["accountId"]
-        
+                
         accountIdStr = str(accountId)
-        if not accountIdStr in Entity.userCachedObjects:
+        
+        if not accountId in Entity.userCachedObjects:
             userObject = Entity.User.UserObject()
-            Entity.userCachedObjects[accountIdStr] = userObject
-            playerInfo = userObject.getData(Entity.Define.PLAYER_INFO)
-        else:
-            playerInfo = Entity.userCachedObjects[accountIdStr].getData(Entity.Define.PLAYER_INFO)
+            Entity.userCachedObjects[accountId] = userObject
         
         try:
-            result = DB.dbConnection.selectQuery("gamedb.account", "iAccountId", str(accountId), playerInfo.ig_queryStr)
-        except:
+            return jsonify(self._getPlayerStatus(accountIdStr))
+        except Exception as e:
+            print(str(e))
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_LOGIN_NOT_FOUND_ACCOUNT))
+    
+    def _getPlayerStatus(self, accountId):
+        accountDB = DB.dbConnection.customSelectQuery("select * from gamedb.account where iAccountId = %s" % accountId)
+        accountInfo = Entity.userCachedObjects[accountId].getData(Entity.Define.ACCOUNT_INFO)
+        accountInfo.updateValue(accountDB)
         
-        return jsonify(Common.respHandler.getResponse("base", playerInfo.getConvertToResponse(result, Route.Define.OK_LOGIN_CONNECT)))
+        itemDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.item where iAccountId = %s" % accountId)
+        itemContanier = Entity.userCachedObjects[accountId].getData(Entity.Define.ITEM_CONTANIER)
+        itemContanier.updateContainer(itemDB)
+        
+        mailDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.mailBox where iAccountId = %s" % accountId)        
+        
+        Common.respHandler.mergeResp(accountInfo.getResp())
+        Common.respHandler.mergeResp(itemContanier.getContainerResp())
+        
+        return Common.respHandler.getResponse(Route.Define.OK_LOGIN_CONNECT)
+                
                 
     def put(self):
         Route.parser.add_argument("nickname")
@@ -58,11 +73,12 @@ class Login(Resource):
 
         userObject = Entity.User.UserObject()
         Entity.userCachedObjects[accountIdStr] = userObject
-        playerInfo = userObject.getData(Entity.Define.PLAYER_INFO)
+        playerInfo = userObject.getData(Entity.Define.ACCOUNT_INFO)
         
         try:
-            DB.dbConnection.insertQuery("gamedb.account", playerInfo.ig_queryStr, playerInfo.getRenewFieldDBCache({"accountId":accountId, "name":nickname, "portrait":portrait}))
-        except:
+            DB.dbConnection.customInsertQuery("insert into gamedb.account (iaccountid, cname, iportrait) values(%d, %s, %d)" % (int(accountId), nickname, int(portrait)))
+        except Exception as e:
+            print(str(e))
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_NOT_LOGIN))
         
         return jsonify(Common.respHandler.customeResponse(Route.Define.OK_CREATE_LOGIN, {'accountId':accountId}))
