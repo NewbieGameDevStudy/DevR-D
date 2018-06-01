@@ -25,11 +25,14 @@ class TradeShop(Resource, Common.BaseRoute):
         if not "buyId" in args:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INPUT_PARAMS))
         
-        shop = serverCachedObject[Entity.Define.SHOP]
-        resultCode = shop.buyProduct(args["buyId"])
+        if not session in userCachedObjects:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INVALID_ACCESS))
         
-        if not resultCode is Route.Define.OK_SUCCESS:
-            return jsonify(Common.respHandler.errorResponse(resultCode))
+        userObject = userCachedObjects[session]
+        
+        shop = serverCachedObject[Entity.Define.SHOP]
+        resp = shop.buyProduct(int(args["buyId"]), userObject)
+        return jsonify(resp)
         
         
         

@@ -89,15 +89,16 @@ namespace ClientTool
 
         public void TestSession2(object sender, EventArgs e)
         {
-            //var playerInfo = new ReqPlayerInfo {
-            //    accountId = id,
-            //};
+            var playerInfo = new ReqLoginInfo {
+                accountId = 186282282057728513,
+            };
 
-            //client.HttpConnection.HttpConnectAsync(playerInfo, (RespPlayerInfo result) => {
-            //    if (result == null)
-            //        return;
+            client.HttpConnect();
+            client.HttpConnection.HttpConnectAsync(playerInfo, (PlayerStatus result) => {
+                if (result == null)
+                    return;
 
-            //});
+            });
         }
 
         public void Button_RoomEnter(object sender, RoutedEventArgs e)

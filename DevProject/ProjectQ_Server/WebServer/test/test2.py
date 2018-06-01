@@ -1,8 +1,13 @@
+#!/usr/bin/env python
+# coding=utf8
 '''
 Created on 2018. 4. 29.
 
 @author: namoeye
 '''
+
+
+import re
 
 from flask import jsonify, request, session
 import json
@@ -59,14 +64,23 @@ class dictTest():
 # 
 # if 'ig' in d:
 #     print('find')
+import time
+import datetime
 
-d = [183033101549568769, 0, 0, 0, 'abb', 2, 0, 0]
+print(int(time.time()))
 
-df = d.pop(0)
+list = [1,2,3,4]
 
-print(df)
+for idx, data in enumerate(list):
+    print(idx, data)
 
-df = d.pop(0)
+p = re.compile('TRUE|FALSE', re.I)
+#p = re.compile('[a-zA-Z0-9]')
+#m = p.match("true")
 
-print(df)
-print(d)
+#p = re.compile('[0-9]')
+#p = re.compile('[a-zA-Z]')
+#p = re.compile('[ㄱ-ㅣ가-힣]+')
+m = p.match("false")
+
+print(m)

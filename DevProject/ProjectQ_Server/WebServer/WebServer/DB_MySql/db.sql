@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `gamedb` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `gamedb`;
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: localhost    Database: gamedb
@@ -30,12 +28,13 @@ CREATE TABLE `account` (
   `iLevel` tinyint(1) NOT NULL DEFAULT '1',
   `iExp` int(10) unsigned NOT NULL DEFAULT '0',
   `iGameMoney` int(10) unsigned NOT NULL DEFAULT '0',
-  `iavatarType` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `iportrait` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `ibestRecord` int(10) unsigned NOT NULL DEFAULT '0',
   `iwinRecord` int(10) unsigned NOT NULL DEFAULT '0',
   `icontinueRecord` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`iAccountId`),
-  UNIQUE KEY `uAccount_UNIQUE` (`iAccountId`)
+  UNIQUE KEY `uAccount_UNIQUE` (`iAccountId`),
+  UNIQUE KEY `cName_UNIQUE` (`cName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -45,8 +44,66 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (100,'A',1,11,111,0,0,0,0),(183033101549568769,'abb',0,0,0,2,0,0,0);
+INSERT INTO `account` VALUES (101,'ddfdsafdsa',1,0,0,1,0,0,0),(185144400936961537,'fsdfdsfsd',1,0,0,5,0,0,0),(185144526766081793,'uytuyt',1,0,0,5,0,0,0),(185144614846466049,'234234',1,0,0,5,0,0,0),(185144728092674305,'5675675',1,0,0,5,0,0,0),(185144996528130561,'fdasf',1,0,0,5,0,0,0),(185146892353538817,'gfdgfds',1,0,0,5,0,0,0),(185167226339331073,'gfdgdf',1,0,0,0,0,0,0),(185167293448195329,'fdsfsaf',1,0,0,0,0,0,0),(185169336074243585,'dd',1,0,0,1,0,0,0),(185183122751491841,'tertert',1,0,0,5,0,0,0),(185183785451524097,'fdsafds',1,0,0,5,0,0,0),(185918564597760513,'fdsafsaf',1,0,0,5,0,0,0),(186281959096320257,'123',1,0,0,5,0,0,0),(186282282057728513,'namoeye',1,0,0,6,0,0,0),(186831572303872257,'dada',1,0,0,1,0,0,0),(186834407653376257,'dada6',1,0,0,1,0,0,0),(186838060892160257,'dada6766',1,0,0,1,0,0,0),(191313278402562049,'879978978978',1,0,0,10,0,0,0),(191322082246656257,'8799789789781',1,0,0,10,0,0,0),(191323017576448513,'87997897897811',1,0,0,10,0,0,0);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `item`
+--
+
+DROP TABLE IF EXISTS `item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `item` (
+  `iIdx` bigint(8) NOT NULL,
+  `iAccountId` bigint(8) NOT NULL,
+  `iItemId` int(11) NOT NULL,
+  `iItemType` tinyint(1) NOT NULL,
+  PRIMARY KEY (`iIdx`,`iAccountId`,`iItemId`),
+  UNIQUE KEY `iIdx_UNIQUE` (`iIdx`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `item`
+--
+
+LOCK TABLES `item` WRITE;
+/*!40000 ALTER TABLE `item` DISABLE KEYS */;
+INSERT INTO `item` VALUES (200000000,186282282057728513,1,1),(200000001,186282282057728513,2,2),(200000002,186282282057728513,0,0);
+/*!40000 ALTER TABLE `item` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `mailbox`
+--
+
+DROP TABLE IF EXISTS `mailbox`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mailbox` (
+  `iIdx` bigint(20) NOT NULL AUTO_INCREMENT,
+  `iAccountId` bigint(8) NOT NULL,
+  `iSenderAccountId` bigint(8) NOT NULL,
+  `cSender` varchar(45) NOT NULL,
+  `cTitle` varchar(45) NOT NULL,
+  `cBody` varchar(45) NOT NULL,
+  `dSendTime` datetime NOT NULL,
+  `dExpireTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`iIdx`),
+  UNIQUE KEY `idx_UNIQUE` (`iIdx`)
+) ENGINE=InnoDB AUTO_INCREMENT=1002 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `mailbox`
+--
+
+LOCK TABLES `mailbox` WRITE;
+/*!40000 ALTER TABLE `mailbox` DISABLE KEYS */;
+INSERT INTO `mailbox` VALUES (1001,186282282057728513,186831572303872257,'dada','테스트','테스트본문','2018-06-02 00:00:00','2018-06-02 00:00:00');
+/*!40000 ALTER TABLE `mailbox` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -58,4 +115,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-09  1:53:43
+-- Dump completed on 2018-06-02  2:36:07

@@ -5,6 +5,7 @@ Created on 2018. 5. 29.
 '''
 import csv
 import os
+import re
 from os import listdir
 from os.path import isfile, join
 from Util import SingletonInstane
@@ -16,6 +17,11 @@ class MetaDataMgr(SingletonInstane):
     def loadData(self):
         path = os.getcwd() + '\\CsvDataTable'
         onlyfiles = [f for f in listdir(path) if isfile(join(path, f))]
+        
+        boolRegx = re.compile("TRUE", re.I)
+        intRegx = re.compile('[0-9]')
+        strRegx = re.compile('[a-zA-Z]')
+        
         for fileName in onlyfiles:
             keyStr = fileName.split('.')
             self.metaDataDict[keyStr[0]] = {}
@@ -27,11 +33,21 @@ class MetaDataMgr(SingletonInstane):
                 for row in reader_csv:
                     first = True             
                     rowDict = {}
-                    for key, val in row.items():
-                        rowDict[key] = val
+                    for key, val in row.items():                        
                         if first:
                             idx = int(val)
-                            first = False                    
+                            first = False
+                            
+                        #bRegx = boolRegx.match(val)
+                        
+                        iRegx = intRegx.match(val)
+                        if iRegx:
+                            rowDict[key] = int(val)
+                            continue
+#                         sRegx = strRegx.match(val)
+#                         if sRegx:
+                        rowDict[key] = val
+                                                                                            
                     csvlist[idx] = rowDict
                     
     def getMetaData(self, metaStr, metaId):

@@ -21,7 +21,7 @@ namespace Http
             m_restClient.CookieContainer = new System.Net.CookieContainer();
         }
 
-        public void HttpConnectAsync<REQUEST, RESPONSE>(REQUEST dto, Action<RESPONSE> callback) 
+        public void HttpConnectAsync<REQUEST, RESPONSE>(ulong session, REQUEST dto, Action<RESPONSE> callback) 
             where REQUEST : new()
             where RESPONSE : new()
         {
@@ -42,6 +42,8 @@ namespace Http
             } else {
                 request.AddBody(dto);
             }
+
+            request.AddCookie("Session", session.ToString());
 
             m_restClient.ExecuteAsync(request, (response) => {
                 var result = JsonConvert.DeserializeObject<RESPONSE>(response.Content);

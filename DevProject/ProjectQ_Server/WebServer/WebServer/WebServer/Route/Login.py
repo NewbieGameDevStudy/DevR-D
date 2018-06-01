@@ -34,10 +34,13 @@ class Login(Resource, Common.BaseRoute):
         itemContanier = Entity.userCachedObjects[accountId].getData(Entity.Define.ITEM_CONTANIER)
         itemContanier.loadValueFromDB(itemDB)
         
-        mailDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.mailBox where iAccountId = %s" % accountId)        
+        mailDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.mailBox where iAccountId = %s" % accountId)
+        mailContanier = Entity.userCachedObjects[accountId].getData(Entity.Define.MAIL_CONTANIER)        
+        mailContanier.loadValueFromDB(mailDB)
         
         Common.respHandler.mergeResp(accountInfo.getResp())
         Common.respHandler.mergeResp(itemContanier.getContainerResp())
+        Common.respHandler.mergeResp(mailContanier.getContainerResp())
         
         return Common.respHandler.getResponse(Route.Define.OK_LOGIN_CONNECT)
                 
@@ -65,6 +68,9 @@ class Login(Resource, Common.BaseRoute):
         
         accountIdStr = str(accountId)
         session[accountIdStr] = nickname;
+
+        resp = make_response()
+        resp.set_cookie("dd", "ff")
 
         userObject = Entity.User.UserObject()
         Entity.userCachedObjects[accountIdStr] = userObject

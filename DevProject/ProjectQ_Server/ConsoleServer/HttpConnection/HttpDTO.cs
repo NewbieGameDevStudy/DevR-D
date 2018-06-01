@@ -20,7 +20,7 @@ namespace GameServer.Connection
     [HttpConnect(Method.GET, "/loginInfo")]     //두번째
     public class ReqLoginInfo
     {
-        public ulong accountId;
+        
     }
 
     //public class A {
@@ -46,18 +46,32 @@ namespace GameServer.Connection
     //    public A b;
     //}
 
-    public class RespLoginInfo : ResponseBase
+    public class Account
     {
         public ulong accountId;
+        public string name;
+        public int level;
+        public int exp;
+        public int gameMoney;
         public int portrait;
         public int bestRecord;
         public int winRecord;
         public int continueRecord;
-        public int level;
-        public int exp;
-        public int gameMoney;
-        public string name;
     }
+
+    public class Item
+    {
+        public ulong itemId;
+        public int itemIdx;        
+        public int itemType;
+    }
+
+    public class PlayerStatus : ResponseBase
+    {
+        public Account Account;
+        public Item[] item;
+    }
+    
     #endregion
 
     public static class ResponseCode

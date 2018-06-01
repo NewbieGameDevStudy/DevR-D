@@ -42,6 +42,7 @@ namespace MetaData.Data
         public int ItemType { get; set; }
         public int Price { get; set; }
         public int GetExp { get; set; }
+        public bool StockItem { get; set; }
     }
 
     #region 퀴즈 데이터
@@ -99,6 +100,13 @@ namespace MetaData.Data
         }
     }
 
+    #region 아이템 데이터
+    public class ShopItem : BaseItemMeta
+    {
+
+    }
+    #endregion
+
     [BaseMeta("BaseItemMeta")]
     public class ItemMapping<T> : ClassMap<T> where T : BaseItemMeta
     {
@@ -109,17 +117,11 @@ namespace MetaData.Data
             Map(m => m.ItemType).Index(2);
             Map(m => m.Price).Index(3);
             Map(m => m.GetExp).Index(4);
+            Map(m => m.StockItem).Index(5);
         }
     }
 
-    #region 아이템 데이터
-    public class ShopItem : BaseItemMeta
-    {
-
-    }
-    #endregion
-
-
+    //메타데이터 list와 dict사용법
     //Map(m => m.Index).Index(0);
     //Map(m => m.Desc).Index(1);
     //Map(m => m.Result).Index(2);

@@ -3,8 +3,9 @@ Created on 2018. 5. 13.
 
 @author: namoeye
 '''
-from Entity.Define import ACCOUNT_INFO, ITEM_CONTANIER
+from Entity.Define import ACCOUNT_INFO, ITEM_CONTANIER, MAIL_CONTANIER
 from Entity.Item import Item
+from Entity.Mail import Mail
 from Route import Common
 
 class UserObject(object):
@@ -12,6 +13,7 @@ class UserObject(object):
         self.cachedDict = {}
         self.accountInfo = Account()
         self.itemContainer = ItemContainer()
+        self.mailContainer = MailContainer()
         
         #cached init dict
         self.initCachedDict()
@@ -19,6 +21,7 @@ class UserObject(object):
     def initCachedDict(self):
         self.cachedDict[ACCOUNT_INFO] = self.accountInfo
         self.cachedDict[ITEM_CONTANIER] = self.itemContainer
+        self.cachedDict[MAIL_CONTANIER] = self.mailContainer
     
     def getData(self, dataType):
         if dataType in self.cachedDict:
@@ -60,13 +63,40 @@ class Account(Common.BaseObjResp):
 
 class ItemContainer(Common.BaseContainerResp):
     def loadValueFromDB(self, updateList):
-        convertList = list(updateList)
-        
-        for datas in convertList:
+        for datas in updateList:
             dataIdx = datas[0]
             if not 0 in self.container:
                 self.container[dataIdx] = Item()
             
             item = self.container[dataIdx]
             item.loadValueFromDB(datas[0], datas[2])
-            item.initResp(datas)
+            #item.initResp(datas)
+            item.syncToResp()
+            
+    def getItemById(self, itemId):
+        for item in self.container.values():
+            if item.itemId == itemId:
+                return item
+            
+        return None 
+    
+
+class MailContainer(Common.BaseContainerResp):
+    def loadValueFromDB(self, updateList):
+        for datas in updateList:
+            datas = list(datas)
+            dataIdx = datas[0]
+            if not 0 in self.container:
+                self.container[dataIdx] = Mail()
+            
+            del datas[2]
+            mail = self.container[dataIdx]
+            mail.loadValueFromDB(datas)
+            mail.syncToResp()
+            
+    def getItemById(self, mailIdx):
+        for mail in self.container.values():
+            if mail.mailIdx == mailIdx:
+                return mail
+            
+        return None
