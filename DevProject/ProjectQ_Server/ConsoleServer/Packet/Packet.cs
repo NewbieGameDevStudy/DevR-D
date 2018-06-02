@@ -12,51 +12,15 @@ namespace Packet
     [ProtoContract]
     public class PK_CS_ENTERROOM : PK_BASE
     {
-        /* 클라이언트 섹션 바뀌면 여기도 바꿔줘야함.
-       public enum eQuestionType
-       {
-           Society,        //사회
-           Entertainment,  //연예
-           General,        //일반
-           Common,         //상식
-           History,        //역사
-           Science,        //과학
-           Sports,         //스포츠
-           Animal,         //동물
-       }*/
-        public enum RoomType
-        {
-            SOCIETY,
-            ENTERTAINMENT,
-            GENERAL,
-            COMMON,
-            HISTORY,
-            SCIENCE,
-            SPORTS,
-            ANIMAL
-        }
-
         [ProtoMember(1)]
-        public RoomType type { get; set; }
+        public ulong userSequence { get; set; }
     }
 
     [ProtoContract]
     public class PK_CS_CANCEL_MATCHING : PK_BASE
     {
-        public enum RoomType
-        {
-            SOCIETY,
-            ENTERTAINMENT,
-            GENERAL,
-            COMMON,
-            HISTORY,
-            SCIENCE,
-            SPORTS,
-            ANIMAL
-        }
-
         [ProtoMember(1)]
-        public RoomType type { get; set; }
+        public ulong userSequence { get; set; }
     }
 
     [ProtoContract]
@@ -138,15 +102,17 @@ namespace Packet
         [ProtoMember(1)]
         public MatchingErrorType type { get; set; }
         [ProtoMember(2)]
-        public ulong accountID { get; set; }
+        public ulong userSequence { get; set; }
     }
 
     [ProtoContract]
     public class PK_SC_MATCHING_MEMBER_INFO : PK_BASE
     {
         [ProtoMember(1)]
-        public string strNickName { get; set; }
+        public ulong userSequence { get; set; }
         [ProtoMember(2)]
+        public string strNickName { get; set; }
+        [ProtoMember(3)]
         public int portRaitNo { get; set; }
     }
 

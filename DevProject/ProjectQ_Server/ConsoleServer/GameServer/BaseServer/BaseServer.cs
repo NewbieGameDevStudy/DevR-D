@@ -66,19 +66,10 @@ namespace Server
             }
 
             System.Console.WriteLine("접속된 클라이언트 수 : {0}", m_accountCount);
-
-            RequestPlayerInforToWebServer(client.AccountId);
-        }
-
-        bool RequestPlayerInforToWebServer(ulong _accountID)
-        {
-
-            return false;
         }
 
         void CloseClient()
         {
-
             //CloseSocket(Socket socket, UserToken token)
         }
 

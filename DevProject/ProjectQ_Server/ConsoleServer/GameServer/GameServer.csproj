@@ -60,6 +60,7 @@
     <Compile Include="PlayerObject\Component\BaseComponent.cs" />
     <Compile Include="PlayerObject\Component\MoveComponent.cs" />
     <Compile Include="PlayerObject\PlayerData.cs" />
+    <Compile Include="PlayerObject\PlayerManager.cs" />
     <Compile Include="PlayerObject\PlayerObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
