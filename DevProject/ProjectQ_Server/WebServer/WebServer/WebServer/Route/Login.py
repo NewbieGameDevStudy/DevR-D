@@ -25,17 +25,17 @@ class Login(Resource, Common.BaseRoute):
             print(str(e))
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_LOGIN_NOT_FOUND_ACCOUNT))
     
-    def _getPlayerStatus(self, accountId):
-        accountDB = DB.dbConnection.customSelectQuery("select * from gamedb.account where iAccountId = %s" % accountId)
-        accountInfo = Entity.userCachedObjects[accountId].getData(Entity.Define.ACCOUNT_INFO)
+    def _getPlayerStatus(self, session):
+        accountDB = DB.dbConnection.customSelectQuery("select * from gamedb.account where iAccountId = %s" % session)
+        accountInfo = Entity.userCachedObjects[session].getData(Entity.Define.ACCOUNT_INFO)
         accountInfo.loadValueFromDB(accountDB)
         
-        itemDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.item where iAccountId = %s" % accountId)
-        itemContanier = Entity.userCachedObjects[accountId].getData(Entity.Define.ITEM_CONTANIER)
+        itemDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.item where iAccountId = %s" % session)
+        itemContanier = Entity.userCachedObjects[session].getData(Entity.Define.ITEM_CONTANIER)
         itemContanier.loadValueFromDB(itemDB)
         
-        mailDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.mailBox where iAccountId = %s" % accountId)
-        mailContanier = Entity.userCachedObjects[accountId].getData(Entity.Define.MAIL_CONTANIER)        
+        mailDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.mailBox where iAccountId = %s" % session)
+        mailContanier = Entity.userCachedObjects[session].getData(Entity.Define.MAIL_CONTANIER)        
         mailContanier.loadValueFromDB(mailDB)
         
         Common.respHandler.mergeResp(accountInfo.getResp())
@@ -69,12 +69,9 @@ class Login(Resource, Common.BaseRoute):
         accountIdStr = str(accountId)
         session[accountIdStr] = nickname;
 
-        resp = make_response()
-        resp.set_cookie("dd", "ff")
-
         userObject = Entity.User.UserObject()
         Entity.userCachedObjects[accountIdStr] = userObject
-        playerInfo = userObject.getData(Entity.Define.ACCOUNT_INFO)
+        #playerInfo = userObject.getData(Entity.Define.ACCOUNT_INFO)
         
         try:
             DB.dbConnection.customInsertQuery("insert into gamedb.account (iaccountid, cname, iportrait) values(%d, %s, %d)" % (int(accountId), nickname, int(portrait)))

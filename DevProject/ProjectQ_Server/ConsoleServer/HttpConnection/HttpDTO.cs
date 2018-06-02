@@ -1,5 +1,6 @@
 ﻿using Http;
 using RestSharp;
+using System;
 using System.Collections.Generic;
 
 namespace GameServer.Connection
@@ -22,6 +23,7 @@ namespace GameServer.Connection
     {
         
     }
+
 
     //public class A {
     //    public int a;
@@ -66,10 +68,22 @@ namespace GameServer.Connection
         public int itemType;
     }
 
+    public class Mail
+    {
+        public ulong mailIdx;
+        public ulong senderAccountId;
+        public string sender;
+        public string title;
+        public string body;
+        public ulong sendTime;
+        public ulong exprireTime;
+    }
+
     public class PlayerStatus : ResponseBase
     {
         public Account Account;
         public Item[] item;
+        public Mail[] mail;
     }
     
     #endregion
@@ -77,14 +91,22 @@ namespace GameServer.Connection
     public static class ResponseCode
     {
         public const int ERROR_LOGIN_NOT_FOUND_ACCOUNT = 101;
-        public const int ERROR_CREATE_LOGIN_PARAM = 102;
+        public const int ERROR_NOT_FOUND_SESSION = 103;
+        public const int ERROR_INPUT_PARAMS = 102;
+        public const int ERROR_INVALID_ACCESS = 104;
 
 
         public const int ERROR_CREATE_NOT_LOGIN = 1001;
         public const int ERROR_ALREADY_CREATE_NICKNAME = 1002;
-
         public const int OK_CREATE_LOGIN = 2001;
         public const int OK_LOGIN_CONNECT = 2002;
+
+        public const int OK_SUCCESS = 2004;
+
+        public const int ERROR_INVALID_BUY_PRODUCT = 30001;
+        public const int ERROR_NOT_ENOUGH_MONEY = 30002;
+        public const int ERROR_NOT_FOUND_ITEM = 30003;
+        
     }
 
 }

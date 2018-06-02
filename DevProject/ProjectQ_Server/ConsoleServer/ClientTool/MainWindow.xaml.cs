@@ -90,11 +90,11 @@ namespace ClientTool
         public void TestSession2(object sender, EventArgs e)
         {
             var playerInfo = new ReqLoginInfo {
-                accountId = 186282282057728513,
+                
             };
 
             client.HttpConnect();
-            client.HttpConnection.HttpConnectAsync(playerInfo, (PlayerStatus result) => {
+            client.HttpConnection.HttpConnectAsync(186282282057728513, playerInfo, (PlayerStatus result) => {
                 if (result == null)
                     return;
 
