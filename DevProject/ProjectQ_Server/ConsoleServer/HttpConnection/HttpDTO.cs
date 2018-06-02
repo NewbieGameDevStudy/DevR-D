@@ -136,22 +136,27 @@ namespace GameServer.Connection
     public static class ResponseCode
     {
         public const int ERROR_LOGIN_NOT_FOUND_ACCOUNT = 101;
-        public const int ERROR_NOT_FOUND_SESSION = 103;
         public const int ERROR_INPUT_PARAMS = 102;
+        public const int ERROR_NOT_FOUND_SESSION = 103;
         public const int ERROR_INVALID_ACCESS = 104;
+        public const int ERROR_OUT_OF_RANGE = 105;
 
 
         public const int ERROR_CREATE_NOT_LOGIN = 1001;
         public const int ERROR_ALREADY_CREATE_NICKNAME = 1002;
+
         public const int OK_CREATE_LOGIN = 2001;
         public const int OK_LOGIN_CONNECT = 2002;
-
-        public const int OK_SUCCESS = 2004;
+        public const int OK_SUCCESS = 2003;
 
         public const int ERROR_INVALID_BUY_PRODUCT = 30001;
         public const int ERROR_NOT_ENOUGH_MONEY = 30002;
         public const int ERROR_NOT_FOUND_ITEM = 30003;
-        
+
+        public const int ERROR_ALREADY_EQUIP_ITEM = 40001;
+        public const int OK_EQUIP_ITEM = 40002;
+        public const int OK_UNEQUIP_ITEM = 40003;
+
     }
 
 }
