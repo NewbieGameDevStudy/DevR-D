@@ -1,4 +1,5 @@
 ﻿using GameServer.Player;
+using System;
 using System.Collections.Generic;
 using Packet;
 
@@ -74,7 +75,10 @@ namespace GameServer.MatchRoom
         public void EnterRoom(PlayerObject player)
         {
             if (m_roomPlayerList.Contains(player))
+            {
+                Console.WriteLine("RoomNo : {0}, Already in {0} ", RoomNo, player.UserSequence);
                 return;
+            }
 
             // 신규 참가 인원 : 기존 방인원 정보 send
             // 기존 참가 인원 : 신규 인원 정보 send
@@ -106,7 +110,6 @@ namespace GameServer.MatchRoom
             m_roomPlayerList.Add(player);
             player.EnteredRoomNo = this.RoomNo;
             player.PlayerIndex = (byte)m_roomPlayerList.Count;
-
         }
 
         public void MatchimgGame(double deltaTime)
@@ -114,7 +117,7 @@ namespace GameServer.MatchRoom
             if (m_roomPlayerList.Count >= GameNeedUserCount)
             {
                 CurrentRoomState = Room.RoomState.ROOM_PLAYING;
-                System.Console.WriteLine("Match! : {0}", GameNeedUserCount);
+                System.Console.WriteLine("Match! : Need - {0}, User - {0}", GameNeedUserCount, m_roomPlayerList.Count);
                 BeginTheGame(deltaTime);
             }
         }
@@ -179,6 +182,7 @@ namespace GameServer.MatchRoom
 
         void CannotMatchingGame()
         {
+            Console.WriteLine("Matching Fail! RoomNo : {0}", RoomNo);
             var info = new PK_SC_CANNOT_MATCHING_GAME
             {
                 type = PK_SC_CANNOT_MATCHING_GAME.MatchingErrorType.MAX_WAIT_TIME
@@ -186,7 +190,7 @@ namespace GameServer.MatchRoom
 
             foreach (var player in m_roomPlayerList)
             {
-                info.accountID = player.AccountID;
+                info.userSequence = player.UserSequence;
                 player.Client?.SendPacket(info);
             }
         }
@@ -203,7 +207,7 @@ namespace GameServer.MatchRoom
             var info = new PK_SC_CANNOT_MATCHING_GAME
             {
                 type = PK_SC_CANNOT_MATCHING_GAME.MatchingErrorType.CANCEL_ROOM,
-                accountID = player.AccountID
+                userSequence = player.UserSequence
             };
             player.Client?.SendPacket(info);
 

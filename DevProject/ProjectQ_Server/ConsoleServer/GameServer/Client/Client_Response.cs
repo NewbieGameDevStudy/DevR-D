@@ -7,23 +7,29 @@ namespace GameServer.ServerClient
     {
         void OnReceivePacket(PK_CS_ENTERROOM pks)
         {
-            MatchRoom.RoomManager.RoomType eRoomType = (MatchRoom.RoomManager.RoomType)pks.type;
-            m_baseServer.RoomManager.EnterWaitRoom(eRoomType, Player);
+            if (Player == null)
+                return;
+
+            Player.UserSequence = pks.userSequence;
+            m_baseServer.RoomManager.EnterWaitRoom(Player);
         }
 
         void onReceivePacket(PK_CS_CANCEL_MATCHING pks)
         {
-            MatchRoom.RoomManager.RoomType eRoomType = (MatchRoom.RoomManager.RoomType)pks.type;
-            m_baseServer.RoomManager.CancelMatching(eRoomType, Player);
+            if (Player.UserSequence != pks.userSequence)
+                return;
+
+            m_baseServer.RoomManager.CancelMatching(Player);
         }
 
         void OnReceivePacket(PK_CS_INPUT_POSITION pks)
         {
+            /*
             Player.Client.m_baseServer.RoomManager.AddMoveInput(new MatchRoom.RoomManager.MoveData {
                 handle = Player.Handle,
                 xPos = pks.xPos,
                 yPos = pks.yPos
-            });
+            });*/
         }
     }
 }
