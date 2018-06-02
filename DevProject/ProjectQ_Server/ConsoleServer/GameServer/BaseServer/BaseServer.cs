@@ -47,6 +47,7 @@ namespace Server
             HttpConnection = new HttpConnection("http://localhost:5000");
 
             m_guid = new Guid(machiedId);
+
         }
 
         public void RunServer()

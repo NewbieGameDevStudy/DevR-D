@@ -1,89 +1,63 @@
 from linecache import cache
 import Route.Define
 import json
+from abc import ABC, abstractmethod, abstractclassmethod
 
-class ObjRespBase(object):
+class BaseObjResp(ABC):
     def __init__(self):
-        self.responseCode = 0
-        self.ig_dbCache = []
-        self.ig_responseCache = []
-        self.ig_fieldValueCache = {}
-        self.ig_queryStr = ""
-        self.ig_fieldType = {}
-        self.ig_resp = {}
+        self.respDict = {}
         
-    def initFieldDBQueryCache(self):
+    def initRespCache(self):
         for key, value in self.__dict__.items():
-            if 'ig' in key or key == 'responseCode':
+            if 'resp' in key or 'ig' in key:
                 continue
             
-            if 'db_' in key:
-                convertType = type(value)
-                convertStr = key[3:]
-                if convertType.__name__ == 'str':
-                    self.ig_dbCache.append('c%s' % convertStr)
-
-                elif convertType.__name__ == 'int':
-                    self.ig_dbCache.append('i%s' % convertStr)
-                                     
-                self.ig_fieldType[convertStr] = convertType
-                
-                self.ig_responseCache.append(convertStr)
-                self.ig_fieldValueCache[convertStr] = value
-                
-                dbKey = key[3:]
-                self.ig_resp[dbKey] = value
-            else:                  
-                self.ig_resp[key] = value
-        
-        lastIdx = len(self.ig_dbCache) - 1
-        for idx, str in enumerate(self.ig_dbCache):
-            self.ig_queryStr += str
-            if idx != lastIdx:
-                self.ig_queryStr += ", "
-    
-    def getRenewFieldDBCache(self, fieldChangeDict = None):       
-        if fieldChangeDict is None:
-            return self.ig_fieldValueCache.values()
-        
-        for key, value in fieldChangeDict.items():
-            if key in self.ig_fieldValueCache:
-                self.ig_fieldValueCache[key] = value
-        
-        return self.ig_fieldValueCache.values()
-    
-    def getConvertToResponse(self, resultList, responseCode):
+            self.respDict[key] = value
+            
+    def updateResp(self, resultList):
         convertList = list(resultList)
-        for key in self.ig_resp.keys():
+        for key in self.respDict.keys():
             if not convertList:
                 break
-            self.ig_resp[key] = convertList.pop(0)
-        
-        self.ig_resp["responseCode"] = responseCode    
-        return self.ig_resp
+            self.respDict[key] = convertList.pop(0)
+        return self.respDict
     
-    def getConvertToDBField(self, checkField, targetField):
-        if not checkField in self.ig_fieldType:
-            return None
+    @abstractclassmethod
+    def getResp(self):        
+        pass
+    
+class BaseContainerResp(ABC):
+    def __init__(self):
+        self.container = {}
         
-        type = self.ig_fieldType[checkField]
-        if type is str:
-            return "\"%s\"" % targetField
-        else:
-            return targetField
+    def getContainerResp(self):
+        resp = {}
+        for value in self.container.values():
+            if not value.__class__.__name__ in resp:
+                resp[value.__class__.__name__] = []
+            resp[value.__class__.__name__].append(value.getResp())
+            
+        return resp
+    
+    @abstractclassmethod
+    def updateContainer(self, updateList):
+        pass
+            
             
 class RespHandler(object):
     
     def __init__(self):
         self.collectReponse = {}
-    
-    def getResponse(self, responseKey, responseDatas):
-        respDict = {}
-        if responseKey == "base":
-            respDict = responseDatas
-            return respDict
         
-        respDict[responseKey] = responseDatas
+    def mergeResp(self, mergeDict):        
+        primaryDict = self.collectReponse
+        for key, value in mergeDict.items():
+            primaryDict[key]= value
+                     
+    def getResponse(self, responseCode):
+        respDict = self.collectReponse.copy()
+        self.collectReponse.clear()
+        respDict['responseCode'] = responseCode
         return respDict
     
     def errorResponse(self, responseCode):

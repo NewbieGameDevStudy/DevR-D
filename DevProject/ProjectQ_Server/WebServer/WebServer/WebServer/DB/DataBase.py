@@ -44,25 +44,27 @@ class DBConnection:
                 result = cursor.fetchone()
                 return result
         finally:
-            conn.close() 
-    
-    def insertQuery(self, insertTable, insertQueryStr, insertValues):
-        inputStr = ""
-        lastIdx = len(insertValues) - 1
-        for idx, data in enumerate(insertValues):
-            inputStr += str(data)
-            if idx != lastIdx:
-                inputStr += ", "
-       
-        insertStr = "insert into %s (%s) value (%s)" % (insertTable, insertQueryStr, inputStr)
-        return self._insertQuery(insertStr)
+            conn.close()
             
+    def _selectListQuery(self, queryStr):
+        try:
+            conn = self._dbPool.connect()
+            with conn.cursor() as cursor:
+                cursor.execute(queryStr)
+                result = cursor.fetchall()
+                return result
+        finally:
+            conn.close()  
+    
     def selectQuery(self, table, matchDataStr, matchInDataStr, selectQueryStr):    
         findStr = "select %s from %s where %s = %s" % (selectQueryStr, table, matchDataStr, matchInDataStr)        
         return self._selectQuery(findStr)
     
     def customSelectQuery(self, queryStr):
         return self._selectQuery(queryStr)
+    
+    def customeSelectListQuery(self, queryStr):
+        return self._selectListQuery(queryStr)
     
     def customInsertQuery(self, queryStr):
         return self._insertQuery(queryStr)
