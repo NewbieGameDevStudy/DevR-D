@@ -49,6 +49,34 @@ INSERT INTO `account` VALUES (101,'ddfdsafdsa',1,0,0,1,0,0,0),(18514440093696153
 UNLOCK TABLES;
 
 --
+-- Table structure for table `inventory`
+--
+
+DROP TABLE IF EXISTS `inventory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `inventory` (
+  `iIdx` bigint(20) NOT NULL AUTO_INCREMENT,
+  `iAccountId` bigint(8) NOT NULL,
+  `iSlot0` bigint(8) NOT NULL DEFAULT '0',
+  `iSlot1` bigint(8) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`iIdx`),
+  UNIQUE KEY `iIdx_UNIQUE` (`iIdx`),
+  UNIQUE KEY `iAccountId_UNIQUE` (`iAccountId`)
+) ENGINE=InnoDB AUTO_INCREMENT=3000000022 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `inventory`
+--
+
+LOCK TABLES `inventory` WRITE;
+/*!40000 ALTER TABLE `inventory` DISABLE KEYS */;
+INSERT INTO `inventory` VALUES (3000000001,186282282057728513,0,0);
+/*!40000 ALTER TABLE `inventory` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `item`
 --
 
@@ -56,13 +84,13 @@ DROP TABLE IF EXISTS `item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `item` (
-  `iIdx` bigint(8) NOT NULL,
+  `iIdx` bigint(8) NOT NULL AUTO_INCREMENT,
   `iAccountId` bigint(8) NOT NULL,
   `iItemId` int(11) NOT NULL,
-  `iItemType` tinyint(1) NOT NULL,
+  `iCount` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`iIdx`,`iAccountId`,`iItemId`),
   UNIQUE KEY `iIdx_UNIQUE` (`iIdx`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=200000003 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +99,7 @@ CREATE TABLE `item` (
 
 LOCK TABLES `item` WRITE;
 /*!40000 ALTER TABLE `item` DISABLE KEYS */;
-INSERT INTO `item` VALUES (200000000,186282282057728513,1,1),(200000001,186282282057728513,2,2),(200000002,186282282057728513,0,0);
+INSERT INTO `item` VALUES (200000000,186282282057728513,1,1),(200000001,186282282057728513,2,2),(200000002,186282282057728513,0,1);
 /*!40000 ALTER TABLE `item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -83,7 +111,7 @@ DROP TABLE IF EXISTS `mailbox`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mailbox` (
-  `iIdx` bigint(20) NOT NULL AUTO_INCREMENT,
+  `iIdx` bigint(8) NOT NULL AUTO_INCREMENT,
   `iAccountId` bigint(8) NOT NULL,
   `iSenderAccountId` bigint(8) NOT NULL,
   `cSender` varchar(45) NOT NULL,
@@ -93,7 +121,7 @@ CREATE TABLE `mailbox` (
   `dExpireTime` datetime DEFAULT NULL,
   PRIMARY KEY (`iIdx`),
   UNIQUE KEY `idx_UNIQUE` (`iIdx`)
-) ENGINE=InnoDB AUTO_INCREMENT=1002 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=100000000 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -115,4 +143,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-02  2:36:07
+-- Dump completed on 2018-06-03  3:38:43
