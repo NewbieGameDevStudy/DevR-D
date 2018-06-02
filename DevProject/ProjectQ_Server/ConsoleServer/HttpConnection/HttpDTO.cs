@@ -68,6 +68,11 @@ namespace GameServer.Connection
         public int itemType;
     }
 
+    public class ItemContainer
+    {
+        public Item[] item;
+    }
+
     public class Mail
     {
         public ulong mailIdx;
@@ -79,11 +84,16 @@ namespace GameServer.Connection
         public ulong exprireTime;
     }
 
+    public class MailContainer
+    {
+        public Mail[] mail;
+    }
+
     public class PlayerStatus : ResponseBase
     {
         public Account Account;
-        public Item[] item;
-        public Mail[] mail;
+        public ItemContainer itemContainer;
+        public MailContainer mail;
     }
     
     #endregion

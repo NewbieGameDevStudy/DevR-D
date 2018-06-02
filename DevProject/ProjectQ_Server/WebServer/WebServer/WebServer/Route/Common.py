@@ -40,13 +40,15 @@ class BaseContainerResp(ABC):
         self.container = {}
         
     def getContainerResp(self):
-        resp = {}
+        baseName = self.__class__.__name__
+        baseResp = {baseName:{}}        
+        resp = baseResp[baseName]
         for value in self.container.values():
             if not value.__class__.__name__ in resp:
                 resp[value.__class__.__name__] = []
             resp[value.__class__.__name__].append(value.getResp())
             
-        return resp
+        return baseResp
     
     @abstractclassmethod
     def loadValueFromDB(self, updateList):
