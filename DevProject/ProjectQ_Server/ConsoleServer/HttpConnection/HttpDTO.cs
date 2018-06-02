@@ -15,7 +15,7 @@ namespace GameServer.Connection
     public class ReqFirstLoginInfo
     {
         public string nickname;
-        public string portrait;
+        public int portrait;
     }
 
     [HttpConnect(Method.GET, "/loginInfo")]     //두번째
