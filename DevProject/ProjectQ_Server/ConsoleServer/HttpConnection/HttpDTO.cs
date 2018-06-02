@@ -24,6 +24,19 @@ namespace GameServer.Connection
         
     }
 
+    [HttpConnect(Method.POST, "/inventory/equip")]     //두번째
+    public class ReqInventoryEquipItem
+    {
+        public int slotId;
+        public int itemIdx;
+    }
+
+    [HttpConnect(Method.POST, "/inventory/unequip")]     //두번째
+    public class ReqInventoryUnEquipItem
+    {
+        public int slotId;
+        public int itemIdx;
+    }
 
     //public class A {
     //    public int a;
@@ -48,6 +61,8 @@ namespace GameServer.Connection
     //    public A b;
     //}
 
+    #region 응답에 포함되는 클래스
+
     public class Account
     {
         public ulong accountId;
@@ -64,13 +79,15 @@ namespace GameServer.Connection
     public class Item
     {
         public ulong itemId;
-        public int itemIdx;        
-        public int itemType;
+        public int itemIdx;
+        public int count;
+        public int equip;
     }
 
     public class ItemContainer
     {
         public Item[] item;
+        public List<ulong> inventory;
     }
 
     public class Mail
@@ -89,13 +106,31 @@ namespace GameServer.Connection
         public Mail[] mail;
     }
 
+    #endregion
+
+    #region response 응답 클래스 
+
     public class PlayerStatus : ResponseBase
     {
         public Account Account;
         public ItemContainer itemContainer;
         public MailContainer mail;
     }
-    
+
+    public class ItemEquip : ResponseBase
+    {
+        public ulong equipItemIdx;
+        public int slotId;
+    }
+
+    public class UnItemEquip : ResponseBase
+    {
+        public ulong equipItemIdx;
+        public int slotId;
+    }
+
+    #endregion
+
     #endregion
 
     public static class ResponseCode

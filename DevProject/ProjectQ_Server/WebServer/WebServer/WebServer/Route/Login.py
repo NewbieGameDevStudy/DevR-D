@@ -31,7 +31,9 @@ class Login(Resource, Common.BaseRoute):
         accountInfo.loadValueFromDB(accountDB)
         
         itemDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.item where iAccountId = %s" % session)
+        inventoryDB = DB.dbConnection.customSelectQuery("select islot0, islot1 from gamedb.inventory where iAccountId = %s" % session)
         itemContanier = Entity.userCachedObjects[session].getData(Entity.Define.ITEM_CONTANIER)
+        itemContanier.loadBasicInitDataFromDB(inventoryDB)
         itemContanier.loadValueFromDB(itemDB)
         
         mailDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.mailBox where iAccountId = %s" % session)
@@ -79,4 +81,4 @@ class Login(Resource, Common.BaseRoute):
             print(str(e))
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_NOT_LOGIN))
         
-        return jsonify(Common.respHandler.customeResponse(Route.Define.OK_CREATE_LOGIN, {'accountId':accountId}))
+        return jsonify(Common.respHandler.customeResponse(Route.Define.OK_CREATE_LOGIN, {"accountId":accountId}))

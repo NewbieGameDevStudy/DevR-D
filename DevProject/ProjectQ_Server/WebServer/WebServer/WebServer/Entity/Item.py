@@ -8,11 +8,13 @@ class Item(Common.BaseObjResp):
         self.itemId = 0        
         self.ig_metaDict = {}
         self.itemType = 0 
+        self.equip = 0
+        self.count = 0
         self.initRespCache()
     
-    def loadValueFromDB(self, itemIdx, itemId):
+    def loadValueFromDB(self, itemIdx, itemId, count):
         self.itemIdx = itemIdx
-        
+        self.count = count
         if self.itemId != itemId:
             self.itemId = itemId        
             self.ig_metaDict = metaData.getMetaData("ShopItem", self.itemId)
@@ -20,3 +22,4 @@ class Item(Common.BaseObjResp):
              
     def getResp(self):
         return self.ig_respDict
+    
