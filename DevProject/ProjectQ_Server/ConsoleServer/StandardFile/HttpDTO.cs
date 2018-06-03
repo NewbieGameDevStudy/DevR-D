@@ -24,18 +24,25 @@ namespace HttpDTO
         
     }
 
-    [HttpConnect(Method.POST, "/inventory/equip")]     //두번째
+    [HttpConnect(Method.POST, "/inventory/equip")] 
     public class ReqInventoryEquipItem
     {
         public int slotId;
         public int itemIdx;
     }
 
-    [HttpConnect(Method.POST, "/inventory/unequip")]     //두번째
+    [HttpConnect(Method.POST, "/inventory/unequip")]
     public class ReqInventoryUnEquipItem
     {
         public int slotId;
         public int itemIdx;
+    }
+
+    [HttpConnect(Method.POST, "/shop/buyProduct")]
+    public class ReqShopBuyProduct
+    {
+        public int buyProductId;
+        public int buyProductCount;
     }
 
     //public class A {
@@ -129,6 +136,12 @@ namespace HttpDTO
         public int slotId;
     }
 
+    public class ShopBuyProduct : ResponseBase
+    {
+        public Account account;
+        public ItemContainer itemContainer;
+    }
+
     #endregion
 
     #endregion
@@ -140,7 +153,7 @@ namespace HttpDTO
         public const int ERROR_NOT_FOUND_SESSION = 103;
         public const int ERROR_INVALID_ACCESS = 104;
         public const int ERROR_OUT_OF_RANGE = 105;
-
+        public const int ERROR_DB = 106;
 
         public const int ERROR_CREATE_NOT_LOGIN = 1001;
         public const int ERROR_ALREADY_CREATE_NICKNAME = 1002;
@@ -152,6 +165,8 @@ namespace HttpDTO
         public const int ERROR_INVALID_BUY_PRODUCT = 30001;
         public const int ERROR_NOT_ENOUGH_MONEY = 30002;
         public const int ERROR_NOT_FOUND_ITEM = 30003;
+        public const int OK_SHOP_BUY_PRODUCT = 3004;
+        public const int ERROR_ALREADY_BUY_NO_STOCK_ITEM = 3005;
 
         public const int ERROR_ALREADY_EQUIP_ITEM = 40001;
         public const int OK_EQUIP_ITEM = 40002;

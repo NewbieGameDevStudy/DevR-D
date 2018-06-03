@@ -67,14 +67,14 @@ namespace ClientTool
             //    accountId = (ulong)id,
             //};
 
-            var playerInfo = new ReqInventoryUnEquipItem {
-                itemIdx = 200000002,
-                slotId = 1,
+            var playerInfo = new ReqShopBuyProduct {
+                buyProductId = 0,
+                buyProductCount = 999,
             };
 
             //playerInfo.accountId = id;
             //client.HttpConnect();
-            //client.HttpConnection.HttpConnectAsync(186282282057728513, playerInfo, (UnItemEquip result) => {
+            //client.HttpConnection.HttpConnectAsync(186282282057728513, playerInfo, (ShopBuyProduct result) => {
             //    if (result == null)
             //        return;
 
@@ -87,7 +87,7 @@ namespace ClientTool
                 
             };
 
-            client.HttpConnect();
+            //client.HttpConnect();
             //client.HttpConnection.HttpConnectAsync(186282282057728513, playerInfo, (PlayerStatus result) => {
             //    if (result == null)
             //        return;
@@ -97,14 +97,14 @@ namespace ClientTool
 
         public void Button_RoomEnter(object sender, RoutedEventArgs e)
         {
-            if (client != null)
-                client.SendPacket(new Packet.PK_CS_ENTERROOM {
-                    type = Packet.PK_CS_ENTERROOM.RoomType.ANIMAL,
-                });
+            //if (client != null)
+            //    client.SendPacket(new Packet.PK_CS_ENTERROOM {
+            //        type = Packet.PK_CS_ENTERROOM.RoomType.ANIMAL,
+            //    });
 
-            gameRender = new GameRender.GameRender();
-            gameRender.SetPlayerObject(client.Player);
-            gameRender.Show();
+            //gameRender = new GameRender.GameRender();
+            //gameRender.SetPlayerObject(client.Player);
+            //gameRender.Show();
         }
 
         private void Button_Disconnect(object sender, RoutedEventArgs e)

@@ -1,4 +1,5 @@
 ﻿using BaseObject;
+using GameServer.HttpDTO;
 using GameServer.Player.Component;
 using GameServer.ServerClient;
 using Packet;
@@ -41,36 +42,36 @@ namespace GameServer.Player
             if (UserSequence == 0)  
                 return;
 
-            ReqLoginInfo playerInfo = new ReqLoginInfo
-            {
-                accountId = this.UserSequence
-            };
+            //ReqLoginInfo playerInfo = new ReqLoginInfo
+            //{
+            //    accountId = this.UserSequence
+            //};
 
-            Client.HttpConnection.HttpConnectAsync(playerInfo, (RespLoginInfo result) =>
-            {
-                if (result == null)
-                    return;
+            //Client.HttpConnection.HttpConnectAsync(playerInfo, (RespLoginInfo result) =>
+            //{
+            //    if (result == null)
+            //        return;
 
-                PlayerData = new PlayerData
-                {
-                    Xpos = 0,
-                    Ypos = 0,
-                    Exp = result.exp,
-                    Level = result.level,
+            //    PlayerData = new PlayerData
+            //    {
+            //        Xpos = 0,
+            //        Ypos = 0,
+            //        Exp = result.exp,
+            //        Level = result.level,
 
 
-                    /*
-                    public ulong accountId { get; set; }
-                    public int portrait { get; set; }
-                    public int bestRecord { get; set; }
-                    public int winRecord { get; set; }
-                    public int continueRecord { get; set; }
-                    public int level { get; set; }
-                    public int exp { get; set; }
-                    public int gameMoney { get; set; }
-                    public string name { get; set; }*/
-                };
-            });
+            //        /*
+            //        public ulong accountId { get; set; }
+            //        public int portrait { get; set; }
+            //        public int bestRecord { get; set; }
+            //        public int winRecord { get; set; }
+            //        public int continueRecord { get; set; }
+            //        public int level { get; set; }
+            //        public int exp { get; set; }
+            //        public int gameMoney { get; set; }
+            //        public string name { get; set; }*/
+            //    };
+            //});
 
             //var playerInfo = new ReqPlayerInfo {
             //    accountId = 100,
