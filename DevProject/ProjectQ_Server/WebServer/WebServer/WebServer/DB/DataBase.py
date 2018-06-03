@@ -86,6 +86,9 @@ class DBConnection:
     def customeSelectListQuery(self, queryStr):
         return self._selectListQuery(queryStr)
     
+    def customInsertQuery(self, queryStr):
+        return self._insertQuery(queryStr)
+    
     #params = () tuple, outputParams = Range(>=, <)
     def executeStoredProcedure(self, storedProcedureFuncStr, params, outputParamRange):
         return self._storedProcedure(storedProcedureFuncStr, params, outputParamRange)
