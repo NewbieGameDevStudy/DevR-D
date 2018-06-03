@@ -3,7 +3,7 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 
-namespace GameServer.Connection
+namespace HttpDTO
 {
     #region 공용 프로토콜 정의
     public class ResponseBase

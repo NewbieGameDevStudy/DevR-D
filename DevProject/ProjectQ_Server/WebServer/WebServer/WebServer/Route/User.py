@@ -32,7 +32,7 @@ class InventoryEquip(Resource, Common.BaseRoute):
         returnCode = itemContainer.EquipItem(slotId, itemIdx)
         if returnCode is Define.OK_EQUIP_ITEM:
             try:
-                DB.dbConnection.customInsertQuery("insert into gamedb.inventory (iAccountId, islot%d) values (%s, %d) on duplicate key update islot%d = %d" % (slotId, session, slotId, slotId, itemIdx))
+                DB.dbConnection.customInsertQuery("insert into gamedb.inventory (iAccountId, islot%d) values (%s, %d) on duplicate key update islot%d = %d" % (slotId, session, itemIdx, slotId, itemIdx))
             except Exception as e:
                 print(str(e))
         else:

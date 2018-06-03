@@ -53,7 +53,6 @@
   <ItemGroup>
     <Compile Include="HttpAttribute.cs" />
     <Compile Include="HttpConnection.cs" />
-    <Compile Include="HttpDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -32,7 +32,7 @@ namespace BaseClient
             HttpConnection = new HttpConnection(string.Format("http://{0}:5000", ip));
         }
 
-        public void WebReqEnqueue<REQUEST, RESPONSE>(REQUEST dto, Action<RESPONSE> callback)
+        public void WebReqEnqueue<REQUEST, RESPONSE>(ulong session, REQUEST dto, Action<RESPONSE> callback)
         {
             var type = dto.GetType();
             var attribute = type.GetCustomAttributes(typeof(HttpConnectAttribute), true).FirstOrDefault() as HttpConnectAttribute;
@@ -51,6 +51,9 @@ namespace BaseClient
             } else {
                 request.AddBody(dto);
             }
+
+            request.AddCookie("Session", session.ToString());
+
             var command = new HttpCommand();
             command.req = request;
             command.callback = () => {

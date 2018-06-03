@@ -69,8 +69,8 @@ class ItemContainer(Common.BaseContainerResp):
         self.inventory = [0, 0]        
         self.initRespCache()
     
-    def loadBasicInitDataFromDB(self, updateList):        
-        if len(updateList) == 0:
+    def loadBasicInitDataFromDB(self, updateList):
+        if updateList is None or len(updateList) == 0:
             return
         
         #dbTable == data 1:1 match
