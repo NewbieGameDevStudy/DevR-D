@@ -110,6 +110,10 @@
       <Project>{7cc55b35-1d0f-404e-b48d-2e2f264098cf}</Project>
       <Name>Client</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GameServer\GameServer.csproj">
+      <Project>{3379F6D9-5F61-43F3-A082-95042BD00D32}</Project>
+      <Name>GameServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HttpConnection\HttpConnection.csproj">
       <Project>{1A230189-CEC6-43AB-BA95-D8C7F4ABAB9B}</Project>
       <Name>HttpConnection</Name>

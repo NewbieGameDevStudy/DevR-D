@@ -1,5 +1,4 @@
-﻿using GameServer.Connection;
-using Packet;
+﻿using Packet;
 
 namespace GameServer.ServerClient
 {

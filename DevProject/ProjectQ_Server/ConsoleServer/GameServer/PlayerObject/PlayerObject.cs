@@ -1,5 +1,4 @@
 ﻿using BaseObject;
-using GameServer.Connection;
 using GameServer.Player.Component;
 using GameServer.ServerClient;
 using Packet;
