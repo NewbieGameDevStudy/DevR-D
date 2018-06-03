@@ -54,6 +54,26 @@ class DBConnection:
                 result = cursor.fetchall()
                 return result
         finally:
+            conn.close()
+            
+    def _storedProcedure(self, storedProcedureFuncStr, params, outputParamRange):
+        try:
+            conn = self._dbPool.connect()
+            with conn.cursor() as cursor:
+                cursor.callproc(storedProcedureFuncStr, params)
+                
+                outputStr = "SELECT" #@_%s_3'
+                for index in range(outputParamRange[0], outputParamRange[1]):
+                    if index == outputParamRange[0]:
+                        outputStr += ("@_%s_%d" % (storedProcedureFuncStr, index))
+                    else:
+                        outputStr += (", @_%s_%d" % (storedProcedureFuncStr, index))
+                    
+                cursor.execute(outputStr)
+                result = cursor.fetchone()
+                conn.commit()
+                return result
+        finally:
             conn.close()  
     
     def selectQuery(self, table, matchDataStr, matchInDataStr, selectQueryStr):    
@@ -66,8 +86,9 @@ class DBConnection:
     def customeSelectListQuery(self, queryStr):
         return self._selectListQuery(queryStr)
     
-    def customInsertQuery(self, queryStr):
-        return self._insertQuery(queryStr)
+    #params = () tuple, outputParams = Range(>=, <)
+    def executeStoredProcedure(self, storedProcedureFuncStr, params, outputParamRange):
+        return self._storedProcedure(storedProcedureFuncStr, params, outputParamRange)
         
 db = DBConnection()
 

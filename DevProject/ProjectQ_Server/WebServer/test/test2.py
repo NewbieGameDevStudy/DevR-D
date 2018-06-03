@@ -64,23 +64,28 @@ class dictTest():
 # 
 # if 'ig' in d:
 #     print('find')
-import time
-import datetime
+# import time
+# import datetime
+# 
+# print(int(time.time()))
+# 
+# list = [1,2,3,4]
+# 
+# for idx, data in enumerate(list):
+#     print(idx, data)
+# 
+# p = re.compile('TRUE|FALSE', re.I)
+# #p = re.compile('[a-zA-Z0-9]')
+# #m = p.match("true")
+# 
+# #p = re.compile('[0-9]')
+# #p = re.compile('[a-zA-Z]')
+# #p = re.compile('[ㄱ-ㅣ가-힣]+')
+# m = p.match("false")
 
-print(int(time.time()))
+#print(m)
 
-list = [1,2,3,4]
 
-for idx, data in enumerate(list):
-    print(idx, data)
+tupless = (1, )
 
-p = re.compile('TRUE|FALSE', re.I)
-#p = re.compile('[a-zA-Z0-9]')
-#m = p.match("true")
-
-#p = re.compile('[0-9]')
-#p = re.compile('[a-zA-Z]')
-#p = re.compile('[ㄱ-ㅣ가-힣]+')
-m = p.match("false")
-
-print(m)
+print(len(tupless))
