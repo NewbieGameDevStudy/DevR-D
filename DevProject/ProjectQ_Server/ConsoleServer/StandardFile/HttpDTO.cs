@@ -70,6 +70,11 @@ namespace HttpDTO
 
     #region 응답에 포함되는 클래스
 
+    public class CreateId : ResponseBase
+    {
+        public ulong accountId;
+    }
+
     public class Account
     {
         public ulong accountId;

@@ -38,6 +38,9 @@ namespace NetworkSocket
 
         void CloseSocket(Socket socket, UserToken token)
         {
+            if (m_saeapSendPool == null && m_saeapRecvPool == null)
+                return;
+
             //풀링 반납
             var saeaRecv = token.ReceiveSaea;
             var saeaSend = token.SendSaea;

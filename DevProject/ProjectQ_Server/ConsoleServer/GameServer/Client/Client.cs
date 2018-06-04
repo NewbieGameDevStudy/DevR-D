@@ -12,19 +12,18 @@ namespace GameServer.ServerClient
         UserToken m_userToken;
         BaseServer m_baseServer;
 
-        public ulong AccountId { get; private set; }
+        //public ulong AccountId { get; private set; }
         public int AccountCount { get; private set; }
         public HttpConnection HttpConnection { get; }
         public PlayerObject Player { get; private set; }
         public Action<int, object, object[]> PacketDispatch;
 
-        public Client(BaseServer baseServer, UserToken userToken, ulong accountValue, int m_accountCount)
+        public Client(BaseServer baseServer, UserToken userToken, int m_accountCount)
         {
             m_baseServer = baseServer;
             HttpConnection = baseServer.HttpConnection;
             m_userToken = userToken;
-            userToken.ReceiveDispatch = ReceiveDispatch;
-            AccountId = accountValue;
+            userToken.ReceiveDispatch = ReceiveDispatch;            
             AccountCount = m_accountCount;
 
             Player = new PlayerObject(this, m_baseServer);

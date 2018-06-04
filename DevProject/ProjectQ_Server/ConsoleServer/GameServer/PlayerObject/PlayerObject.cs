@@ -15,7 +15,7 @@ namespace GameServer.Player
         public PlayerData PlayerData { get; private set; }
         public ulong UserSequence { get; set; }             // 매칭용 - 클라에서 받는다.
         public int Handle => Client.AccountCount;
-        public ulong AccountID => Client.AccountId;         // 서버 자체 ID
+        public ulong AccountID { get; set; }         // 서버 자체 ID
 
         public byte EnteredRoomNo { get; set; }             // 게임 참가 방번호
         public byte PlayerIndex { get; set; }               // 방에서 몇번째로 들어왔는지

@@ -77,6 +77,7 @@ namespace NetworkSocket
         void AcceptComplete(object sender, SocketAsyncEventArgs e)
         {
             Socket acceptSocket = e.AcceptSocket;
+            acceptSocket.NoDelay = true;
 
             SocketAsyncEventArgs receiveSaea;
             SocketAsyncEventArgs sendSaea;

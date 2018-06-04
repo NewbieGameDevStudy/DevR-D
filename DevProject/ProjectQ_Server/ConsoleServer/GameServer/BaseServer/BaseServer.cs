@@ -7,6 +7,7 @@ using MetaData.Data;
 using NetworkSocket;
 using Packet;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Server
 {
@@ -26,7 +27,8 @@ namespace Server
         public void InitServer(int port, byte machiedId)
         {
             m_serverSocket = new SocketLib {
-                acceptHandler = AcceptClient
+                acceptHandler = AcceptClient,
+                closeHandler = CloseClient               
             };
 
             PacketList.InitPacketList();
@@ -57,10 +59,13 @@ namespace Server
 
         void AcceptClient(UserToken userToken)
         {
-            Client client = new Client(this, userToken, m_guid.GuidCreate(), m_accountCount) {
-                PacketDispatch = PacketMethodDispatch
-            };
             lock (m_addClientList) {
+                Client client = new Client(this, userToken, m_accountCount) {
+                    PacketDispatch = PacketMethodDispatch
+                };
+                //Client client = new Client(this, userToken, m_guid.GuidCreate(), m_accountCount) {
+                //    PacketDispatch = PacketMethodDispatch
+                //};
                 m_addClientList.Add(m_accountCount, client);
                 m_accountCount++;
             }
@@ -70,14 +75,14 @@ namespace Server
 
         void CloseClient()
         {
-            //CloseSocket(Socket socket, UserToken token)
+            Interlocked.Decrement(ref m_accountCount);
+            System.Console.WriteLine("접속된 클라이언트 수 : {0}", m_accountCount);
         }
 
         public void Update(double deltaTime)
         {
             UpdateClient(deltaTime);
-            RoomManager.Update(deltaTime);
-            
+            RoomManager.Update(deltaTime);            
         }
 
         void UpdateClient(double deltaTime)
@@ -90,8 +95,8 @@ namespace Server
                 m_addClientList.Clear();
             }
 
-            foreach (var client in m_clientList) {
-                client.Value.Update(deltaTime);
+            foreach (var client in m_clientList.Values) {
+                client.Update(deltaTime);
             }
         }
 
