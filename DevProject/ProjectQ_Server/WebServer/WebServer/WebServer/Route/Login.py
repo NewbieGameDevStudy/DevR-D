@@ -69,7 +69,6 @@ class Login(Resource, Common.BaseRoute):
         accountId = Util.guidInst.createGuid()
         
         accountIdStr = str(accountId)
-        session[accountIdStr] = nickname;
 
         userObject = Entity.User.UserObject()
         Entity.userCachedObjects[accountIdStr] = userObject
