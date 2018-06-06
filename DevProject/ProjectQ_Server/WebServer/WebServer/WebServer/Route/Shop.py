@@ -17,6 +17,9 @@ class ShopBuyProduct(Resource, Common.BaseRoute):
         if session is None:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
 
+        if not session in userCachedObjects:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
+
         Route.parser.add_argument("buyProductId")
         Route.parser.add_argument("buyProductCount")
         args = Route.parser.parse_args()

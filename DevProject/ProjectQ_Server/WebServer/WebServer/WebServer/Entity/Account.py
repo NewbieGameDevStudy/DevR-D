@@ -12,6 +12,7 @@ class Account(Common.BaseObjResp):
         self.bestRecord = 0
         self.winRecord = 0
         self.continueRecord = 0
+        self.dailyMailCount = 0
         
         self.initRespCache()
     
@@ -26,6 +27,7 @@ class Account(Common.BaseObjResp):
         self.bestRecord = convertList[6]
         self.winRecord = convertList[7]
         self.continueRecord = convertList[8]
+        self.continueRecord = convertList[9]
         
         self.initResp(convertList)
         

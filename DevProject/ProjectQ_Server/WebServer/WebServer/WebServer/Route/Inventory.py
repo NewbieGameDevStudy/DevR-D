@@ -14,6 +14,9 @@ class InventoryEquip(Resource, Common.BaseRoute):
         if session is None:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
             
+        if not session in userCachedObjects:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
+            
         Route.parser.add_argument("slotId")
         Route.parser.add_argument("itemIdx")
         args = Route.parser.parse_args()
@@ -45,6 +48,9 @@ class InventoryUnEquip(Resource, Common.BaseRoute):
     def post(self):
         session = self.getSession(request)
         if session is None:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
+        
+        if not session in userCachedObjects:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
             
         Route.parser.add_argument("slotId")
