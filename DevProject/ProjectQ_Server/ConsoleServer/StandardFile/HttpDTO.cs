@@ -21,10 +21,10 @@ namespace HttpDTO
     [HttpConnect(Method.GET, "/loginInfo")]     //두번째
     public class ReqLoginInfo
     {
-        
+
     }
 
-    [HttpConnect(Method.POST, "/inventory/equip")] 
+    [HttpConnect(Method.POST, "/inventory/equip")]
     public class ReqInventoryEquipItem
     {
         public int slotId;
@@ -43,6 +43,26 @@ namespace HttpDTO
     {
         public int buyProductId;
         public int buyProductCount;
+    }
+
+    [HttpConnect(Method.PUT, "/mailPost/wrtie")]
+    public class ReqMailPostWrite
+    {
+        public string targetNickName;
+        public string title;
+        public string body;
+    }
+
+    [HttpConnect(Method.GET, "/mailPost/read")]
+    public class ReqMailGetList
+    {
+
+    }
+
+    [HttpConnect(Method.GET, "/user/find")]
+    public class ReqUserFind
+    {
+        public string nickName;
     }
 
     //public class A {
@@ -86,6 +106,7 @@ namespace HttpDTO
         public int bestRecord;
         public int winRecord;
         public int continueRecord;
+        public int dailyMailCount;
     }
 
     public class Item
@@ -126,7 +147,7 @@ namespace HttpDTO
     {
         public Account Account;
         public ItemContainer itemContainer;
-        public MailContainer mail;
+        public MailContainer mailContainer;
     }
 
     public class ItemEquip : ResponseBase
@@ -146,6 +167,24 @@ namespace HttpDTO
         public Account account;
         public ItemContainer itemContainer;
     }
+
+    public class GetMailList : ResponseBase
+    {
+        public MailContainer mailContainer;
+    }
+
+    public class WriteMail : ResponseBase
+    {
+        public int mailCount;       //메일쓰기 이후 증가된 count
+        public int gameMoney;       //메일쓰기 이후 감소된 현재 재화량
+    }
+
+    public class FindUser : ResponseBase
+    {
+        public string nickName;
+    }
+
+
 
     #endregion
 
@@ -177,6 +216,11 @@ namespace HttpDTO
         public const int OK_EQUIP_ITEM = 40002;
         public const int OK_UNEQUIP_ITEM = 40003;
 
+        public const int ERROR_NOT_FOUND_USER = 5001;
+
+        public const int ERROR_NOT_WRITE = 6001;
+
     }
+
 
 }
