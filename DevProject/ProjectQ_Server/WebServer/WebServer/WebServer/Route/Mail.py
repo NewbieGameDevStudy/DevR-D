@@ -73,7 +73,7 @@ class MailWrite(Resource, Common.BaseRoute):
             print(str(e))
             return Route.Define.ERROR_DB
         
-        o_error = resultDB[1]
+        o_error = resultDB[0]
         
         if o_error == -1:
             return Common.respHandler.getResponse(Route.Define.ERROR_NOT_WRITE)

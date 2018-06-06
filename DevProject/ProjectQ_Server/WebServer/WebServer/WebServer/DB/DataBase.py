@@ -74,7 +74,8 @@ class DBConnection:
                 cursor.execute(outputStr)
                 outResult = cursor.fetchone()
                 conn.commit()
-                return result + outResult
+                
+                return outResult if result is None else result + outResult
         finally:
             conn.close()  
     
