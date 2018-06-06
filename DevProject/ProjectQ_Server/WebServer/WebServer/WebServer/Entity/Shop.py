@@ -51,7 +51,7 @@ class ShopBase(object):
         
         accountInfo.gameMoney -= priceValue
         accountInfo.syncToResp()
-        itemContainer.setItem(resultDB[0], itemId, buyProductCount)
+        itemContainer.setItem(resultDB[1], itemId, buyProductCount)
         
         return Route.Define.OK_SHOP_BUY_PRODUCT
         
