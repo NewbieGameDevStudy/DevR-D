@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{385e042a-08db-472e-ad45-e4236c68a28a}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>server.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="DB\DataBase.py" />
+    <Compile Include="DB\TableData.py" />
+    <Compile Include="DB\__init__.py" />
+    <Compile Include="Entity\Account.py" />
+    <Compile Include="Entity\Container.py" />
+    <Compile Include="Entity\Define.py" />
+    <Compile Include="Entity\Item.py" />
+    <Compile Include="Entity\Mail.py" />
+    <Compile Include="Entity\Shop.py" />
+    <Compile Include="Entity\User.py" />
+    <Compile Include="Entity\__init__.py" />
+    <Compile Include="Guid.py" />
+    <Compile Include="MetaDataMgr.py" />
+    <Compile Include="Route\Common.py" />
+    <Compile Include="Route\Define.py" />
+    <Compile Include="Route\Inventory.py" />
+    <Compile Include="Route\Login.py" />
+    <Compile Include="Route\Mail.py" />
+    <Compile Include="Route\Shop.py" />
+    <Compile Include="Route\User.py" />
+    <Compile Include="Route\__init__.py" />
+    <Compile Include="server.py" />
+    <Compile Include="Util.py" />
+    <Compile Include="__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="build\server.exe\warnserver.exe.txt" />
+    <Content Include="build\server.exe\xref-server.exe.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="build\" />
+    <Folder Include="build\server.exe" />
+    <Folder Include="DB" />
+    <Folder Include="Entity" />
+    <Folder Include="Route" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+</Project>

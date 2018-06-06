@@ -14,14 +14,17 @@ class MailPostRead(Resource, Common.BaseRoute):
         if session is None:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
         
-        mailDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.mailBox where iAccountId = %s" % session)
+        try:
+            mailDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.mailBox where iAccountId = %s" % session)
+        except Exception as e:
+            print(str(e))
+            return Route.Define.ERROR_DB
+        
         mailContanier = Entity.userCachedObjects[session].getData(Entity.Define.MAIL_CONTANIER)        
         mailContanier.loadValueFromDB(mailDB)
         
         Common.respHandler.mergeResp(mailContanier.getContainerResp())
-        
-        return Common.respHandler.getResponse(Route.Define.OK_SUCCESS)
-        
+        return Common.respHandler.getResponse(Route.Define.OK_SUCCESS)        
         
 class MailWrite(Resource, Common.BaseRoute):
     def put(self):
@@ -29,29 +32,36 @@ class MailWrite(Resource, Common.BaseRoute):
         if session is None:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
         
-        Route.parser.add_argument("senderAccountId")
-        Route.parser.add_argument("targetAccountId")
+        Route.parser.add_argument("targetNickName")
         Route.parser.add_argument("title")
         Route.parser.add_argument("body")
         args = Route.parser.parse_args()
         
-        if not "senderAccountId" in args:
+        if not args["targetNickName"]:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INPUT_PARAMS))
-        if not "targetAccountId" in args:
+        if not args["title"]:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INPUT_PARAMS))
-        if not "title" in args:
-            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INPUT_PARAMS))
-        if not "body" in args:
+        if not args["body"]:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INPUT_PARAMS))
         
+        senderAccountId = int(session)
+        targetNickName = args["targetNickName"]
+        title = args["title"]
+        body = args["body"]        
         
-#         mailDB = DB.dbConnection.customInsertQuery("insert into gamedb.mail iaccountid, isenderaccountid, csender, ctitle, cbody values(%d, %d, %s, %s, %s)" % session)
-#         mailContanier = Entity.userCachedObjects[session].getData(Entity.Define.MAIL_CONTANIER)        
-#         mailContanier.loadValueFromDB(mailDB)
-#         
-#         Common.respHandler.mergeResp(mailContanier.getContainerResp())
-#         
-#         return Common.respHandler.getResponse(Route.Define.OK_SUCCESS)
+        o_error = 0
+        try:
+            resultDB = DB.dbConnection.executeStoredProcedure("Game_Mail_Write", (targetNickName, senderAccountId, title, body, o_error), (4, 5))
+        except Exception as e:
+            print(str(e))
+            return Route.Define.ERROR_DB
+        
+        o_error = resultDB[0]
+        
+        if o_error == -1:
+            return Common.respHandler.getResponse(Route.Define.ERROR_NOT_WRITE)
+         
+        return Common.respHandler.customeResponse(Route.Define.OK_SUCCESS, {"mailCount" : mailCount})
         
 class MailPostAccept(Resource, Common.BaseRoute):
     def post(self):

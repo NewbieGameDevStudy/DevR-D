@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+<<<<<<< HEAD:DevProject/ProjectQ_Server/WebServer/WebServer/WebServer/WebServer1.sln
+VisualStudioVersion = 15.0.27703.2018
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "WebServer1", "WebServer1.pyproj", "{385E042A-08DB-472E-AD45-E4236C68A28A}"
+=======
+VisualStudioVersion = 15.0.27703.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "WebServer", "WebServer.pyproj", "{83882958-F58B-4657-BEC8-FBBCB1ADDE5C}"
+>>>>>>> 584d04c401e5a2f633740ee8c1b141472c7fdb95:DevProject/ProjectQ_Server/WebServer/WebServer/WebServer.sln
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+<<<<<<< HEAD:DevProject/ProjectQ_Server/WebServer/WebServer/WebServer/WebServer1.sln
+		{385E042A-08DB-472E-AD45-E4236C68A28A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{385E042A-08DB-472E-AD45-E4236C68A28A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+=======
+		{83882958-F58B-4657-BEC8-FBBCB1ADDE5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83882958-F58B-4657-BEC8-FBBCB1ADDE5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+>>>>>>> 584d04c401e5a2f633740ee8c1b141472c7fdb95:DevProject/ProjectQ_Server/WebServer/WebServer/WebServer.sln
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+<<<<<<< HEAD:DevProject/ProjectQ_Server/WebServer/WebServer/WebServer/WebServer1.sln
+		SolutionGuid = {49E15C1A-D25B-42F6-BE1E-30A74866F4D7}
+=======
+		SolutionGuid = {65E4EA87-5060-41B4-A7EA-62BCD5EECF97}
+>>>>>>> 584d04c401e5a2f633740ee8c1b141472c7fdb95:DevProject/ProjectQ_Server/WebServer/WebServer/WebServer.sln
+	EndGlobalSection
+EndGlobal
