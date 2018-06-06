@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2036
+VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "WebServer", "WebServer\WebServer.pyproj", "{5913A9CE-3C15-49EB-8867-E3375FB4F64E}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "WebServer", "WebServer.pyproj", "{83882958-F58B-4657-BEC8-FBBCB1ADDE5C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,13 +11,13 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5913A9CE-3C15-49EB-8867-E3375FB4F64E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5913A9CE-3C15-49EB-8867-E3375FB4F64E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83882958-F58B-4657-BEC8-FBBCB1ADDE5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83882958-F58B-4657-BEC8-FBBCB1ADDE5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {D050896E-AEFA-4329-AF5B-EFFBA955A71C}
+		SolutionGuid = {65E4EA87-5060-41B4-A7EA-62BCD5EECF97}
 	EndGlobalSection
 EndGlobal

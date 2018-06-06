@@ -16,6 +16,7 @@ namespace GameServer.MatchRoom
         public enum RoomState
         {
             ROOM_WAITING,
+            ROOM_READY_GAME,
             ROOM_PLAYING,
             ROOM_GAME_ENDED
         }
@@ -38,15 +39,14 @@ namespace GameServer.MatchRoom
 
         byte WaitMaxLimitCount;
 
-        // test
-        const double GAME_PLAY_TIME_TEST = 10;
-        double GameBeginTime;
-        bool isGameStarted;
-
         List<PlayerObject> m_roomPlayerList = new List<PlayerObject>();
+        List<bool> m_readyForGame = new List<bool>();
 
         public Room(double waitTime, byte gameNeedUserCount)
         {
+            m_roomPlayerList.Clear();
+            m_readyForGame.Clear();
+
             this.GameWaitTime = waitTime;
             this.GameNeedUserCount = gameNeedUserCount;
 
@@ -57,10 +57,6 @@ namespace GameServer.MatchRoom
             CurrentRoomState = Room.RoomState.ROOM_WAITING;
 
             WaitMaxLimitCount = 0;
-
-            // test
-            GameBeginTime = 0;
-            isGameStarted = false;
         }
 
         public void ResetRoomPlayerListIndex()
@@ -116,16 +112,12 @@ namespace GameServer.MatchRoom
         {
             if (m_roomPlayerList.Count >= GameNeedUserCount)
             {
-                CurrentRoomState = Room.RoomState.ROOM_PLAYING;
+                CurrentRoomState = Room.RoomState.ROOM_READY_GAME;
                 System.Console.WriteLine("Match! : Need - {0}, User - {0}", GameNeedUserCount, m_roomPlayerList.Count);
-                BeginTheGame(deltaTime);
-            }
-        }
 
-        public void BeginTheGame(double deltaTime)
-        {
-            isGameStarted = true;
-            GameBeginTime = deltaTime;
+                // 게임 시작 준비
+                ReadyForGame();
+            }
         }
 
         public void Update(double deltaTime)
@@ -152,9 +144,24 @@ namespace GameServer.MatchRoom
                     MatchimgGame(deltaTime);
                 }
                 break;
+                case RoomState.ROOM_READY_GAME:
+                {
+                    bool isReady = false;
+                    foreach (var playerAccept in m_readyForGame)
+                    {
+                        if (playerAccept == false)
+                        {
+                            break;
+                        }
+                        isReady = true;
+                    }
+
+                    if (isReady)
+                        CurrentRoomState = RoomState.ROOM_PLAYING;
+                }
+                break;
                 case RoomState.ROOM_PLAYING:
                 {
-                    ProcessGamePlaying(deltaTime);
                     
                 }
                 break;
@@ -166,18 +173,18 @@ namespace GameServer.MatchRoom
             }
         }
 
-        void ProcessGamePlaying(double deltaTime)
+        void ReadyForGame()
         {
-            // 인게임 플레이
-            if (deltaTime - GameBeginTime > GAME_PLAY_TIME_TEST)
+            var info = new PK_SC_READY_FOR_GAME
             {
-                ProcessGameEnd();
-            }
-        }
+                gameUserCount = this.m_roomPlayerList.Count,
+                roomNo = this.RoomNo
+            };
 
-        void ProcessGameEnd()
-        {
-            // 게임 전체 종료.
+            foreach (var player in m_roomPlayerList)
+            {
+                player.Client?.SendPacket(info);
+            }
         }
 
         void CannotMatchingGame()
@@ -228,10 +235,7 @@ namespace GameServer.MatchRoom
             CurrentRoomState = Room.RoomState.ROOM_WAITING;
             WaitMaxLimitCount = 0;
             m_roomPlayerList.Clear();
-
-            // test
-            GameBeginTime = 0;
-            isGameStarted = false;
+            m_readyForGame.Clear();
         }
     }
 }

@@ -10,19 +10,29 @@ namespace Packet
 
     //클라이언트 -> 서버 패킷
     [ProtoContract]
-    public class PK_CS_ENTERROOM : PK_BASE
+    public class PK_CS_ENTERROOM : PK_BASE                  // 매칭 입장
     {
         [ProtoMember(1)]
         public ulong userSequence { get; set; }
     }
 
     [ProtoContract]
-    public class PK_CS_CANCEL_MATCHING : PK_BASE
+    public class PK_CS_CANCEL_MATCHING : PK_BASE            // 매칭 취소
     {
         [ProtoMember(1)]
         public ulong userSequence { get; set; }
     }
 
+    [ProtoContract]
+    public class PK_CS_READY_COMPLETE_FOR_GAME : PK_BASE
+    {
+        [ProtoMember(1)]
+        public byte roomNo { get; set; }
+        [ProtoMember(2)]
+        public ulong userSequence { get; set; }
+    }
+
+    /*
     [ProtoContract]
     public class PK_CS_INPUT_POSITION : PK_BASE
     {
@@ -37,10 +47,10 @@ namespace Packet
     {
         [ProtoMember(1)]
         public ulong accountId { get; set; }
-    }
+    }*/
 
     //서버 -> 클라이언트 패킷
-
+    /*
     [ProtoContract]
     public class PK_SC_PLAYERINFO_LOAD : PK_BASE
     {
@@ -86,10 +96,10 @@ namespace Packet
     {
         [ProtoMember(1)]
         public List<PK_SC_TARGET_POSITION> m_objectList { get; set; }
-    }
+    }*/
 
     [ProtoContract]
-    public class PK_SC_CANNOT_MATCHING_GAME : PK_BASE
+    public class PK_SC_CANNOT_MATCHING_GAME : PK_BASE           // 매칭 캔슬
     {
         public enum MatchingErrorType
         {
@@ -106,7 +116,16 @@ namespace Packet
     }
 
     [ProtoContract]
-    public class PK_SC_MATCHING_MEMBER_INFO : PK_BASE
+    public class PK_SC_READY_FOR_GAME : PK_BASE                 // 게임 시작 준비
+    {
+        [ProtoMember(1)]
+        public int gameUserCount { get; set; }
+        [ProtoMember(2)]
+        public byte roomNo { get; set; }
+    }
+
+    [ProtoContract]
+    public class PK_SC_MATCHING_MEMBER_INFO : PK_BASE           // 게임 멤버 기본 정보
     {
         [ProtoMember(1)]
         public ulong userSequence { get; set; }
@@ -117,7 +136,7 @@ namespace Packet
     }
 
     [ProtoContract]
-    public class PK_SC_MATCHING_ROOM_INFO : PK_BASE
+    public class PK_SC_MATCHING_ROOM_INFO : PK_BASE             // 게임 멤버 기본 정보 리스트
     {
         [ProtoMember(1)]
         public List<PK_SC_MATCHING_MEMBER_INFO> m_memberList { get; set; }

@@ -21,14 +21,24 @@ namespace GameServer.ServerClient
             m_baseServer.RoomManager.CancelMatching(Player);
         }
 
+        void onReceivePacket(PK_CS_READY_COMPLETE_FOR_GAME pks)
+        {
+            if (Player.UserSequence != pks.userSequence)
+                return;
+
+            //pks.roomNo;
+            //pks.userSequence;
+        }
+
+        /*
         void OnReceivePacket(PK_CS_INPUT_POSITION pks)
         {
-            /*
+            
             Player.Client.m_baseServer.RoomManager.AddMoveInput(new MatchRoom.RoomManager.MoveData {
                 handle = Player.Handle,
                 xPos = pks.xPos,
                 yPos = pks.yPos
-            });*/
-        }
+            });
+        }*/
     }
 }

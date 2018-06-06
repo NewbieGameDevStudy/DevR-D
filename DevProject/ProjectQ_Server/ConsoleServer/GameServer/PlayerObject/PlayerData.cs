@@ -12,13 +12,16 @@ namespace GameServer.Player
 
         // from webServer
         public ulong accountId { get; set; }
-        public int portrait { get; set; }
-        public int bestRecord { get; set; }
-        public int winRecord { get; set; }
-        public int continueRecord { get; set; }
-        public int level { get; set; }
-        public int exp { get; set; }
-        public int gameMoney { get; set; }
         public string name { get; set; }
+        public int iGamaMoney { get; set; }
+        public int iPortrait { get; set; }
+        public int iBestRecord { get; set; }
+        public int iWinRecord { get; set; }
+        public int iContinueRecord { get; set; }
+
+        // inven
+        public int iSlot0 { get; set; }
+        public int iSlot1 { get; set; }
+
     }
 }
