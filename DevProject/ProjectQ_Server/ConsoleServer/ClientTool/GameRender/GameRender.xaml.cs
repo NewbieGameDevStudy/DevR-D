@@ -48,74 +48,74 @@ namespace ClientTool.GameRender
 
         private void ObjectRender(double deltaTime)
         {
-            if (playerObject.Client.Player.RoomInObjList.Count == 0)
-                return;
+            //if (playerObject.Client.Player.RoomInObjList.Count == 0)
+            //    return;
 
-            foreach (var obj in playerObject.RoomInObjList) {
-                if (!objectList.ContainsKey(obj.Key))
-                    continue;
+            //foreach (var obj in playerObject.RoomInObjList) {
+            //    if (!objectList.ContainsKey(obj.Key))
+            //        continue;
 
-                var elip = objectList[obj.Key];
-                Canvas.SetLeft(elip, obj.Value.PlayerData.Xpos - 15);
-                Canvas.SetTop(elip, obj.Value.PlayerData.Ypos - 15);
-            }
+            //    var elip = objectList[obj.Key];
+            //    Canvas.SetLeft(elip, obj.Value.PlayerData.Xpos - 15);
+            //    Canvas.SetTop(elip, obj.Value.PlayerData.Ypos - 15);
+            //}
 
-            var playerElip = objectList[playerObject.Handle];
-            Canvas.SetLeft(playerElip, playerObject.PlayerData.Xpos - 15);
-            Canvas.SetTop(playerElip, playerObject.PlayerData.Ypos - 15);
+            //var playerElip = objectList[playerObject.Handle];
+            //Canvas.SetLeft(playerElip, playerObject.PlayerData.Xpos - 15);
+            //Canvas.SetTop(playerElip, playerObject.PlayerData.Ypos - 15);
 
-            if (prevX != playerObject.PlayerData.Xpos || prevY != playerObject.PlayerData.Ypos) {
-                prevX = playerObject.PlayerData.Xpos;
-                prevY = playerObject.PlayerData.Ypos;
-                PosListView.Items.Add(playerObject.PlayerData.Xpos + " // " + playerObject.PlayerData.Ypos);
-            }
+            //if (prevX != playerObject.PlayerData.Xpos || prevY != playerObject.PlayerData.Ypos) {
+            //    prevX = playerObject.PlayerData.Xpos;
+            //    prevY = playerObject.PlayerData.Ypos;
+            //    PosListView.Items.Add(playerObject.PlayerData.Xpos + " // " + playerObject.PlayerData.Ypos);
+            //}
 
-            if (deltaTime > deltaTimeSave) {
-                deltaTimeSave = deltaTime;
-                DeltaTime.Content = deltaTimeSave.ToString();
-            }
+            //if (deltaTime > deltaTimeSave) {
+            //    deltaTimeSave = deltaTime;
+            //    DeltaTime.Content = deltaTimeSave.ToString();
+            //}
         }
 
         void ObjectInitRender()
         {
-            if (playerObject.isEnterComplete && !isInitPlayer) {
-                isInitPlayer = true;
-                Ellipse elips = new Ellipse();
-                elips.Fill = new SolidColorBrush(Colors.Crimson);
-                elips.Width = 30;
-                elips.Height = 30;
-                GameCanvans.Children.Add(elips);
-                Canvas.SetLeft(elips, playerObject.PlayerData.Xpos);
-                Canvas.SetTop(elips, playerObject.PlayerData.Ypos);
+            //if (playerObject.isEnterComplete && !isInitPlayer) {
+            //    isInitPlayer = true;
+            //    Ellipse elips = new Ellipse();
+            //    elips.Fill = new SolidColorBrush(Colors.Crimson);
+            //    elips.Width = 30;
+            //    elips.Height = 30;
+            //    GameCanvans.Children.Add(elips);
+            //    Canvas.SetLeft(elips, playerObject.PlayerData.Xpos);
+            //    Canvas.SetTop(elips, playerObject.PlayerData.Ypos);
 
-                objectList.Add(playerObject.Handle, elips);
-            }
+            //    objectList.Add(playerObject.Handle, elips);
+            //}
 
-            if (playerObject.Client.Player.RoomInObjList.Count == 0)
-                return;
+            //if (playerObject.Client.Player.RoomInObjList.Count == 0)
+            //    return;
 
-            foreach (var obj in playerObject.Client.Player.RoomInObjList) {
-                if (objectList.ContainsKey(obj.Key))
-                    continue;
+            //foreach (var obj in playerObject.Client.Player.RoomInObjList) {
+            //    if (objectList.ContainsKey(obj.Key))
+            //        continue;
                 
-                var ellipse = new Ellipse();
-                ellipse.Fill = new SolidColorBrush(Colors.Black);
-                ellipse.Width = 30;
-                ellipse.Height = 30;
-                GameCanvans.Children.Add(ellipse);
+            //    var ellipse = new Ellipse();
+            //    ellipse.Fill = new SolidColorBrush(Colors.Black);
+            //    ellipse.Width = 30;
+            //    ellipse.Height = 30;
+            //    GameCanvans.Children.Add(ellipse);
 
-                Canvas.SetLeft(ellipse, obj.Value.PlayerData.Xpos);
-                Canvas.SetTop(ellipse, obj.Value.PlayerData.Xpos);
+            //    Canvas.SetLeft(ellipse, obj.Value.PlayerData.Xpos);
+            //    Canvas.SetTop(ellipse, obj.Value.PlayerData.Xpos);
 
-                objectList.Add(obj.Key, ellipse);
-            }
+            //    objectList.Add(obj.Key, ellipse);
+            //}
         }
 
         private void GameCanvans_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var p = Mouse.GetPosition(GameCanvans);
-            playerObject.PlayerData.SetTargetPosition((float)p.X, (float)p.Y);
-            playerObject.Client.ReqInputTargetMovePos((float)p.X, (float)p.Y);
+            //var p = Mouse.GetPosition(GameCanvans);
+            //playerObject.PlayerData.SetTargetPosition((float)p.X, (float)p.Y);
+            //playerObject.Client.ReqInputTargetMovePos((float)p.X, (float)p.Y);
         }
     }
 }
