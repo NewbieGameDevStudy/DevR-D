@@ -26,7 +26,9 @@ class Login(Resource, Common.BaseRoute):
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_LOGIN_NOT_FOUND_ACCOUNT))
     
     def _getPlayerStatus(self, session):
-        accountDB = DB.dbConnection.customSelectQuery("select * from gamedb.account where iAccountId = %s" % session)
+        o_error = 0
+        accountDB = DB.dbConnection.executeStoredProcedure("Game_Login", (session, o_error), (1, 1))
+        #accountDB = DB.dbConnection.customSelectQuery("select * from gamedb.account where iAccountId = %s" % session)
         accountInfo = Entity.userCachedObjects[session].getData(Entity.Define.ACCOUNT_INFO)
         accountInfo.loadValueFromDB(accountDB)
         

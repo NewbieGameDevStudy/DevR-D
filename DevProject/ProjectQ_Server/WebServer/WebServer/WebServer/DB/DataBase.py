@@ -62,17 +62,19 @@ class DBConnection:
             with conn.cursor() as cursor:
                 cursor.callproc(storedProcedureFuncStr, params)
                 
-                outputStr = "SELECT" #@_%s_3'
-                for index in range(outputParamRange[0], outputParamRange[1]):
+                outputStr = "SELECT" #@_storedProcedureFuncStr_4" #@_%s_3'
+                for index in range(outputParamRange[0], outputParamRange[1] + 1):
                     if index == outputParamRange[0]:
                         outputStr += ("@_%s_%d" % (storedProcedureFuncStr, index))
                     else:
                         outputStr += (", @_%s_%d" % (storedProcedureFuncStr, index))
                     
+                #cursor.execute(outputStr)
+                result = cursor.fetchone()                
                 cursor.execute(outputStr)
-                result = cursor.fetchone()
+                outResult = cursor.fetchone()
                 conn.commit()
-                return result
+                return result + outResult
         finally:
             conn.close()  
     
