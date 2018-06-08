@@ -70,6 +70,7 @@ namespace GameServer.MatchRoom
 
         public void EnterRoom(PlayerObject player)
         {
+            Random portRait = new Random(100);
             if (m_roomPlayerList.Contains(player))
             {
                 Console.WriteLine("RoomNo : {0}, Already in {0} ", RoomNo, player.UserSequence);
@@ -85,7 +86,7 @@ namespace GameServer.MatchRoom
             PK_SC_MATCHING_MEMBER_INFO newInfo = new PK_SC_MATCHING_MEMBER_INFO
             {
                 strNickName = "test1",
-                portRaitNo = 1
+                portRaitNo = portRait.Next(1, 100)
             };
 
             foreach (var info in m_roomPlayerList)
@@ -95,7 +96,7 @@ namespace GameServer.MatchRoom
                 PK_SC_MATCHING_MEMBER_INFO tempInfo = new PK_SC_MATCHING_MEMBER_INFO
                 {
                     strNickName = "info" + info.AccountID,           // info 닉네임
-                    portRaitNo = 2              // info 초상화
+                    portRaitNo = portRait.Next(1, 100)              // info 초상화
                 };
 
                 pks.m_memberList.Add(tempInfo);
@@ -162,7 +163,11 @@ namespace GameServer.MatchRoom
                 break;
                 case RoomState.ROOM_PLAYING:
                 {
-                    
+                    if (m_roomPlayerList.Count == 1)
+                    {
+                        
+
+                    }
                 }
                 break;
                 case RoomState.ROOM_GAME_ENDED:
@@ -200,6 +205,8 @@ namespace GameServer.MatchRoom
                 info.userSequence = player.UserSequence;
                 player.Client?.SendPacket(info);
             }
+
+            ClearRoomData();
         }
 
         public void RemoveUserFromRoom(PlayerObject player)

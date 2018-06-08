@@ -141,4 +141,11 @@ namespace Packet
         [ProtoMember(1)]
         public List<PK_SC_MATCHING_MEMBER_INFO> m_memberList { get; set; }
     }
+
+    [ProtoContract]
+    public class PK_SC_GAME_END : PK_BASE
+    {
+        [ProtoMember(1)]
+        public byte rank { get; set; }
+    }
 }

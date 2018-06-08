@@ -4,6 +4,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using Packet;
 
 namespace ClientTool
 {
@@ -17,12 +18,14 @@ namespace ClientTool
         DateTime prevTime;
         double deltaTime = 0;
         ulong id;
+        Random tempRandom = new Random(10000);
 
         static GameRender.GameRender gameRender;
 
         public MainWindow()
         {
             InitializeComponent();
+            id = (ulong)tempRandom.Next(1, 100000);
         }
 
         public void Update(object sender, EventArgs e)
@@ -67,10 +70,11 @@ namespace ClientTool
             //    accountId = (ulong)id,
             //};
 
+            /*
             var playerInfo = new ReqShopBuyProduct {
                 buyProductId = 0,
                 buyProductCount = 999,
-            };
+            };*/
 
             //playerInfo.accountId = id;
             //client.HttpConnect();
@@ -79,13 +83,20 @@ namespace ClientTool
             //        return;
 
             //});
+
+            var temp = new PK_CS_CANCEL_MATCHING
+            {
+                userSequence = (ulong)tempRandom.Next(1, 100000)//id
+        };
+            client.SendPacket(temp);
         }
 
         public void TestSession2(object sender, EventArgs e)
         {
+            /*
             var playerInfo = new ReqLoginInfo {
                 
-            };
+            };*/
 
             //client.HttpConnect();
             //client.HttpConnection.HttpConnectAsync(186282282057728513, playerInfo, (PlayerStatus result) => {
@@ -93,14 +104,22 @@ namespace ClientTool
             //        return;
 
             //});
+
+            var temp = new PK_CS_READY_COMPLETE_FOR_GAME
+            {
+                userSequence
+            }
         }
 
         public void Button_RoomEnter(object sender, RoutedEventArgs e)
         {
-            //if (client != null)
-            //    client.SendPacket(new Packet.PK_CS_ENTERROOM {
-            //        type = Packet.PK_CS_ENTERROOM.RoomType.ANIMAL,
-            //    });
+            var temp = new PK_CS_ENTERROOM
+            {
+                userSequence = (ulong)tempRandom.Next(1, 100000)//id
+        };
+
+            client.SendPacket(temp);
+
 
             //gameRender = new GameRender.GameRender();
             //gameRender.SetPlayerObject(client.Player);

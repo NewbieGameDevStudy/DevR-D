@@ -64,7 +64,7 @@ namespace GameServer.MatchRoom
             });
 
             m_sortedRoomList[0]?.EnterRoom(player);
-            Console.WriteLine("RoomEnter {0} : User {0}", m_sortedRoomList[0].RoomNo, player.UserSequence);
+            Console.WriteLine("RoomEnter {0} : UserID {0}", m_sortedRoomList[0].RoomNo, player.UserSequence);
             m_sortedRoomList.Clear();
         }
 
@@ -72,19 +72,28 @@ namespace GameServer.MatchRoom
         {
             Room tempRoom = new Room(WAIT_TIME_INTERVAL, NEED_USER_COUNT);
             tempRoom.RoomNo = (byte)(m_roomList.Count + 1);
-            m_roomList.Add(tempRoom.RoomNo, tempRoom);            
+            m_roomList.Add(tempRoom.RoomNo, tempRoom);
             tempRoom.EnterRoom(player);
 
-            Console.WriteLine("Make New Room : {0} : User {0}", tempRoom.RoomNo, player.UserSequence);
+            Console.WriteLine("Make New Room : {0} : UserID {0}", tempRoom.RoomNo, player.UserSequence);
         }
 
         public void CancelMatching(PlayerObject player)
         {
-           // 대기중 취소
+            // 대기중 취소
+            foreach (var member in m_waitingPlayerQueue)
+            {
+                if (member.UserSequence == player.UserSequence)
+                {
+                    // Queue에서 어떻게 제거한다..?
+                }
+            }
 
-           // 방에서 취소
-
+            // 방에서 취소
+            m_roomList[player.EnteredRoomNo]?.RemoveUserFromRoom(player);
+            
            // 이미 처리됨
+           // PlayerManager 에서 처리
         }
         
         public void RoomUpdate(double deltaTime)

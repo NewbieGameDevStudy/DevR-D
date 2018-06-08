@@ -17,12 +17,13 @@
             <Button Name="DisconnectButton" Content="로그아웃" Canvas.Left="143" Canvas.Top="10" Width="59" Click="Button_Disconnect" IsEnabled="False"/>
             <TextBlock Name="ConnectState" Canvas.Left="93" Canvas.Top="35"> 연결상태</TextBlock>
             <Button Content="방 입장" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="46" Canvas.Left="292" Canvas.Top="10" Click="Button_RoomEnter"/>
-            <Button x:Name="ConnectButton_Copy" Content="로그인" Canvas.Left="219" Canvas.Top="10" Width="45" Click="TestSession"/>
-            <Button x:Name="ConnectButton_Copy1" Content="로그인" Canvas.Left="219" Canvas.Top="36" Width="45" Click="TestSession2"/>
+            <Button x:Name="ConnectButton_Copy" Content="매칭취소" Canvas.Left="219" Canvas.Top="10" Width="55" Click="TestSession"/>
+            <Button x:Name="ConnectButton_Copy1" Content="준비" Canvas.Left="219" Canvas.Top="36" Width="45" Click="TestSession2"/>
         </Canvas>
 
         <Canvas Margin="0,56,281,0" Height="185" VerticalAlignment="Top" HorizontalAlignment="Right" Width="228" Grid.RowSpan="2">
             <GroupBox Header="케릭터 정보" Height="165" Canvas.Left="10" Canvas.Top="10" Width="208">
+                <TextBlock x:Name ="ExpLabel_Copy" TextWrapping="Wrap" Margin="10,78,138,48"><Run Text="Pos"/><Run Text=" : "/></TextBlock>
             </GroupBox>
             <TextBlock Canvas.Left="29" TextWrapping="Wrap" Text="아이디 : " Canvas.Top="39"/>
             <TextBlock Canvas.Left="29" TextWrapping="Wrap" Canvas.Top="60"><Run Text="레   벨"/><Run Text=" : "/></TextBlock>

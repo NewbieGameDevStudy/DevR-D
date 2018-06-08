@@ -13,7 +13,7 @@ namespace GameServer.ServerClient
             m_baseServer.RoomManager.EnterWaitRoom(Player);
         }
 
-        void onReceivePacket(PK_CS_CANCEL_MATCHING pks)
+        void OnReceivePacket(PK_CS_CANCEL_MATCHING pks)
         {
             if (Player.UserSequence != pks.userSequence)
                 return;
@@ -21,7 +21,7 @@ namespace GameServer.ServerClient
             m_baseServer.RoomManager.CancelMatching(Player);
         }
 
-        void onReceivePacket(PK_CS_READY_COMPLETE_FOR_GAME pks)
+        void OnReceivePacket(PK_CS_READY_COMPLETE_FOR_GAME pks)
         {
             if (Player.UserSequence != pks.userSequence)
                 return;
