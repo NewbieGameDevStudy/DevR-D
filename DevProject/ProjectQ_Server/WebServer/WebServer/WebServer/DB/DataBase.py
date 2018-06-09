@@ -57,6 +57,7 @@ class DBConnection:
             conn.close()
             
     def _storedProcedure(self, storedProcedureFuncStr, params, outputParamRange):
+        print("call storedProcedure")
         try:
             conn = self._dbPool.connect()
             with conn.cursor() as cursor:
@@ -70,15 +71,15 @@ class DBConnection:
                         outputStr += (", @_%s_%d" % (storedProcedureFuncStr, index))
                     
                 #cursor.execute(outputStr)
-                result = cursor.fetchone()                
+                result = cursor.fetchone()
+                print(result)                
                 cursor.execute(outputStr)
                 outResult = cursor.fetchone()
+                print(outResult)
                 conn.commit()
-                
-                print("result : %s" % result)
-                print("outParamResult : %s" % outResult)
-                
                 return outResult if result is None else result + outResult
+        except Exception as e:
+            print(str(e))
         finally:
             conn.close()  
     
