@@ -25,6 +25,9 @@ class ShopBase(object):
         buyItemInfo = self.itemMetas[buyProductId]
         accountInfo = userObject.getData(Define.ACCOUNT_INFO)
         
+        if "Single" == buyItemInfo['ItemType']:
+            return Route.Define.ERROR_REQUEST_SINGLE_ITEM
+        
         priceValue = buyItemInfo['Price']
         
         if priceValue > accountInfo.gameMoney:
@@ -33,8 +36,8 @@ class ShopBase(object):
         itemContainer = userObject.getData(ITEM_CONTANIER)
         
         #1 == no stock item, 0 == stock item
-        type = buyItemInfo['ItemType']
-        if type == 1:
+        typeStr = buyItemInfo['ItemType']
+        if typeStr == "Normal":
             findItem = itemContainer.getItemById(buyProductId)
             if not findItem is None: 
                 return Route.Define.ERROR_ALREADY_BUY_NO_STOCK_ITEM

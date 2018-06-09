@@ -75,6 +75,9 @@ class DBConnection:
                 outResult = cursor.fetchone()
                 conn.commit()
                 
+                print("result : %s" % result)
+                print("outParamResult : %s" % outResult)
+                
                 return outResult if result is None else result + outResult
         finally:
             conn.close()  

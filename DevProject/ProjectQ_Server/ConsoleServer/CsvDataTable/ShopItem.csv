@@ -1,4 +1,14 @@
-Index,Desc,ItemType,Price,GetExp,StockItem
-0,웃는 이모티콘,1,100,1,TRUE
-1,어벤저스 머리,2,200,2,FALSE
-2,부스트 아이템,3,300,3,TRUE
+Index,Desc,ItemType,Price,GetExp,UseType,Resouce
+0,웃는 이모티콘,Stock,100,1,Multi,Name
+1,어벤저스 머리,Normal,200,2,Multi,Name
+2,블링블링 UI팩,Normal,100000,3,Single,Name
+3,부스트 아이템,Stock,300,4,Multi,Name
+4,우는 이모티콘,Normal,400,5,Multi,Name
+5,물고기 머리,Normal,500,6,Multi,Name
+6,사자머리,Normal,600,7,Multi,Name
+7,틀린문제쉴드,Stock,700,8,Multi,Name
+8,화난 이모티콘,Normal,800,9,Multi,Name
+9,화산불배경,Normal,1000,10,Single,Name
+10,초원배경,Normal,1100,11,Single,Name
+11,신나는 음악,Normal,1200,12,Single,Name
+12,우울한 음악,Normal,3000,13,Single,Name
