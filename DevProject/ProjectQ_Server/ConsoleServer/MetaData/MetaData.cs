@@ -32,17 +32,17 @@ namespace MetaData.Data
         public string QuestText { get; set; }
         public bool Result { get; set; }
         public int GetExp { get; set; }
-        public int Difficult { get; set; }
+        public string WrongInfo { get; set; }
     }
 
     public class BaseItemMeta : IBaseMeta
     {
         public int Index { get; set; }
         public string Desc { get; set; }
-        public int ItemType { get; set; }
+        public string ItemType { get; set; }
         public int Price { get; set; }
         public int GetExp { get; set; }
-        public bool StockItem { get; set; }
+        public bool UseType { get; set; }      
     }
 
     #region 퀴즈 데이터
@@ -96,7 +96,7 @@ namespace MetaData.Data
             Map(m => m.QuestText).Index(1);
             Map(m => m.Result).Index(2);
             Map(m => m.GetExp).Index(3);
-            Map(m => m.Difficult).Index(4);
+            Map(m => m.WrongInfo).Index(4);
         }
     }
 
@@ -117,7 +117,7 @@ namespace MetaData.Data
             Map(m => m.ItemType).Index(2);
             Map(m => m.Price).Index(3);
             Map(m => m.GetExp).Index(4);
-            Map(m => m.StockItem).Index(5);
+            Map(m => m.UseType).ConvertUsing(row => row.GetField<string>(5) == "Multi" ? true : false);
         }
     }
 

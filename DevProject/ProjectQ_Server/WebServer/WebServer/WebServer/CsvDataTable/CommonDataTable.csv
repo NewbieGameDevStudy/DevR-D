@@ -1,6 +1,6 @@
-Index,QuestText,Result,GetExp,Difficult
-0,��Ĺ���1,TRUE,1,5
-1,��Ĺ���2,TRUE,2,4
-2,��Ĺ���3,FALSE,3,3
-3,��Ĺ���4,TRUE,4,2
-4,��Ĺ���5,FALSE,5,1
+﻿Index,QuestText,Result,GetExp,WrongInfo
+0,상식문제1,TRUE,1,설명임1
+1,상식문제2,TRUE,2,설명임2
+2,상식문제3,FALSE,3,설명임3
+3,상식문제4,TRUE,4,설명임4
+4,상식문제5,FALSE,5,설명임5
