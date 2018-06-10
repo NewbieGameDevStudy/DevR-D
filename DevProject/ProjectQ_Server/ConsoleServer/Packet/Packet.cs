@@ -10,6 +10,13 @@ namespace Packet
 
     //클라이언트 -> 서버 패킷
     [ProtoContract]
+    public class PK_CS_LONGPACKET_TEST : PK_BASE                  // 매칭 입장
+    {
+        [ProtoMember(1)]
+        public string longData { get; set; }
+    }
+
+    [ProtoContract]
     public class PK_CS_ENTERROOM : PK_BASE                  // 매칭 입장
     {
         [ProtoMember(1)]

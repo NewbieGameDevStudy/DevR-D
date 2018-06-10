@@ -13,6 +13,15 @@ namespace GameServer.ServerClient
             m_baseServer.RoomManager.EnterWaitRoom(Player);
         }
 
+        void OnReceivePacket(PK_CS_LONGPACKET_TEST pks)
+        {
+            if (Player == null)
+                return;
+
+            var d = pks.longData.Length;
+            int a = 0;
+        }
+
         void onReceivePacket(PK_CS_CANCEL_MATCHING pks)
         {
             if (Player.UserSequence != pks.userSequence)
