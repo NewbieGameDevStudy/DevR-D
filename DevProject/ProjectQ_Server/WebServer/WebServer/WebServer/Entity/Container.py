@@ -106,14 +106,15 @@ class MailContainer(Common.BaseContainerResp):
             if not dataIdx in self.ig_container:
                 self.ig_container[dataIdx] = Mail()
             
-            del datas[2]
             mail = self.ig_container[dataIdx]
             mail.loadValueFromDB(datas)
             mail.syncToResp()
             
-    def getItemById(self, mailIdx):
+    def getMailById(self, mailIdx):
         for mail in self.ig_container.values():
             if mail.mailIdx == mailIdx:
                 return mail
             
         return None
+    
+    

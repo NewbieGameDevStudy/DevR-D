@@ -79,7 +79,47 @@ class MailWrite(Resource, Common.BaseRoute):
             return Common.respHandler.getResponse(Route.Define.ERROR_NOT_WRITE)
                 
         return Common.respHandler.customeResponse(Route.Define.OK_SUCCESS, {"mailCount" : accountInfo.dailyMailCount, "gameMoney" : accountInfo.gameMoney})
+
+class MailPostDone(Resource, Common.BaseRoute):
+    def post(self):
+        session = self.getSession(request)
+        if session is None:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
         
+        Route.parser.add_argument("mailId")
+        args = Route.parser.parse_args()
+        
+        if not args["mailId"]:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INPUT_PARAMS))
+        
+        if not session in userCachedObjects:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INVALID_ACCESS))
+        
+        readMailId = int(args["mailId"])
+        
+        mailContanier = Entity.userCachedObjects[session].getData(Entity.Define.MAIL_CONTANIER)
+        mail = mailContanier.getMailById(readMailId)
+        
+        if mail is None:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_ITEM))
+        
+        if mail.readDone == 1:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_ALREADY_READ_DONE))
+        
+        try:
+            mailDB = DB.dbConnection.customInsertQuery("update gamedb.mailBox SET ireadDone = 1 where iAccountId = %s and iIdx = %s" % (session, readMailId))
+        except Exception as e:
+            print(str(e))
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_DB))
+        
+        mailContanier = Entity.userCachedObjects[session].getData(Entity.Define.MAIL_CONTANIER)        
+        mail = mailContanier.getMailById(readMailId)
+        mail.readDone = 1
+        mail.syncToResp()
+                
+        return Common.respHandler.customeResponse(Route.Define.OK_SUCCESS, {"readMailId":readMailId})
+        
+
 class MailPostAccept(Resource, Common.BaseRoute):
     def post(self):
         session = self.getSession(request)
