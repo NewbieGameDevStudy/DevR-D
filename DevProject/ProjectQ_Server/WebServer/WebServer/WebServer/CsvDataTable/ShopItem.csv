@@ -1,14 +1,14 @@
-Index,Desc,ItemType,Price,GetExp,UseType,Resouce
-0,¿ô´Â ÀÌ¸ğÆ¼ÄÜ,Stock,100,1,Multi,Name
-1,¾îº¥Àú½º ¸Ó¸®,Normal,200,2,Multi,Name
-2,ºí¸µºí¸µ UIÆÑ,Normal,100000,3,Single,Name
-3,ºÎ½ºÆ® ¾ÆÀÌÅÛ,Stock,300,4,Multi,Name
-4,¿ì´Â ÀÌ¸ğÆ¼ÄÜ,Normal,400,5,Multi,Name
-5,¹°°í±â ¸Ó¸®,Normal,500,6,Multi,Name
-6,»çÀÚ¸Ó¸®,Normal,600,7,Multi,Name
-7,Æ²¸°¹®Á¦½¯µå,Stock,700,8,Multi,Name
-8,È­³­ ÀÌ¸ğÆ¼ÄÜ,Normal,800,9,Multi,Name
-9,È­»êºÒ¹è°æ,Normal,1000,10,Single,Name
-10,ÃÊ¿ø¹è°æ,Normal,1100,11,Single,Name
-11,½Å³ª´Â À½¾Ç,Normal,1200,12,Single,Name
-12,¿ì¿ïÇÑ À½¾Ç,Normal,3000,13,Single,Name
+ï»¿Index,Desc,ItemType,Price,GetExp,UseType,Resouce
+0,ì›ƒëŠ” ì´ëª¨í‹°ì½˜,Stock,100,1,Multi,Name
+1,ì–´ë²¤ì €ìŠ¤ ë¨¸ë¦¬,Normal,200,2,Multi,Name
+2,ë¸”ë§ë¸”ë§ UIíŒ©,Normal,100000,3,Single,Name
+3,ë¶€ìŠ¤íŠ¸ ì•„ì´í…œ,Stock,300,4,Multi,Name
+4,ìš°ëŠ” ì´ëª¨í‹°ì½˜,Normal,400,5,Multi,Name
+5,ë¬¼ê³ ê¸° ë¨¸ë¦¬,Normal,500,6,Multi,Name
+6,ì‚¬ìë¨¸ë¦¬,Normal,600,7,Multi,Name
+7,í‹€ë¦°ë¬¸ì œì‰´ë“œ,Stock,700,8,Multi,Name
+8,í™”ë‚œ ì´ëª¨í‹°ì½˜,Normal,800,9,Multi,Name
+9,í™”ì‚°ë¶ˆë°°ê²½,Normal,1000,10,Single,Name
+10,ì´ˆì›ë°°ê²½,Normal,1100,11,Single,Name
+11,ì‹ ë‚˜ëŠ” ìŒì•…,Normal,1200,12,Single,Name
+12,ìš°ìš¸í•œ ìŒì•…,Normal,3000,13,Single,Name

@@ -40,18 +40,9 @@ class ShopBuyProduct(Resource, Common.BaseRoute):
         buyId = int(args["buyProductId"])
         buyProductCount = int(args["buyProductCount"])
         
-        respCode = shop.buyProduct(buyId, buyProductCount, userObject)
+        respDict = shop.buyProduct(buyId, buyProductCount, userObject)
         
-        if not respCode is Route.Define.OK_SHOP_BUY_PRODUCT:
-            return jsonify(Common.respHandler.errorResponse(respCode))
+        if not Route.Define.OK_SHOP_BUY_PRODUCT is respDict["responseCode"]:
+            return jsonify(Common.respHandler.errorResponse(respDict["responseCode"]))
         
-        accountInfo = userObject.getData(Define.ACCOUNT_INFO)
-        itemContainer = userObject.getData(ITEM_CONTANIER)
-        
-        Common.respHandler.mergeResp(accountInfo.getResp())
-        Common.respHandler.mergeResp(itemContainer.getContainerResp())
-        
-        return Common.respHandler.getResponse(Route.Define.OK_SHOP_BUY_PRODUCT)
-        
-        
-        
+        return respDict

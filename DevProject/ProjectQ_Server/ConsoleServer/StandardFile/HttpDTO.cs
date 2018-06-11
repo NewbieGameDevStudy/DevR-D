@@ -164,8 +164,9 @@ namespace HttpDTO
 
     public class ShopBuyProduct : ResponseBase
     {
-        public Account account;
-        public ItemContainer itemContainer;
+        public int gameMoney;
+        public int buyItemId;
+        public int buyCount;
     }
 
     public class GetMailList : ResponseBase
