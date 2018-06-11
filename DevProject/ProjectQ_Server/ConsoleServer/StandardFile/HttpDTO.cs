@@ -138,6 +138,7 @@ namespace HttpDTO
         public string body;
         public ulong sendTime;
         public ulong exprireTime;
+        public int readDone;
     }
 
     public class MailContainer
