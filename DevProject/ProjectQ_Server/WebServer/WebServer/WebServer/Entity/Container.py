@@ -61,7 +61,7 @@ class ItemContainer(Common.BaseContainerResp):
         self.ig_container[itemIdx].loadValueFromDB(itemIdx, itemId, itemCount)
         self.ig_container[itemIdx].syncToResp()
                 
-    def EquipItem(self, slotId, itemIdx):
+    def equipItem(self, slotId, itemIdx):
         if slotId > len(self.slot) - 1:
             return Define.ERROR_OUT_OF_RANGE
         
@@ -83,7 +83,7 @@ class ItemContainer(Common.BaseContainerResp):
         equipItem.equip = 1
         return Define.OK_EQUIP_ITEM
     
-    def UnEquipItem(self, slotId, itemIdx):
+    def unEquipItem(self, slotId, itemIdx):
         if slotId > len(self.slot) - 1:
             return Define.ERROR_OUT_OF_RANGE
         
@@ -95,7 +95,10 @@ class ItemContainer(Common.BaseContainerResp):
         equipItem.equip = 0
         self.slot[slotId] = 0
         
-        return Define.OK_UNEQUIP_ITEM  
+        return Define.OK_UNEQUIP_ITEM
+    
+    def getSlotItem(self, slotId):
+        return self.slot[slotId]
     
     
 class MailContainer(Common.BaseContainerResp):

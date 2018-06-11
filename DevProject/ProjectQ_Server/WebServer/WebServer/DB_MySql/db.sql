@@ -45,8 +45,62 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (194621334355968257,'ouiouio',1,0,0,6,0,0,0,0,'2018-06-10 01:15:52'),(194621518905344513,'yrtyrtytr',1,0,0,4,0,0,0,0,'2018-06-10 01:16:26'),(194621799923712769,'iououoiu',1,0,0,0,0,0,0,0,'2018-06-10 01:17:33'),(194621879615489025,'gdfgdfgdfg',1,0,0,6,0,0,0,0,'2018-06-10 01:17:52'),(194622114496513281,'78978987',1,0,0,0,0,0,0,0,'2018-06-10 01:18:48'),(194623171461120257,'867867',1,0,0,5,0,0,0,0,'2018-06-10 01:23:01'),(194623347621888513,'gdfsgdsfgdfs',1,0,0,2,0,0,0,0,'2018-06-10 01:23:47'),(194625105035264769,'675675756',1,0,0,0,0,0,0,0,'2018-06-10 01:30:55'),(194627000860672257,'9879789',1,0,0,5,0,0,0,0,'2018-06-10 01:38:17'),(194628569530368513,'432432432',1,0,0,0,0,0,0,0,'2018-06-10 01:44:27'),(194630578601984257,'765876867867',1,0,0,6,0,0,0,0,'2018-06-10 01:52:26'),(194631262273536513,'3243241231',1,0,0,5,0,0,0,0,'2018-06-10 01:55:09');
+INSERT INTO `account` VALUES (194621334355968257,'ouiouio',1,0,0,6,0,0,0,0,'2018-06-10 01:15:52'),(194621518905344513,'yrtyrtytr',1,0,0,4,0,0,0,0,'2018-06-10 01:16:26'),(194621799923712769,'iououoiu',1,0,0,0,0,0,0,0,'2018-06-10 01:17:33'),(194621879615489025,'gdfgdfgdfg',1,0,0,6,0,0,0,0,'2018-06-10 01:17:52'),(194622114496513281,'78978987',1,0,0,0,0,0,0,0,'2018-06-10 01:18:48'),(194623171461120257,'867867',1,0,0,5,0,0,0,0,'2018-06-10 01:23:01'),(194623347621888513,'gdfsgdsfgdfs',1,0,0,2,0,0,0,0,'2018-06-10 01:23:47'),(194625105035264769,'675675756',1,0,0,0,0,0,0,0,'2018-06-10 01:30:55'),(194627000860672257,'9879789',1,0,9499,5,0,0,0,0,'2018-06-12 00:50:16'),(194628569530368513,'432432432',1,0,0,0,0,0,0,0,'2018-06-10 01:44:27'),(194630578601984257,'765876867867',1,0,0,6,0,0,0,0,'2018-06-10 01:52:26'),(194631262273536513,'3243241231',1,0,0,5,0,0,0,0,'2018-06-10 01:55:09');
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `guild`
+--
+
+DROP TABLE IF EXISTS `guild`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `guild` (
+  `iguidIdx` bigint(20) NOT NULL AUTO_INCREMENT,
+  `cguildName` varchar(45) NOT NULL,
+  `iguildMemberCount` smallint(10) NOT NULL DEFAULT '1',
+  `iguildJoinType` tinyint(1) NOT NULL DEFAULT '0',
+  `iguildLeaderId` bigint(20) NOT NULL DEFAULT '0',
+  `iguildLeaderId2` bigint(20) NOT NULL DEFAULT '0',
+  `iguildGrade` tinyint(1) NOT NULL DEFAULT '0',
+  `iguildMark` tinyint(1) NOT NULL DEFAULT '0',
+  `iguildScore` smallint(3) NOT NULL DEFAULT '0',
+  `dguildCreateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`iguidIdx`,`cguildName`)
+) ENGINE=InnoDB AUTO_INCREMENT=2000000000 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `guild`
+--
+
+LOCK TABLES `guild` WRITE;
+/*!40000 ALTER TABLE `guild` DISABLE KEYS */;
+/*!40000 ALTER TABLE `guild` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `guild_member`
+--
+
+DROP TABLE IF EXISTS `guild_member`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `guild_member` (
+  `iguildIdx` bigint(20) NOT NULL,
+  `iAccountId` varchar(45) NOT NULL,
+  PRIMARY KEY (`iguildIdx`,`iAccountId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `guild_member`
+--
+
+LOCK TABLES `guild_member` WRITE;
+/*!40000 ALTER TABLE `guild_member` DISABLE KEYS */;
+/*!40000 ALTER TABLE `guild_member` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -63,7 +117,7 @@ CREATE TABLE `inventory` (
   `iSlot1` bigint(8) NOT NULL DEFAULT '0',
   PRIMARY KEY (`iIdx`),
   UNIQUE KEY `iAccountId_UNIQUE` (`iAccountId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 DELAY_KEY_WRITE=1;
+) ENGINE=InnoDB AUTO_INCREMENT=100000002 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,6 +126,7 @@ CREATE TABLE `inventory` (
 
 LOCK TABLES `inventory` WRITE;
 /*!40000 ALTER TABLE `inventory` DISABLE KEYS */;
+INSERT INTO `inventory` VALUES (100000001,194627000860672257,0,0);
 /*!40000 ALTER TABLE `inventory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -89,7 +144,7 @@ CREATE TABLE `item` (
   `iCount` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`iIdx`),
   KEY `index2` (`iAccountId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=300000001 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,6 +153,7 @@ CREATE TABLE `item` (
 
 LOCK TABLES `item` WRITE;
 /*!40000 ALTER TABLE `item` DISABLE KEYS */;
+INSERT INTO `item` VALUES (1,194627000860672257,2,1),(2,194627000860672257,1,1),(3,194627000860672257,3,1);
 /*!40000 ALTER TABLE `item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -117,8 +173,9 @@ CREATE TABLE `mailbox` (
   `cBody` varchar(100) NOT NULL,
   `dSendTime` datetime NOT NULL,
   `dExpireTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`iIdx`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `iReadDone` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`iIdx`,`iAccountId`)
+) ENGINE=InnoDB AUTO_INCREMENT=700000003 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,6 +184,7 @@ CREATE TABLE `mailbox` (
 
 LOCK TABLES `mailbox` WRITE;
 /*!40000 ALTER TABLE `mailbox` DISABLE KEYS */;
+INSERT INTO `mailbox` VALUES (700000000,194627000860672257,194628569530368513,'9879789','테스트타이블','테스ㅡ바디','2018-06-11 23:25:55','2018-06-11 23:25:55',1),(700000001,194627000860672257,194628569530368513,'9879789','테스트타이블','테스ㅡ바디','2018-06-11 23:26:12','2018-06-11 23:26:12',1),(700000002,194628569530368513,194627000860672257,'9879789','테스트타이블','테스ㅡ바디','2018-06-11 23:39:22','2018-06-11 23:39:22',0);
 /*!40000 ALTER TABLE `mailbox` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -254,6 +312,80 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `Game_Slot_Equip` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Game_Slot_Equip`( 
+IN i_accountId BIGINT(8),
+IN i_slotId SMALLINT(2),
+IN i_itemIdx BIGINT(8),
+OUT o_error SMALLINT(2)
+)
+BEGIN
+	IF (SELECT EXISTS(SELECT 1 FROM gamedb.inventory WHERE iAccountId = i_accountId LIMIT 1)) = 0 THEN		
+        IF i_slotId = 0 THEN
+			INSERT INTO gamedb.inventory (iAccountId, iSlot0) 
+				VALUES (i_accountId, i_itemIdx); #ON duplicate key update iCount = iCount + itemCount;
+		ELSE
+			INSERT INTO gamedb.inventory (iAccountId, iSlot1) 
+				VALUES (i_accountId, i_itemIdx); #ON duplicate key update iCount = iCount + itemCount;
+        END IF;		
+        
+	ELSE
+		IF i_slotId = 0 THEN
+			UPDATE gamedb.inventory SET iSlot0 = i_itemIdx WHERE iAccountId = i_accountId;
+		ELSE
+			UPDATE gamedb.inventory SET iSlot1 = i_itemIdx WHERE iAccountId = i_accountId;
+		END IF;
+    END IF;
+    
+	SET o_error := 1;
+    
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `Game_Slot_UnEquip` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Game_Slot_UnEquip`( 
+IN i_accountId BIGINT(8),
+IN i_slotId SMALLINT(2),
+OUT o_error SMALLINT(2)
+)
+BEGIN
+	IF (SELECT EXISTS(SELECT 1 FROM gamedb.inventory WHERE iAccountId = i_accountId LIMIT 1)) = 1 THEN		
+        IF i_slotId = 0 THEN
+			UPDATE gamedb.inventory SET iSlot0 = 0 WHERE iAccountId = i_accountId;
+		ELSE
+			UPDATE gamedb.inventory SET iSlot1 = 0 WHERE iAccountId = i_accountId;
+        END IF;		        
+        SET o_error := 1;
+	ELSE		
+        SET o_error := -1;
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -264,4 +396,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-10  2:08:49
+-- Dump completed on 2018-06-12  1:53:22
