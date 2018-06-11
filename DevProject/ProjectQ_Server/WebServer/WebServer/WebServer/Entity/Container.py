@@ -12,7 +12,7 @@ from Route import Define
 class ItemContainer(Common.BaseContainerResp):
     def __init__(self):
         super(ItemContainer, self).__init__()
-        self.inventory = [0, 0]        
+        self.slot = [0, 0]        
         self.initRespCache()
     
     def loadBasicInitDataFromDB(self, updateList):
@@ -20,8 +20,8 @@ class ItemContainer(Common.BaseContainerResp):
             return
         
         #dbTable == data 1:1 match
-        self.inventory[0] = updateList[0]
-        self.inventory[1] = updateList[1]
+        self.slot[0] = updateList[0]
+        self.slot[1] = updateList[1]
         
         self.syncToResp()
     
@@ -34,7 +34,7 @@ class ItemContainer(Common.BaseContainerResp):
             item = self.ig_container[dataIdx]
             item.loadValueFromDB(datas[0], datas[2], datas[3])
             
-            if item.itemIdx in self.inventory:
+            if item.itemIdx in self.slot:
                 item.equip = 1
             
             item.syncToResp()
@@ -62,19 +62,19 @@ class ItemContainer(Common.BaseContainerResp):
         self.ig_container[itemIdx].syncToResp()
                 
     def EquipItem(self, slotId, itemIdx):
-        if slotId > len(self.inventory) - 1:
+        if slotId > len(self.slot) - 1:
             return Define.ERROR_OUT_OF_RANGE
         
         equipItem = self.getItemByIdx(itemIdx)
         if equipItem is None:
             return Define.ERROR_NOT_FOUND_ITEM
         
-        prevIdx = self.inventory[slotId]
+        prevIdx = self.slot[slotId]
         
         if prevIdx == itemIdx or equipItem.equip == 1:
             return Define.ERROR_ALREADY_EQUIP_ITEM
         
-        self.inventory[slotId] = itemIdx        
+        self.slot[slotId] = itemIdx        
         
         if not prevIdx is 0:
             prevItem = self.getItemByIdx(prevIdx)
@@ -84,16 +84,16 @@ class ItemContainer(Common.BaseContainerResp):
         return Define.OK_EQUIP_ITEM
     
     def UnEquipItem(self, slotId, itemIdx):
-        if slotId > len(self.inventory) - 1:
+        if slotId > len(self.slot) - 1:
             return Define.ERROR_OUT_OF_RANGE
         
-        unEquipItemIdx = self.inventory[slotId]
+        unEquipItemIdx = self.slot[slotId]
         if unEquipItemIdx == 0 or unEquipItemIdx != itemIdx:
             return Define.ERROR_NOT_FOUND_ITEM
         
         equipItem = self.getItemByIdx(itemIdx)
         equipItem.equip = 0
-        self.inventory[slotId] = 0
+        self.slot[slotId] = 0
         
         return Define.OK_UNEQUIP_ITEM  
     

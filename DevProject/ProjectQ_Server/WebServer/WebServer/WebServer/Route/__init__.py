@@ -6,8 +6,8 @@ from Route.Mail import MailPostRead
 from Route.Mail import MailPostAccept
 from Route.Mail import MailPostDone
 from Route.Mail import MailWrite
-from Route.Inventory import InventoryEquip
-from Route.Inventory import InventoryUnEquip
+from Route.Slot import SlotEquip
+from Route.Slot import SlotUnEquip
 from Route.User import UserFind
 from Route.Guild import GuildCreate
 from Route.Guild import GuildJoin
@@ -19,8 +19,8 @@ route_dict = {
     MailPostDone : '/mailPost/done',
     MailPostAccept : '/mailPost/accept',
     MailWrite : '/mailPost/write',    
-    InventoryEquip : '/inventory/equip',
-    InventoryUnEquip : '/inventory/unequip',
+    SlotEquip : '/slot/equip',
+    SlotUnEquip : '/slot/unequip',
     UserFind : '/user/find',
     GuildCreate : '/guild/create',
     GuildJoin : '/guild/join',

@@ -8,7 +8,7 @@ from Route import Define
 import Entity.User
 from Entity import serverCachedObject, userCachedObjects
 
-class InventoryEquip(Resource, Common.BaseRoute):
+class SlotEquip(Resource, Common.BaseRoute):
     def post(self):
         session = self.getSession(request)
         if session is None:
@@ -44,7 +44,7 @@ class InventoryEquip(Resource, Common.BaseRoute):
         return jsonify(Common.respHandler.customeResponse(Route.Define.OK_SUCCESS, {"equipItemIdx" : itemIdx, "slotId" : slotId}))
     
     
-class InventoryUnEquip(Resource, Common.BaseRoute):
+class SlotUnEquip(Resource, Common.BaseRoute):
     def post(self):
         session = self.getSession(request)
         if session is None:

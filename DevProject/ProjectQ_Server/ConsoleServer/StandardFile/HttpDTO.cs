@@ -126,7 +126,7 @@ namespace HttpDTO
     public class ItemContainer
     {
         public Item[] item;
-        public List<ulong> inventory;
+        public List<ulong> slot;
     }
 
     public class Mail
