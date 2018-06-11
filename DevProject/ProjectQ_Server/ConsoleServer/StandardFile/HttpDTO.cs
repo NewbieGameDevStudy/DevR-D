@@ -28,14 +28,14 @@ namespace HttpDTO
     public class ReqInventoryEquipItem
     {
         public int slotId;
-        public int itemIdx;
+        public ulong itemIdx;
     }
 
     [HttpConnect(Method.POST, "/inventory/unequip")]
     public class ReqInventoryUnEquipItem
     {
         public int slotId;
-        public int itemIdx;
+        public ulong itemIdx;
     }
 
     [HttpConnect(Method.POST, "/shop/buyProduct")]
@@ -57,6 +57,12 @@ namespace HttpDTO
     public class ReqMailGetList
     {
 
+    }
+
+    [HttpConnect(Method.POST, "/mailPost/done")]
+    public class ReqMailDone
+    {
+        public ulong mailId;
     }
 
     [HttpConnect(Method.GET, "/user/find")]
@@ -180,6 +186,11 @@ namespace HttpDTO
         public int gameMoney;       //메일쓰기 이후 감소된 현재 재화량
     }
 
+    public class DoneMail : ResponseBase
+    {
+        public ulong readMailId;
+    }
+
     public class FindUser : ResponseBase
     {
         public string nickName;
@@ -220,7 +231,7 @@ namespace HttpDTO
         public const int ERROR_NOT_FOUND_USER = 5001;
 
         public const int ERROR_NOT_WRITE = 6001;
-
+        public const int ERROR_ALREADY_READ_DONE = 6002;
     }
 
 
