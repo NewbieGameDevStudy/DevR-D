@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: gamedb
 -- ------------------------------------------------------
--- Server version	5.7.21-log
+-- Server version	5.7.22-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -27,7 +27,7 @@ CREATE TABLE `account` (
   `cName` varchar(45) NOT NULL,
   `iLevel` tinyint(1) NOT NULL DEFAULT '1',
   `iExp` int(10) unsigned NOT NULL DEFAULT '0',
-  `iGameMoney` int(10) unsigned NOT NULL DEFAULT '0',
+  `iGameMoney` int(10) unsigned NOT NULL DEFAULT '9999',
   `iportrait` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `ibestRecord` int(10) unsigned NOT NULL DEFAULT '0',
   `iwinRecord` int(10) unsigned NOT NULL DEFAULT '0',
@@ -45,7 +45,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (194621334355968257,'ouiouio',1,0,0,6,0,0,0,0,'2018-06-10 01:15:52'),(194621518905344513,'yrtyrtytr',1,0,0,4,0,0,0,0,'2018-06-10 01:16:26'),(194621799923712769,'iououoiu',1,0,0,0,0,0,0,0,'2018-06-10 01:17:33'),(194621879615489025,'gdfgdfgdfg',1,0,0,6,0,0,0,0,'2018-06-10 01:17:52'),(194622114496513281,'78978987',1,0,0,0,0,0,0,0,'2018-06-10 01:18:48'),(194623171461120257,'867867',1,0,0,5,0,0,0,0,'2018-06-10 01:23:01'),(194623347621888513,'gdfsgdsfgdfs',1,0,0,2,0,0,0,0,'2018-06-10 01:23:47'),(194625105035264769,'675675756',1,0,0,0,0,0,0,0,'2018-06-10 01:30:55'),(194627000860672257,'9879789',1,0,9499,5,0,0,0,0,'2018-06-12 00:50:16'),(194628569530368513,'432432432',1,0,0,0,0,0,0,0,'2018-06-10 01:44:27'),(194630578601984257,'765876867867',1,0,0,6,0,0,0,0,'2018-06-10 01:52:26'),(194631262273536513,'3243241231',1,0,0,5,0,0,0,0,'2018-06-10 01:55:09');
+INSERT INTO `account` VALUES (194621334355968257,'ouiouio',1,0,0,6,0,0,0,0,'2018-06-10 01:15:52'),(194621518905344513,'yrtyrtytr',1,0,0,4,0,0,0,0,'2018-06-10 01:16:26'),(194621799923712769,'iououoiu',1,0,0,0,0,0,0,0,'2018-06-10 01:17:33'),(194621879615489025,'gdfgdfgdfg',1,0,0,6,0,0,0,0,'2018-06-10 01:17:52'),(194622114496513281,'78978987',1,0,0,0,0,0,0,0,'2018-06-10 01:18:48'),(194623171461120257,'867867',1,0,0,5,0,0,0,0,'2018-06-10 01:23:01'),(194623347621888513,'gdfsgdsfgdfs',1,0,0,2,0,0,0,0,'2018-06-10 01:23:47'),(194625105035264769,'675675756',1,0,0,0,0,0,0,0,'2018-06-10 01:30:55'),(194627000860672257,'9879789',1,0,3499,5,0,0,0,0,'2018-06-12 00:50:16'),(194628569530368513,'432432432',1,0,0,0,0,0,0,0,'2018-06-10 01:44:27'),(194630578601984257,'765876867867',1,0,0,6,0,0,0,0,'2018-06-12 22:17:21'),(194631262273536513,'3243241231',1,0,0,5,0,0,0,0,'2018-06-12 22:16:54');
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -57,7 +57,7 @@ DROP TABLE IF EXISTS `guild`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `guild` (
-  `iguidIdx` bigint(20) NOT NULL AUTO_INCREMENT,
+  `iguildIdx` bigint(20) NOT NULL AUTO_INCREMENT,
   `cguildName` varchar(45) NOT NULL,
   `iguildMemberCount` smallint(10) NOT NULL DEFAULT '1',
   `iguildJoinType` tinyint(1) NOT NULL DEFAULT '0',
@@ -67,8 +67,9 @@ CREATE TABLE `guild` (
   `iguildMark` tinyint(1) NOT NULL DEFAULT '0',
   `iguildScore` smallint(3) NOT NULL DEFAULT '0',
   `dguildCreateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`iguidIdx`,`cguildName`)
-) ENGINE=InnoDB AUTO_INCREMENT=2000000000 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`iguildIdx`),
+  UNIQUE KEY `cguildName_UNIQUE` (`cguildName`)
+) ENGINE=InnoDB AUTO_INCREMENT=2000000008 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -77,6 +78,7 @@ CREATE TABLE `guild` (
 
 LOCK TABLES `guild` WRITE;
 /*!40000 ALTER TABLE `guild` DISABLE KEYS */;
+INSERT INTO `guild` VALUES (2000000007,'테스트길드',1,1,194627000860672257,0,0,1,0,'2018-06-12 21:40:30');
 /*!40000 ALTER TABLE `guild` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -191,6 +193,45 @@ UNLOCK TABLES;
 --
 -- Dumping routines for database 'gamedb'
 --
+/*!50003 DROP PROCEDURE IF EXISTS `Game_Guild_Create` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Game_Guild_Create`( 
+IN i_accountId BIGINT(8),
+IN i_guildName VARCHAR(45),
+IN i_guildJoinType TINYINT(1),
+IN i_guildMark TINYINT(1),
+IN i_gameMoney INT(10),
+OUT o_error SMALLINT(2),
+OUT o_guildIdx BIGINT(20)
+)
+GuildCreate:BEGIN
+	
+    SET o_error = -1;
+    SET @createGuildIdx = 0;
+    SET o_guildIdx = 0;
+    
+    IF (SELECT EXISTS(SELECT 1 FROM gamedb.guild_member WHERE iAccountId = i_accountId LIMIT 1)) = 0 THEN
+		INSERT INTO gamedb.guild (cguildName, iguildJoinType, iguildLeaderId, iguildMark)
+			VALUES (i_guildName, i_guildJoinType, i_accountId, i_guildMark);
+            
+		UPDATE gamedb.account SET igamemoney = igamemoney - i_gameMoney WHERE iaccountid = i_accountId;
+        SELECT iguildIdx INTO o_guildIdx FROM gamedb.guild WHERE cguildName = i_guildName;
+        SET o_error = 1;
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `Game_Item_BuyProduct` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -396,4 +437,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-12  1:53:22
+-- Dump completed on 2018-06-12 22:38:34
