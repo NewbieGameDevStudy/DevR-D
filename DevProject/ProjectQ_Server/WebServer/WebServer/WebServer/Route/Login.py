@@ -42,6 +42,8 @@ class Login(Resource, Common.BaseRoute):
         mailContanier = Entity.userCachedObjects[session].getData(Entity.Define.MAIL_CONTANIER)        
         mailContanier.loadValueFromDB(mailDB)
         
+        #guildDB = DB.dbConnection.customSelectQuery("select * from gamedb.mail")
+        
         Common.respHandler.mergeResp(accountInfo.getResp())
         Common.respHandler.mergeResp(itemContanier.getContainerResp())
         Common.respHandler.mergeResp(mailContanier.getContainerResp())
@@ -83,3 +85,15 @@ class Login(Resource, Common.BaseRoute):
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_NOT_LOGIN))
         
         return jsonify(Common.respHandler.customeResponse(Route.Define.OK_CREATE_LOGIN, {"accountId":accountId}))
+    
+    
+    
+class LogOut(Resource, Common.BaseRoute):
+    def post(self):
+        session = self.getSession(request)
+        if session is None:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
+            
+        if session in Entity.userCachedObjects:
+            del Entity.userCachedObjects[session]
+            print("logOut : %s" % session)

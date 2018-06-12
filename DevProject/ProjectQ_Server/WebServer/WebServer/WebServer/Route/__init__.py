@@ -1,6 +1,6 @@
 from Route import Login
 from flask_restful import reqparse
-from Route.Login import Login
+from Route.Login import Login, LogOut
 from Route.Shop import ShopBuyProduct
 from Route.Mail import MailPostRead
 from Route.Mail import MailPostAccept
@@ -14,6 +14,7 @@ from Route.Guild import GuildJoin
 
 route_dict = { 
     Login:'/loginInfo', 
+    LogOut:'/logout',
     ShopBuyProduct:'/shop/buyProduct',
     MailPostRead : '/mailPost/read',
     MailPostDone : '/mailPost/done',

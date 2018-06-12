@@ -10,7 +10,7 @@ from Entity import Define
 from Entity import serverCachedObject, userCachedObjects
 
 class GuildCreate(Resource, Common.BaseRoute):
-    def get(self):
+    def put(self):
         session = self.getSession(request)
         if session is None:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
@@ -18,17 +18,57 @@ class GuildCreate(Resource, Common.BaseRoute):
         if not session in userCachedObjects:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
         
+        
+        Route.parser.add_argument("guildName")
+        args = Route.parser.parse_args()
+        
+        if not args["guildName"]:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INPUT_PARAMS))
+        
+        userObject = userCachedObjects[session]
+        guildInfo = userObject.getData(Define.GUILD_INFO)
+        accountInfo = userObject.getData(Define.ACCOUNT_INFO)
+        
+        if guildInfo.guildIdx > 0:
+            return Common.respHandler.errorResponse(Route.Define.ERROR_CURRENT_JOIN_GUILD)
+        
+        if accountInfo.level <= 15:
+            return Common.respHandler.errorResponse(Route.Define.ERROR_LOW_LEVEL)
+        
+        if accountInfo.gameMoney <= 10000:
+            return Common.respHandler.errorResponse(Route.Define.ERROR_NOT_ENOUGH_MONEY)
+        
+        createGuildName = args["guildName"]
+        guildJoinType = int(args["guildJoinType"])
+        guildMark = int(args["guildMark"])
+        
         try:
-            mailDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.mailBox where iAccountId = %s" % session)
+            guildNameCheck = DB.dbConnection.customSelectQuery("select cguildName from gamedb.guild where cguildName = %s" % createGuildName)
         except Exception as e:
             print(str(e))
-            return Route.Define.ERROR_DB
+            return Common.respHandler.errorResponse(Route.Define.ERROR_DB)
         
-        mailContanier = Entity.userCachedObjects[session].getData(Entity.Define.MAIL_CONTANIER)        
-        mailContanier.loadValueFromDB(mailDB)
+        if not guildNameCheck is None:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_ALREADY_GUILDNAME))
         
-        Common.respHandler.mergeResp(mailContanier.getContainerResp())
+        o_error = 0
+        o_guildIdx = 0 
+        try:
+            resultDB = DB.dbConnection.executeStoredProcedure("Game_Guild_Create", (accountInfo.accountId, createGuildName, guildJoinType, guildMark, accountInfo.gameMoney, o_error, o_guildIdx), (5, 6))
+        except Exception as e:
+            print(str(e))
+            return Common.respHandler.errorResponse(Route.Define.ERROR_DB)
+        
+        o_error = resultDB[0]
+        o_guildIdx = resultDB[1]
+        
+        if o_error == -1:
+            return Common.respHandler.getResponse(Route.Define.ERROR_NOT_CREATE_GUILD)
+        
+        guildInfo.InitGuildInfo(o_guildIdx, createGuildName, guildJoinType, guildMark, accountInfo.accountId)
+        
         return Common.respHandler.getResponse(Route.Define.OK_SUCCESS)        
+        
         
 class GuildJoin(Resource, Common.BaseRoute):
     def put(self):
