@@ -13,23 +13,36 @@ namespace Packet
     public class PK_CS_ENTERROOM : PK_BASE                  // 매칭 입장
     {
         [ProtoMember(1)]
-        public ulong userSequence { get; set; }
+        public ulong AccountIDClient { get; set; }
     }
 
     [ProtoContract]
     public class PK_CS_CANCEL_MATCHING : PK_BASE            // 매칭 취소
     {
         [ProtoMember(1)]
-        public ulong userSequence { get; set; }
+        public ulong AccountIDClient { get; set; }
     }
 
     [ProtoContract]
     public class PK_CS_READY_COMPLETE_FOR_GAME : PK_BASE
     {
         [ProtoMember(1)]
-        public byte roomNo { get; set; }
+        public byte RoomNo { get; set; }
         [ProtoMember(2)]
-        public ulong userSequence { get; set; }
+        public ulong AccountIDClient { get; set; }
+    }
+
+    [ProtoContract]
+    public class PK_CS_MOVE_POSITION : PK_BASE
+    {
+        [ProtoMember(1)]
+        public byte RoomNo { get; set; }
+        [ProtoMember(2)]
+        public ulong AccountIDClient { get; set; }
+        [ProtoMember(3)]
+        public float xPos { get; set; }
+        [ProtoMember(4)]
+        public float yPos { get; set; }
     }
 
     /*
@@ -99,6 +112,13 @@ namespace Packet
     }*/
 
     [ProtoContract]
+    public class PK_SC_CLIENT_SERVER_ID : PK_BASE
+    {
+        [ProtoMember(1)]
+        public ulong AccountIDServer { get; set; }
+    }
+
+    [ProtoContract]
     public class PK_SC_CANNOT_MATCHING_GAME : PK_BASE           // 매칭 캔슬
     {
         public enum MatchingErrorType
@@ -112,27 +132,27 @@ namespace Packet
         [ProtoMember(1)]
         public MatchingErrorType type { get; set; }
         [ProtoMember(2)]
-        public ulong userSequence { get; set; }
+        public ulong AccountIDClient { get; set; }
     }
 
     [ProtoContract]
     public class PK_SC_READY_FOR_GAME : PK_BASE                 // 게임 시작 준비
     {
         [ProtoMember(1)]
-        public int gameUserCount { get; set; }
+        public int GameUserCount { get; set; }
         [ProtoMember(2)]
-        public byte roomNo { get; set; }
+        public byte RoomNo { get; set; }
     }
 
     [ProtoContract]
     public class PK_SC_MATCHING_MEMBER_INFO : PK_BASE           // 게임 멤버 기본 정보
     {
         [ProtoMember(1)]
-        public ulong userSequence { get; set; }
+        public ulong AccountIDClient { get; set; }
         [ProtoMember(2)]
-        public string strNickName { get; set; }
+        public string NickName { get; set; }
         [ProtoMember(3)]
-        public int portRaitNo { get; set; }
+        public int PortRaitNo { get; set; }
     }
 
     [ProtoContract]
@@ -143,9 +163,22 @@ namespace Packet
     }
 
     [ProtoContract]
+    public class PK_SC_MOVE_POSITION : PK_BASE
+    {
+        [ProtoMember(1)]
+        public byte RoomNo { get; set; }
+        [ProtoMember(2)]
+        public ulong AccountIDClient { get; set; }
+        [ProtoMember(3)]
+        public float xPos { get; set; }
+        [ProtoMember(4)]
+        public float yPos { get; set; }
+    }
+
+    [ProtoContract]
     public class PK_SC_GAME_END : PK_BASE
     {
         [ProtoMember(1)]
-        public byte rank { get; set; }
+        public byte Rank { get; set; }
     }
 }

@@ -39,8 +39,8 @@ namespace GameServer.MatchRoom
 
         byte WaitMaxLimitCount;
 
-        List<PlayerObject> m_roomPlayerList = new List<PlayerObject>();
-        List<bool> m_readyForGame = new List<bool>();
+        Dictionary<ulong, PlayerObject> m_roomPlayerList = new Dictionary<ulong, PlayerObject>();
+        Dictionary<ulong, bool> m_readyForGame = new Dictionary<ulong, bool>();
 
         public Room(double waitTime, byte gameNeedUserCount)
         {
@@ -59,21 +59,17 @@ namespace GameServer.MatchRoom
             WaitMaxLimitCount = 0;
         }
 
-        public void ResetRoomPlayerListIndex()
+        public void ResetRoomState()
         {
-            int iIndex = m_roomPlayerList.Count;
-            for (int i = 0; i < iIndex; ++i)
-            {
-                m_roomPlayerList[i].PlayerIndex = (byte)(i + 1);
-            }
+            
         }
 
         public void EnterRoom(PlayerObject player)
         {
             Random portRait = new Random(100);
-            if (m_roomPlayerList.Contains(player))
+            if (m_roomPlayerList.ContainsValue(player))
             {
-                Console.WriteLine("RoomNo : {0}, Already in {0} ", RoomNo, player.UserSequence);
+                Console.WriteLine("RoomNo : {0}, Already in {0} ", RoomNo, player.AccountIDClient);
                 return;
             }
 
@@ -85,18 +81,20 @@ namespace GameServer.MatchRoom
 
             PK_SC_MATCHING_MEMBER_INFO newInfo = new PK_SC_MATCHING_MEMBER_INFO
             {
-                strNickName = "test1",
-                portRaitNo = portRait.Next(1, 100)
+                NickName = player.PlayerData.name,
+                PortRaitNo = player.PlayerData.iPortrait,
+                AccountIDClient = player.AccountIDClient
             };
 
             foreach (var info in m_roomPlayerList)
             {
-                info.Client?.SendPacket(newInfo);
+                info.Value.Client?.SendPacket(pks);
 
                 PK_SC_MATCHING_MEMBER_INFO tempInfo = new PK_SC_MATCHING_MEMBER_INFO
                 {
-                    strNickName = "info" + info.AccountID,           // info 닉네임
-                    portRaitNo = portRait.Next(1, 100)              // info 초상화
+                    PortRaitNo = info.Value.PlayerData.iPortrait,
+                    NickName = info.Value.PlayerData.name,
+                    AccountIDClient = info.Value.AccountIDClient
                 };
 
                 pks.m_memberList.Add(tempInfo);
@@ -104,9 +102,8 @@ namespace GameServer.MatchRoom
 
             player.Client?.SendPacket(pks);
 
-            m_roomPlayerList.Add(player);
+            m_roomPlayerList.Add(player.AccountIDClient, player);
             player.EnteredRoomNo = this.RoomNo;
-            player.PlayerIndex = (byte)m_roomPlayerList.Count;
         }
 
         public void MatchimgGame(double deltaTime)
@@ -117,7 +114,7 @@ namespace GameServer.MatchRoom
                 System.Console.WriteLine("Match! : Need - {0}, User - {0}", GameNeedUserCount, m_roomPlayerList.Count);
 
                 // 게임 시작 준비
-                ReadyForGame();
+                ReadyForGameCheck();
             }
         }
 
@@ -147,17 +144,18 @@ namespace GameServer.MatchRoom
                 break;
                 case RoomState.ROOM_READY_GAME:
                 {
-                    bool isReady = false;
-                    foreach (var playerAccept in m_readyForGame)
+                    bool isReadyComplete = false;
+                    foreach (var ready in m_readyForGame)
                     {
-                        if (playerAccept == false)
+                        if (ready.Value == false)
                         {
+                            isReadyComplete = false;
                             break;
                         }
-                        isReady = true;
+                        isReadyComplete = true;
                     }
 
-                    if (isReady)
+                    if (isReadyComplete)
                         CurrentRoomState = RoomState.ROOM_PLAYING;
                 }
                 break;
@@ -165,8 +163,8 @@ namespace GameServer.MatchRoom
                 {
                     if (m_roomPlayerList.Count == 1)
                     {
-                        
-
+                        // Game End
+                        GameEndProcess();
                     }
                 }
                 break;
@@ -178,17 +176,17 @@ namespace GameServer.MatchRoom
             }
         }
 
-        void ReadyForGame()
+        void ReadyForGameCheck()
         {
             var info = new PK_SC_READY_FOR_GAME
             {
-                gameUserCount = this.m_roomPlayerList.Count,
-                roomNo = this.RoomNo
+                GameUserCount = this.m_roomPlayerList.Count,
+                RoomNo = this.RoomNo
             };
 
             foreach (var player in m_roomPlayerList)
             {
-                player.Client?.SendPacket(info);
+                player.Value.Client?.SendPacket(info);
             }
         }
 
@@ -202,18 +200,64 @@ namespace GameServer.MatchRoom
 
             foreach (var player in m_roomPlayerList)
             {
-                info.userSequence = player.UserSequence;
-                player.Client?.SendPacket(info);
+                info.AccountIDClient = player.Value.AccountIDClient;
+                player.Value.Client?.SendPacket(info);
             }
 
             ClearRoomData();
         }
 
+        public void MovePosition(PlayerObject player)
+        {
+            if (m_roomPlayerList.ContainsValue(player) == false)
+                return;
+
+            var info = new PK_SC_MOVE_POSITION
+            {
+                AccountIDClient = player.AccountIDClient,
+                RoomNo = player.EnteredRoomNo,
+                xPos = (float)player.PlayerData.Xpos,
+                yPos = (float)player.PlayerData.Ypos
+            };
+
+            foreach (var tempPlayer in m_roomPlayerList)
+            {
+                tempPlayer.Value.Client?.SendPacket(info);
+            }            
+        }
+
+        public void GameEndProcess(PlayerObject player = null)
+        {
+            var info = new PK_SC_GAME_END
+            {
+                Rank = (byte)m_roomPlayerList.Count,
+            };
+
+            if (player != null)
+            {
+                player.Client?.SendPacket(info);
+                m_roomPlayerList.Remove(player.AccountIDClient);
+            }
+            else
+            {
+                foreach (var tempPlayer in m_roomPlayerList)
+                {
+                    tempPlayer.Value.Client?.SendPacket(info);
+                }
+                ClearRoomData();
+            }
+        }
+
+        public void ReadyForGame(PlayerObject player)
+        {
+            m_readyForGame.Add(player.AccountIDClient, true);
+        }
+
         public void RemoveUserFromRoom(PlayerObject player)
         {
-            m_roomPlayerList.Remove(player);
+            m_roomPlayerList.Remove(player.AccountIDClient);
+            m_readyForGame.Remove(player.AccountIDClient);
             player.EnteredRoomNo = 0;
-            player.PlayerIndex = 0;
 
             // 다른 인원들한테 방 나간 사람 보내줌.
             // 방 나간 인원한테는 그냥 보내줌.
@@ -221,16 +265,14 @@ namespace GameServer.MatchRoom
             var info = new PK_SC_CANNOT_MATCHING_GAME
             {
                 type = PK_SC_CANNOT_MATCHING_GAME.MatchingErrorType.CANCEL_ROOM,
-                userSequence = player.UserSequence
+                AccountIDClient = player.AccountIDClient
             };
             player.Client?.SendPacket(info);
 
             foreach (var user in m_roomPlayerList)
             {
-                user.Client?.SendPacket(info);
+                user.Value.Client?.SendPacket(info);
             }
-            
-            ResetRoomPlayerListIndex();
         }
 
         public void ClearRoomData()

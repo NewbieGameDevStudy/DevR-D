@@ -34,6 +34,12 @@ namespace GameServer.MatchRoom
 
             m_waitingPlayerQueue.Enqueue(player);
             Console.WriteLine("WaitUserCount {0}", m_waitingPlayerQueue.Count);
+
+            var info = new PK_SC_CLIENT_SERVER_ID
+            {
+                AccountIDServer = player.AccountID
+            };
+            player.Client?.SendPacket(info);
         }
 
         public void FindMatchingRoom()
@@ -64,18 +70,21 @@ namespace GameServer.MatchRoom
             });
 
             m_sortedRoomList[0]?.EnterRoom(player);
-            Console.WriteLine("RoomEnter {0} : UserID {0}", m_sortedRoomList[0].RoomNo, player.UserSequence);
+            Console.WriteLine("RoomEnter {0} : UserID {0}", m_sortedRoomList[0].RoomNo, player.AccountIDClient);
             m_sortedRoomList.Clear();
         }
 
         public void MakeNewRoom(PlayerObject player)
         {
-            Room tempRoom = new Room(WAIT_TIME_INTERVAL, NEED_USER_COUNT);
-            tempRoom.RoomNo = (byte)(m_roomList.Count + 1);
+            Room tempRoom = new Room(WAIT_TIME_INTERVAL, NEED_USER_COUNT)
+            {
+                RoomNo = (byte)(m_roomList.Count + 1)
+            };
+            
             m_roomList.Add(tempRoom.RoomNo, tempRoom);
             tempRoom.EnterRoom(player);
 
-            Console.WriteLine("Make New Room : {0} : UserID {0}", tempRoom.RoomNo, player.UserSequence);
+            Console.WriteLine("Make New Room : {0} : UserID {0}", tempRoom.RoomNo, player.AccountIDClient);
         }
 
         public void CancelMatching(PlayerObject player)
@@ -83,7 +92,7 @@ namespace GameServer.MatchRoom
             // 대기중 취소
             foreach (var member in m_waitingPlayerQueue)
             {
-                if (member.UserSequence == player.UserSequence)
+                if (member.AccountIDClient == player.AccountIDClient)
                 {
                     // Queue에서 어떻게 제거한다..?
                 }
@@ -95,7 +104,17 @@ namespace GameServer.MatchRoom
            // 이미 처리됨
            // PlayerManager 에서 처리
         }
-        
+
+        public void ReadyForGame(byte roomNo, PlayerObject player)
+        {
+            m_roomList[roomNo]?.ReadyForGame(player);
+        }
+
+        public void MovePosition(byte roomNo, PlayerObject player)
+        {
+            m_roomList[roomNo]?.MovePosition(player);
+        }
+
         public void RoomUpdate(double deltaTime)
         {
             foreach (var tempRoom in m_roomList.Values)

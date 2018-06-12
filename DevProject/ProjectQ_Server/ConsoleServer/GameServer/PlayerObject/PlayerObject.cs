@@ -13,12 +13,11 @@ namespace GameServer.Player
     {
         public Client Client { get; private set; }
         public PlayerData PlayerData { get; private set; }
-        public ulong UserSequence { get; set; }             // 매칭용 - 클라에서 받는다.
+        public ulong AccountIDClient => PlayerData.accountId;   // 매칭용 - 클라에서 받는다.
         public int Handle => Client.AccountCount;
-        public ulong AccountID { get; set; }         // 서버 자체 ID
+        public ulong AccountID { get; set; }                    // 서버 자체 ID
 
-        public byte EnteredRoomNo { get; set; }             // 게임 참가 방번호
-        public byte PlayerIndex { get; set; }               // 방에서 몇번째로 들어왔는지
+        public byte EnteredRoomNo { get; set; }                 // 게임 참가 방번호
 
         BaseServer m_baseServer;
 
@@ -29,18 +28,23 @@ namespace GameServer.Player
             Client = client;
             m_baseServer = baseServer;
 
-            UserSequence = 0;
             EnteredRoomNo = 0;
-            PlayerIndex = 0;
             
             //TODO : 컴퍼넌트가 늘어난다면 별도의 Create로 분리하는것도 고려해볼것
             var moveComp = new MoveComponent(this);
         }
 
+        public void SetAccountIDClient(ulong AccountIdClient)
+        {
+            PlayerData.accountId = AccountIdClient;
+        }
+
         public void LoadPlayerInfo()
         {
-            if (UserSequence == 0)  
+            if (AccountIDClient == 0)  
                 return;
+
+            
 
             //ReqLoginInfo playerInfo = new ReqLoginInfo
             //{

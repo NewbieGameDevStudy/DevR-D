@@ -86,7 +86,7 @@ namespace ClientTool
 
             var temp = new PK_CS_CANCEL_MATCHING
             {
-                userSequence = (ulong)tempRandom.Next(1, 100000)//id
+                AccountIDClient = (ulong)tempRandom.Next(1, 100000)//id
         };
             client.SendPacket(temp);
         }
@@ -107,15 +107,16 @@ namespace ClientTool
 
             var temp = new PK_CS_READY_COMPLETE_FOR_GAME
             {
-                userSequence
-            }
+                AccountIDClient = (ulong)tempRandom.Next(1, 100000),
+                // roomNo                
+            };
         }
 
         public void Button_RoomEnter(object sender, RoutedEventArgs e)
         {
             var temp = new PK_CS_ENTERROOM
             {
-                userSequence = (ulong)tempRandom.Next(1, 100000)//id
+                AccountIDClient = (ulong)tempRandom.Next(1, 100000)//id
         };
 
             client.SendPacket(temp);

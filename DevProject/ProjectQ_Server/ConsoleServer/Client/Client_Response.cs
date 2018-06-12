@@ -30,7 +30,7 @@ namespace BaseClient
                     break;
             }
 
-            Console.WriteLine(strTemp, "{0}", pks.userSequence);
+            Console.WriteLine(strTemp, "{0}", pks.AccountIDClient);
             // disconnect;
         }
 
@@ -41,7 +41,7 @@ namespace BaseClient
 
             foreach (var member in pks.m_memberList)
             {
-                Console.WriteLine("{0}", member.userSequence);
+                Console.WriteLine("{0}", member.AccountIDClient);
             }
         }
 
@@ -51,7 +51,7 @@ namespace BaseClient
                 return;
 
             //pks.roomNo
-            Console.WriteLine("Room Ready : {0}", pks.roomNo);
+            Console.WriteLine("Room Ready : {0}", pks.RoomNo);
         }
 
         
