@@ -29,7 +29,7 @@ class ShopBase(object):
         
         priceValue = buyItemInfo['Price']
         
-        if priceValue > accountInfo.gameMoney:
+        if (priceValue * buyProductCount) > accountInfo.gameMoney:
             return Common.respHandler.customeResponse(Route.Define.ERROR_NOT_ENOUGH_MONEY)
         
         itemContainer = userObject.getData(ITEM_CONTANIER)
@@ -51,9 +51,9 @@ class ShopBase(object):
             print(str(e))
             return Common.respHandler.customeResponse(Route.Define.ERROR_DB)
         
-        accountInfo.gameMoney -= priceValue
+        accountInfo.gameMoney = accountInfo.gameMoney - (priceValue * buyProductCount)
         accountInfo.syncToResp()
         itemContainer.setItem(resultDB[0], itemId, buyProductCount)
         
-        return Common.respHandler.customeResponse(Route.Define.OK_SHOP_BUY_PRODUCT, {"gameMoney" : accountInfo.gameMoney, "buyItemId" : resultDB[0], "buyItemCount":buyProductCount})
+        return Common.respHandler.customeResponse(Route.Define.OK_SHOP_BUY_PRODUCT, {"gameMoney" : accountInfo.gameMoney, "buyItemIdx" : resultDB[0], "buyItemId" : itemId, "buyItemCount":buyProductCount})
         
