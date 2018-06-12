@@ -42,7 +42,5 @@ class Guild(Common.BaseObjResp):
         self.guildJoinType = guildJoinType
         self.guildLeaderId = leaderAccountId
         self.guildMark = guildMark
-        self.guildCreateTime = datetime.now()
-        
-        self.syncToResp()
+        self.guildCreateTime = int(datetime.now().timestamp())
         

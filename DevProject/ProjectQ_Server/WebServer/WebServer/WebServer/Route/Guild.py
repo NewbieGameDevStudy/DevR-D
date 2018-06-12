@@ -7,7 +7,8 @@ import Route.Common
 import Entity.User
 from Route import Common
 from Entity import Define
-from Entity import serverCachedObject, userCachedObjects
+from Entity import userCachedObjects
+from Entity.Define import MAX_CREATE_GUILD_MONEY
 
 class GuildCreate(Resource, Common.BaseRoute):
     def put(self):
@@ -18,11 +19,18 @@ class GuildCreate(Resource, Common.BaseRoute):
         if not session in userCachedObjects:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
         
-        
         Route.parser.add_argument("guildName")
+        Route.parser.add_argument("guildJoinType")
+        Route.parser.add_argument("guildMark")
         args = Route.parser.parse_args()
         
         if not args["guildName"]:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INPUT_PARAMS))
+        
+        if not args["guildJoinType"]:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INPUT_PARAMS))
+        
+        if not args["guildMark"]:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INPUT_PARAMS))
         
         userObject = userCachedObjects[session]
@@ -35,7 +43,7 @@ class GuildCreate(Resource, Common.BaseRoute):
         if accountInfo.level <= 15:
             return Common.respHandler.errorResponse(Route.Define.ERROR_LOW_LEVEL)
         
-        if accountInfo.gameMoney <= 10000:
+        if accountInfo.gameMoney < 10000:
             return Common.respHandler.errorResponse(Route.Define.ERROR_NOT_ENOUGH_MONEY)
         
         createGuildName = args["guildName"]
@@ -43,7 +51,7 @@ class GuildCreate(Resource, Common.BaseRoute):
         guildMark = int(args["guildMark"])
         
         try:
-            guildNameCheck = DB.dbConnection.customSelectQuery("select cguildName from gamedb.guild where cguildName = %s" % createGuildName)
+            guildNameCheck = DB.dbConnection.customSelectQuery("select cguildName from gamedb.guild where cguildName = \"%s\"" % createGuildName)
         except Exception as e:
             print(str(e))
             return Common.respHandler.errorResponse(Route.Define.ERROR_DB)
@@ -54,7 +62,7 @@ class GuildCreate(Resource, Common.BaseRoute):
         o_error = 0
         o_guildIdx = 0 
         try:
-            resultDB = DB.dbConnection.executeStoredProcedure("Game_Guild_Create", (accountInfo.accountId, createGuildName, guildJoinType, guildMark, accountInfo.gameMoney, o_error, o_guildIdx), (5, 6))
+            resultDB = DB.dbConnection.executeStoredProcedure("Game_Guild_Create", (accountInfo.accountId, createGuildName, guildJoinType, guildMark, MAX_CREATE_GUILD_MONEY, o_error, o_guildIdx), (5, 6))
         except Exception as e:
             print(str(e))
             return Common.respHandler.errorResponse(Route.Define.ERROR_DB)
@@ -65,13 +73,14 @@ class GuildCreate(Resource, Common.BaseRoute):
         if o_error == -1:
             return Common.respHandler.getResponse(Route.Define.ERROR_NOT_CREATE_GUILD)
         
-        guildInfo.InitGuildInfo(o_guildIdx, createGuildName, guildJoinType, guildMark, accountInfo.accountId)
+        guildInfo.CreateGuild(o_guildIdx, createGuildName, guildJoinType, guildMark, accountInfo.accountId)
+        guildInfo.syncToResp()
         
-        return Common.respHandler.getResponse(Route.Define.OK_SUCCESS)        
+        return Common.respHandler.customeResponse(Route.Define.OK_SUCCESS, guildInfo.getResp())        
         
         
 class GuildJoin(Resource, Common.BaseRoute):
-    def put(self):
+    def post(self):
         session = self.getSession(request)
         if session is None:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
