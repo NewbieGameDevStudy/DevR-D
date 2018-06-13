@@ -24,6 +24,9 @@ class ShopBase(object):
         buyItemInfo = self.itemMetas[buyProductId]
         accountInfo = userObject.getData(Define.ACCOUNT_INFO)
         
+        if buyProductCount <= 0:
+            return Common.respHandler.customeResponse(Route.Define.ERROR_INVALID_BUY_PRODUCT)
+        
         if "Single" == buyItemInfo['ItemType']:
             return Common.respHandler.customeResponse(Route.Define.ERROR_REQUEST_SINGLE_ITEM)
         
@@ -40,6 +43,9 @@ class ShopBase(object):
             findItem = itemContainer.getItemById(buyProductId)
             if not findItem is None: 
                 return Common.respHandler.customeResponse(Route.Define.ERROR_ALREADY_BUY_NO_STOCK_ITEM)
+            
+            if buyProductCount > 1:
+                return Common.respHandler.customeResponse(Route.Define.ERROR_ONLY_ONE_PURCHASE_AVAILABLE)
             
         itemId = buyItemInfo['Index']
         out_ItemIdx = 0
