@@ -11,6 +11,7 @@ from Route.Slot import SlotUnEquip
 from Route.User import UserFind
 from Route.Guild import GuildCreate
 from Route.Guild import GuildJoin
+from Route.Guild import GuildExit
 
 route_dict = { 
     Login:'/loginInfo', 
@@ -25,6 +26,7 @@ route_dict = {
     UserFind : '/user/find',
     GuildCreate : '/guild/create',
     GuildJoin : '/guild/join',
+    GuildExit : '/guild/exit',
 }
 
 parser = reqparse.RequestParser()

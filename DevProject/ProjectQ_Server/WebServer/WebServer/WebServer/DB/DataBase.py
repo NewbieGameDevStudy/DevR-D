@@ -77,7 +77,7 @@ class DBConnection:
                 outResult = cursor.fetchone()
                 print(outResult)
                 conn.commit()
-                return outResult if result is None else result + outResult
+                return outResult if result is None else (result, outResult)
         except Exception as e:
             print(str(e))
         finally:

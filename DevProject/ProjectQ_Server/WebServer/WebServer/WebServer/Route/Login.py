@@ -30,7 +30,7 @@ class Login(Resource, Common.BaseRoute):
         accountDB = DB.dbConnection.executeStoredProcedure("Game_Login", (session, o_error), (1, 1))
         #accountDB = DB.dbConnection.customSelectQuery("select * from gamedb.account where iAccountId = %s" % session)
         accountInfo = Entity.userCachedObjects[session].getData(Entity.Define.ACCOUNT_INFO)
-        accountInfo.loadValueFromDB(accountDB)
+        accountInfo.loadValueFromDB(accountDB[0])
         
         itemDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.item where iAccountId = %s" % session)
         inventoryDB = DB.dbConnection.customSelectQuery("select islot0, islot1 from gamedb.inventory where iAccountId = %s" % session)

@@ -29,18 +29,33 @@ class Guild(Common.BaseObjResp):
         self.guildGrade = convertList[6]
         self.guildMark = convertList[7]
         self.guildScore = convertList[8]
-        self.guildCreateTime = convertList[9]
+        self.guildCreateTime = int(convertList[9].timestamp()) 
         
         self.initResp(convertList)
         
     def getResp(self):
         return {self.__class__.__name__ : self.ig_respDict}
     
-    def CreateGuild(self, guildIdx, guildName, guildJoinType, guildMark, leaderAccountId):
+    def updateGuild(self, guildIdx, guildName, guildJoinType, guildMark, leaderAccountId):
         self.guildIdx = guildIdx
         self.guildName = guildName
         self.guildJoinType = guildJoinType
         self.guildLeaderId = leaderAccountId
         self.guildMark = guildMark
         self.guildCreateTime = int(datetime.now().timestamp())
+    
+    def resetGuildInfo(self):
+        self.guildIdx = 0
+        self.guildName = ''
+        self.guildMemberCount = 1
+        self.guildJoinType = 0
+        self.guildLeaderId = 0
+        #second guild leader
+        self.guildLeaderId2 = 0     
+        self.guildGrade = 0
+        self.guildMark = 0
+        self.guildScore = 0
+        self.guildCreateTime = 0
+        
+        self.syncToResp()
         
