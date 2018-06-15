@@ -9,6 +9,7 @@ from Entity.Item import Item
 from Entity.Mail import Mail
 from Entity.Guild import GuildMemberInfo
 
+
 class GuildContainer(Common.BaseContainerResp):
     def __init__(self):
         super(GuildContainer, self).__init__()
@@ -19,13 +20,11 @@ class GuildContainer(Common.BaseContainerResp):
             if not dataIdx in self.ig_container:
                 self.ig_container[dataIdx] = GuildMemberInfo()
             
-            item = self.ig_container[dataIdx]
-            item.loadValueFromDB(datas[0], datas[2], datas[3])
+            memberInfo = self.ig_container[dataIdx]
+            memberInfo.loadValueFromDB(datas[0], datas[2], datas[3])            
+            memberInfo.syncToResp()
             
-            if item.itemIdx in self.slot:
-                item.equip = 1
             
-            item.syncToResp()
 
 class ItemContainer(Common.BaseContainerResp):
     def __init__(self):
@@ -117,6 +116,7 @@ class ItemContainer(Common.BaseContainerResp):
     
     def getSlotItem(self, slotId):
         return self.slot[slotId]
+    
     
     
 class MailContainer(Common.BaseContainerResp):

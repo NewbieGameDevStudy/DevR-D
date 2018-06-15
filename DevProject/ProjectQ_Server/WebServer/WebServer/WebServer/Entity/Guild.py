@@ -13,6 +13,22 @@ class GuildMemberInfo(Common.BaseObjResp):
         self.winRecord = 0
         self.continueRecord = 0
         self.memberGrade = 0
+        
+        self.initRespCache()
+        
+    def loadValueFromDB(self, updateList):
+        self.accountId = updateList[0]
+        self.name = updateList[1]
+        self.level = updateList[2]
+        self.exp = updateList[3]
+        self.portrait = updateList[4]
+        self.bestRecord = updateList[5]
+        self.winRecord = updateList[6]
+        self.continueRecord = updateList[7]
+        self.memberGrade = updateList[8]
+        
+        self.initResp(updateList)
+        
 
 class Guild(Common.BaseObjResp):
     def __init__(self):
