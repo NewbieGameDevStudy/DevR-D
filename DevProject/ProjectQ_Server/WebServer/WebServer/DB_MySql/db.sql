@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: gamedb
 -- ------------------------------------------------------
--- Server version	5.7.21-log
+-- Server version	5.7.22-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -45,7 +45,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (194621334355968257,'ouiouio',1,0,0,6,0,0,0,0,'2018-06-10 01:15:52'),(194621518905344513,'yrtyrtytr',1,0,0,4,0,0,0,0,'2018-06-10 01:16:26'),(194621799923712769,'iououoiu',1,0,0,0,0,0,0,0,'2018-06-10 01:17:33'),(194621879615489025,'gdfgdfgdfg',1,0,0,6,0,0,0,0,'2018-06-10 01:17:52'),(194622114496513281,'78978987',1,0,0,0,0,0,0,0,'2018-06-10 01:18:48'),(194623171461120257,'867867',1,0,0,5,0,0,0,0,'2018-06-10 01:23:01'),(194623347621888513,'gdfsgdsfgdfs',1,0,0,2,0,0,0,0,'2018-06-10 01:23:47'),(194625105035264769,'675675756',1,0,0,0,0,0,0,0,'2018-06-10 01:30:55'),(194627000860672257,'9879789',1,0,3499,5,0,0,0,0,'2018-06-12 00:50:16'),(194628569530368513,'432432432',1,0,0,0,0,0,0,0,'2018-06-10 01:44:27'),(194630578601984257,'765876867867',16,0,10000,6,0,14,0,0,'2018-06-15 00:12:54'),(194631262273536513,'3243241231',1,0,0,5,0,0,0,0,'2018-06-12 22:16:54');
+INSERT INTO `account` VALUES (194621334355968257,'ouiouio',1,0,0,6,0,0,0,0,'2018-06-10 01:15:52'),(194621518905344513,'yrtyrtytr',1,0,0,4,0,0,0,0,'2018-06-10 01:16:26'),(194621799923712769,'iououoiu',1,0,0,0,0,0,0,0,'2018-06-10 01:17:33'),(194621879615489025,'gdfgdfgdfg',1,0,0,6,0,0,0,0,'2018-06-10 01:17:52'),(194622114496513281,'78978987',1,0,0,0,0,0,0,0,'2018-06-10 01:18:48'),(194623171461120257,'867867',1,0,0,5,0,0,0,0,'2018-06-10 01:23:01'),(194623347621888513,'gdfsgdsfgdfs',1,0,0,2,0,0,0,0,'2018-06-10 01:23:47'),(194625105035264769,'675675756',1,0,0,0,0,0,0,0,'2018-06-10 01:30:55'),(194627000860672257,'9879789',1,0,3499,5,0,0,0,0,'2018-06-15 19:57:53'),(194628569530368513,'432432432',1,0,0,0,0,0,0,0,'2018-06-10 01:44:27'),(194630578601984257,'765876867867',16,0,9700,6,0,14,0,0,'2018-06-15 00:12:54'),(194631262273536513,'3243241231',1,0,0,5,0,0,0,0,'2018-06-12 22:16:54');
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -156,7 +156,7 @@ CREATE TABLE `item` (
 
 LOCK TABLES `item` WRITE;
 /*!40000 ALTER TABLE `item` DISABLE KEYS */;
-INSERT INTO `item` VALUES (1,194627000860672257,2,1),(2,194627000860672257,1,1),(3,194627000860672257,3,1),(300000001,194630578601984257,0,1),(300000002,194630578601984257,1,1),(300000003,194630578601984257,3,1),(300000004,194630578601984257,4,1);
+INSERT INTO `item` VALUES (1,194627000860672257,2,1),(2,194627000860672257,1,1),(3,194627000860672257,3,1),(300000001,194630578601984257,0,1),(300000002,194630578601984257,1,1),(300000003,194630578601984257,3,2),(300000004,194630578601984257,4,1);
 /*!40000 ALTER TABLE `item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -322,6 +322,98 @@ GuildJoin:BEGIN
 	END IF;    
 	SET o_error = 1;
 
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `Game_Guild_Kick` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Game_Guild_Kick`( 
+IN i_accountId BIGINT(8),
+IN i_guildIdx BIGINT(8),
+IN i_kickUserId BIGINT(8),
+IN i_guildGrade TINYINT(1),
+OUT o_error SMALLINT(2)
+)
+GuildKick:BEGIN
+	    
+	SET o_error = -1;
+	SET @winRecord = 0;
+    
+    #길드가입조건 확인    
+	IF (SELECT EXISTS(SELECT 1 FROM gamedb.guild_member WHERE iAccountId = i_kickUserId LIMIT 1)) = 0 THEN
+		SET o_error = -1;
+	ELSE
+
+		SELECT iwinRecord INTO @winRecord FROM gamedb.account WHERE iaccountId = i_kickUserId;    
+		DELETE FROM gamedb.guild_member WHERE iaccountId = i_kickUserId AND iguildIdx = i_guildIdx;
+        
+		IF i_guildGrade = 1 THEN
+			UPDATE gamedb.guild SET iguildMemberCount = iguildMemberCount - 1, iguildScore = iguildScore - @winRecord, iguildLeaderId2 = 0 WHERE iguildIdx = i_guildIdx;
+		ELSE
+			UPDATE gamedb.guild SET iguildMemberCount = iguildMemberCount - 1, iguildScore = iguildScore - @winRecord WHERE iguildIdx = i_guildIdx;
+		END IF;
+    
+		IF ROW_COUNT() > 0 THEN
+			SET o_error = 1;
+		ELSE
+			SET o_error = -1;
+		END IF; 
+	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `Game_Guild_Leave` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Game_Guild_Leave`( 
+IN i_accountId BIGINT(8),
+IN i_guildIdx BIGINT(8),
+IN i_guildGrade TINYINT(1),
+OUT o_error SMALLINT(2)
+)
+GuildExit:BEGIN
+	    
+	SET o_error = -1;
+    SET @winRecord = 0;
+        
+    SELECT iwinRecord INTO @winRecord FROM gamedb.account WHERE iaccountId = i_accountId;    
+    DELETE FROM gamedb.guild_member WHERE iaccountId = i_accountId AND iguildIdx = i_guildIdx;
+    
+    IF i_guildGrade = 2 THEN
+		UPDATE gamedb.guild SET iguildMemberCount = iguildMemberCount - 1, iguildScore = iguildScore - @winRecord, iguildLeaderId = iguildLeaderId2, iguildLeaderId2 = 0 WHERE iguildIdx = i_guildIdx;
+    ELSEIF i_guildGrade = 1 THEN
+		UPDATE gamedb.guild SET iguildMemberCount = iguildMemberCount - 1, iguildScore = iguildScore - @winRecord, iguildLeaderId2 = 0 WHERE iguildIdx = i_guildIdx;
+    ELSE
+		UPDATE gamedb.guild SET iguildMemberCount = iguildMemberCount - 1, iguildScore = iguildScore - @winRecord WHERE iguildIdx = i_guildIdx;
+    END IF;
+    
+    IF ROW_COUNT() > 0 THEN
+		SET o_error = 1;
+	ELSE
+		SET o_error = -1;
+    END IF;
+    
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -533,4 +625,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-15  1:09:16
+-- Dump completed on 2018-06-15 21:00:53
