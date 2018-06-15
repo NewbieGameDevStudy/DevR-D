@@ -49,7 +49,7 @@ namespace HttpDTO
     {
         public int buyProductId;
         public int buyProductCount;
-      
+
     }
 
     [HttpConnect(Method.PUT, "/mailPost/wrtie")]
@@ -76,6 +76,39 @@ namespace HttpDTO
     public class ReqUserFind
     {
         public string nickName;
+    }
+
+    [HttpConnect(Method.PUT, "/guild/create")]
+    public class ReqGuildCreate
+    {
+        public string guildName;
+        public int guildJoinType;
+        public int guildMark;
+    }
+
+    [HttpConnect(Method.POST, "/guild/join")]
+    public class ReqGuildJoin
+    {
+        public string guildName;
+        public ulong guildIdx;
+    }
+
+    [HttpConnect(Method.POST, "/guild/leave")]
+    public class ReqGuildLeave
+    {
+
+    }
+
+    [HttpConnect(Method.POST, "/guild/kick")]
+    public class ReqGuildKick
+    {
+        public ulong kickUserId;
+    }
+
+    [HttpConnect(Method.GET, "/guild/list")]
+    public class ReqGuildList
+    {
+
     }
 
     //public class A {
@@ -146,11 +179,43 @@ namespace HttpDTO
         public ulong sendTime;
         public ulong exprireTime;
         public int readDone;
+        public int mailType;
+        public int senderPortrait;
+        public int senderLv;
+
     }
 
     public class MailContainer
     {
         public Mail[] mail;
+    }
+
+    public class GuildMemberInfo
+    {
+        public ulong accountId;
+        public string name;
+        public int level;
+        public int exp;
+        public int portrait;
+        public int bestRecord;
+        public int winRecord;
+        public int continueRecord;
+    }
+
+    public class GuildContainer
+    {
+        public ulong idx;
+        public string name;
+        public int memberCount;
+        public int joinType;
+        public int leaderId;
+        public int leaderId2;
+        public int grade;
+        public int mark;
+        public int score;
+        public ulong createTime;
+
+        public GuildMemberInfo[] guildMemberInfo;
     }
 
     #endregion
@@ -205,7 +270,30 @@ namespace HttpDTO
         public string nickName;
     }
 
+    public class GuidlList : ResponseBase
+    {
+        public GuildContainer guildContainer;
+    }
 
+    public class GuildCreate : ResponseBase
+    {
+        public GuildContainer guildContainer;
+    }
+
+    public class GuildJoin : ResponseBase
+    {
+        public GuildContainer guildContainer;
+    }
+
+    public class GuildLeave : ResponseBase
+    {
+
+    }
+
+    public class Guildkick : ResponseBase
+    {
+
+    }
 
     #endregion
 
@@ -220,6 +308,7 @@ namespace HttpDTO
         public const int ERROR_OUT_OF_RANGE = 105;
         public const int ERROR_DB = 106;
         public const int ERROR_NOT_FOUND = 107;
+        public const int ERROR_EXCUTE_FAIL = 108;
 
         //Login Create
         public const int ERROR_CREATE_NOT_LOGIN = 1001;
@@ -237,7 +326,7 @@ namespace HttpDTO
         public const int OK_SHOP_BUY_PRODUCT = 3004;
         public const int ERROR_ALREADY_BUY_NO_STOCK_ITEM = 3005;
         public const int ERROR_REQUEST_SINGLE_ITEM = 3006;
-		public const int ERROR_ONLY_ONE_PURCHASE_AVAILABLE = 3007;
+        public const int ERROR_ONLY_ONE_PURCHASE_AVAILABLE = 3007;
 
         //Inventory
         public const int ERROR_ALREADY_EQUIP_ITEM = 4001;
@@ -257,5 +346,12 @@ namespace HttpDTO
         public const int ERROR_LOW_LEVEL = 7002;
         public const int ERROR_ALREADY_GUILDNAME = 7003;
         public const int ERROR_NOT_CREATE_GUILD = 7004;
+        public const int ERROR_NOT_CREATE_GUILD = 7004;
+        public const int ERROR_NOT_FOUND_JOIN_GUILD = 7005;
+        public const int ERROR_FULL_JOIN_GUILDMEMBER = 7006;
+        public const int ERROR_JOIN_GUILD = 7007;
+
+        public const int OK_JOIN_SIGN_UP = 7008;
+        public const int OK_NOT_FOUND_JOIN_GUILD = 7009;
     }
 }
