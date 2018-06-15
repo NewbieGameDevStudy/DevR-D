@@ -140,7 +140,7 @@ class GuildJoin(Resource, Common.BaseRoute):
         return Common.respHandler.getResponse(Route.Define.OK_JOIN_SIGN_UP)    
 
 
-class GuildExit(Resource, Common.BaseRoute):
+class GuildLeave(Resource, Common.BaseRoute):
     def post(self):
         session = self.getSession(request)
         if session is None:
@@ -157,9 +157,15 @@ class GuildExit(Resource, Common.BaseRoute):
         if guildInfo.guildIdx is None:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_JOIN_GUILD))
         
+        guildGrade = 0
+        if accountInfo.accountId == guildInfo.guildLeaderId:
+            guildGrade = 2
+        elif accountInfo.accountId == guildInfo.guildLeaderId2:
+            guildGrade = 1
+        
         o_error = 0
         try:
-            resultDB = DB.dbConnection.executeStoredProcedure("Game_Guild_Exit", (accountInfo.accountId, guildInfo.guildIdx, o_error), (2, 2))
+            resultDB = DB.dbConnection.executeStoredProcedure("Game_Guild_Leave", (accountInfo.accountId, guildInfo.guildIdx, guildGrade, o_error), (3, 3))
         except Exception as e:
             print(str(e))
             return Common.respHandler.getResponse(Route.Define.ERROR_DB)
@@ -175,4 +181,62 @@ class GuildExit(Resource, Common.BaseRoute):
         #TODO : Redis pub sub -> Expire guild join check
             
         guildInfo.resetGuildInfo()        
-        return Common.respHandler.getResponse(Route.Define.OK_SUCCESS)        
+        return Common.respHandler.getResponse(Route.Define.OK_SUCCESS)      
+    
+    
+class GuildKick(Resource, Common.BaseRoute):
+    def post(self):
+        session = self.getSession(request)
+        if session is None:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
+        
+        if not session in userCachedObjects:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
+        
+        Route.parser.add_argument("kickUserId")
+        args = Route.parser.parse_args()
+        
+        if not args["kickUserId"]:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INPUT_PARAMS))
+        
+        #checkGuildExist
+        userObject = userCachedObjects[session]
+        accountInfo = userObject.getData(Define.ACCOUNT_INFO)
+        guildInfo = userObject.getData(Define.GUILD_INFO)    
+        
+        if guildInfo.guildIdx is None:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_JOIN_GUILD))
+        
+        if guildInfo.guildLeaderId != accountInfo.accountId and guildInfo.guildLeaderId2 != accountInfo.accountId:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INVALID_ACCESS))
+        
+        kickUserId = int(args["kickUserId"])
+        
+        if guildInfo.guildLeaderId == kickUserId or accountInfo.accountId == kickUserId:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INPUT_PARAMS))
+        
+        guildGrade = 0 if kickUserId != guildInfo.guildLeaderId2 else 1
+                
+        o_error = 0
+        try:
+            resultDB = DB.dbConnection.executeStoredProcedure("Game_Guild_Kick", (accountInfo.accountId, guildInfo.guildIdx, kickUserId, guildGrade, o_error), (4, 4))
+        except Exception as e:
+            print(str(e))
+            return Common.respHandler.getResponse(Route.Define.ERROR_DB)
+        
+        o_error = resultDB[1]
+        if o_error == -1:
+            return Common.respHandler.getResponse(Route.Define.ERROR_DB)
+        
+        #mail send..
+        o_error = 0
+#         try:
+#             resultDB = DB.dbConnection.executeStoredProcedure("Game_Mail_Write", (targetNickName, accountInfo.accountId, title, body, accountInfo.gameMoney, o_error), (5, 5))
+#         except Exception as e:
+#             print(str(e))
+#             return Route.Define.ERROR_DB
+        
+        if guildGrade == 1:
+            guildInfo.guildLeaderId2 = 0
+            
+        return Common.respHandler.getResponse(Route.Define.OK_SUCCESS)     
