@@ -38,7 +38,11 @@ class Login(Resource, Common.BaseRoute):
         itemContanier.loadBasicInitDataFromDB(inventoryDB)
         itemContanier.loadValueFromDB(itemDB)
         
-        mailDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.mailBox where iAccountId = %s" % session)
+        mailDB = DB.dbConnection.customeSelectListQuery("select M.iIdx, M.iSenderAccountId, M.cSender, M.cTitle, M.cBody, M.dSendTime, M.dExpireTime, M.iReadDone, M.iMailType, A.iLevel, A.iportrait \
+         from gamedb.mailBox AS M \
+         LEFT JOIN gamedb.account AS A \
+         ON M.iSenderAccountId = A.iAccountId \
+         WHERE M.iAccountId = %s" % session)
         mailContanier = Entity.userCachedObjects[session].getData(Entity.Define.MAIL_CONTANIER)        
         mailContanier.loadValueFromDB(mailDB)
         
