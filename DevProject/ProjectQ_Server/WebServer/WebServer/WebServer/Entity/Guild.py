@@ -1,6 +1,19 @@
 from Route import Common
 from datetime import datetime
 
+class GuildMemberInfo(Common.BaseObjResp):
+    def __init__(self):
+        super(Guild, self).__init__()
+        self.accountId = 0
+        self.name = ""
+        self.level = 0
+        self.exp = 0
+        self.portrait = 0
+        self.bestRecord = 0
+        self.winRecord = 0
+        self.continueRecord = 0
+        self.memberGrade = 0
+
 class Guild(Common.BaseObjResp):
     def __init__(self):
         super(Guild, self).__init__()

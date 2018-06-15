@@ -4,10 +4,28 @@ Created on 2018. 6. 3.
 @author: namoeye
 '''
 
-from Route import Common
+from Route import Common, Define
 from Entity.Item import Item
 from Entity.Mail import Mail
-from Route import Define
+from Entity.Guild import GuildMemberInfo
+
+class GuildContainer(Common.BaseContainerResp):
+    def __init__(self):
+        super(GuildContainer, self).__init__()
+        
+    def loadValueFromDB(self, updateList):
+        for datas in updateList:
+            dataIdx = datas[0]
+            if not dataIdx in self.ig_container:
+                self.ig_container[dataIdx] = GuildMemberInfo()
+            
+            item = self.ig_container[dataIdx]
+            item.loadValueFromDB(datas[0], datas[2], datas[3])
+            
+            if item.itemIdx in self.slot:
+                item.equip = 1
+            
+            item.syncToResp()
 
 class ItemContainer(Common.BaseContainerResp):
     def __init__(self):
