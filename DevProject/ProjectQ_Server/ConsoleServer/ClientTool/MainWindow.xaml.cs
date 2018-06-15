@@ -67,14 +67,14 @@ namespace ClientTool
             //    accountId = (ulong)id,
             //};
 
-            var playerInfo = new ReqShopBuyProduct {
-                buyProductId = 0,
-                buyProductCount = 999,
-            };
+            //var playerInfo = new ReqShopBuyProduct {
+            //    buyProductId = 0,
+            //    buyProductCount = 999,
+            //};
 
             //playerInfo.accountId = id;
             //client.HttpConnect();
-            //client.HttpConnection.HttpConnectAsync(186282282057728513, playerInfo, (ShopBuyProduct result) => {
+            //client.HttpConnection.HttpConnectAsync(194627000860672257, playerInfo, (ShopBuyProduct result) => {
             //    if (result == null)
             //        return;
 
@@ -87,12 +87,12 @@ namespace ClientTool
                 
             };
 
-            //client.HttpConnect();
-            //client.HttpConnection.HttpConnectAsync(186282282057728513, playerInfo, (PlayerStatus result) => {
-            //    if (result == null)
-            //        return;
+            client.HttpConnect();
+            client.HttpConnection.HttpConnectAsync(194630578601984257, playerInfo, (PlayerStatus result) => {
+                if (result == null)
+                    return;
 
-            //});
+            });
         }
 
         public void Button_RoomEnter(object sender, RoutedEventArgs e)

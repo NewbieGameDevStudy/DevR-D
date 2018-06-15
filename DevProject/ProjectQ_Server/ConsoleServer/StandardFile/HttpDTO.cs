@@ -24,6 +24,12 @@ namespace HttpDTO
 
     }
 
+    [HttpConnect(Method.POST, "/logout")]     //두번째
+    public class ReqLogout
+    {
+
+    }
+
     [HttpConnect(Method.POST, "/inventory/equip")]
     public class ReqInventoryEquipItem
     {
@@ -43,6 +49,7 @@ namespace HttpDTO
     {
         public int buyProductId;
         public int buyProductCount;
+      
     }
 
     [HttpConnect(Method.PUT, "/mailPost/wrtie")]
@@ -117,8 +124,8 @@ namespace HttpDTO
 
     public class Item
     {
-        public ulong itemId;
-        public int itemIdx;
+        public ulong itemIdx;
+        public int itemId;
         public int count;
         public int equip;
     }
@@ -174,6 +181,7 @@ namespace HttpDTO
         public int gameMoney;
         public int buyItemId;
         public int buyCount;
+        public ulong buyItemIdx;
     }
 
     public class GetMailList : ResponseBase
@@ -206,34 +214,48 @@ namespace HttpDTO
     public static class ResponseCode
     {
         public const int ERROR_LOGIN_NOT_FOUND_ACCOUNT = 101;
-        public const int ERROR_INPUT_PARAMS = 102;
         public const int ERROR_NOT_FOUND_SESSION = 103;
+        public const int ERROR_INPUT_PARAMS = 102;
         public const int ERROR_INVALID_ACCESS = 104;
         public const int ERROR_OUT_OF_RANGE = 105;
         public const int ERROR_DB = 106;
+        public const int ERROR_NOT_FOUND = 107;
 
+        //Login Create
         public const int ERROR_CREATE_NOT_LOGIN = 1001;
         public const int ERROR_ALREADY_CREATE_NICKNAME = 1002;
-
         public const int OK_CREATE_LOGIN = 2001;
+
+        //Success
         public const int OK_LOGIN_CONNECT = 2002;
         public const int OK_SUCCESS = 2003;
 
-        public const int ERROR_INVALID_BUY_PRODUCT = 30001;
-        public const int ERROR_NOT_ENOUGH_MONEY = 30002;
-        public const int ERROR_NOT_FOUND_ITEM = 30003;
+        //Shop
+        public const int ERROR_INVALID_BUY_PRODUCT = 3001;
+        public const int ERROR_NOT_ENOUGH_MONEY = 3002;
+        public const int ERROR_NOT_FOUND_ITEM = 3003;
         public const int OK_SHOP_BUY_PRODUCT = 3004;
         public const int ERROR_ALREADY_BUY_NO_STOCK_ITEM = 3005;
+        public const int ERROR_REQUEST_SINGLE_ITEM = 3006;
+		public const int ERROR_ONLY_ONE_PURCHASE_AVAILABLE = 3007;
 
-        public const int ERROR_ALREADY_EQUIP_ITEM = 40001;
-        public const int OK_EQUIP_ITEM = 40002;
-        public const int OK_UNEQUIP_ITEM = 40003;
+        //Inventory
+        public const int ERROR_ALREADY_EQUIP_ITEM = 4001;
+        public const int OK_EQUIP_ITEM = 4002;
+        public const int OK_UNEQUIP_ITEM = 4003;
 
+        //User
         public const int ERROR_NOT_FOUND_USER = 5001;
 
+        //Mail
         public const int ERROR_NOT_WRITE = 6001;
         public const int ERROR_ALREADY_READ_DONE = 6002;
+
+
+        //Guild
+        public const int ERROR_CURRENT_JOIN_GUILD = 7001;
+        public const int ERROR_LOW_LEVEL = 7002;
+        public const int ERROR_ALREADY_GUILDNAME = 7003;
+        public const int ERROR_NOT_CREATE_GUILD = 7004;
     }
-
-
 }
