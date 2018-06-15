@@ -19,7 +19,11 @@ class MailPostRead(Resource, Common.BaseRoute):
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
         
         try:
-            mailDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.mailBox where iAccountId = %s" % session)
+            mailDB = DB.dbConnection.customeSelectListQuery("select M.iIdx, M.iSenderAccountId, M.cSender, M.cTitle, M.cBody, M.dSendTime, M.dExpireTime, M.iReadDone, M.iMailType, A.iLevel, A.iportrait \
+         from gamedb.mailBox AS M \
+         LEFT JOIN gamedb.account AS A \
+         ON M.iSenderAccountId = A.iAccountId \
+         WHERE M.iAccountId = %s" % session)
         except Exception as e:
             print(str(e))
             return Route.Define.ERROR_DB
