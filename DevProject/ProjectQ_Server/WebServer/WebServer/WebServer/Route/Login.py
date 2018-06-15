@@ -47,6 +47,14 @@ class Login(Resource, Common.BaseRoute):
         mailContanier.loadValueFromDB(mailDB)
         
         #guildDB = DB.dbConnection.customSelectQuery("select * from gamedb.mail")
+        guildMemberDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.guild_member where iAccountId = %s" % session)
+        
+        if not guildMemberDB is None:
+            d = 0
+#         guildDB = DB.dbConnection.customSelectQuery("select islot0, islot1 from gamedb.inventory where iAccountId = %s" % session)
+#         itemContanier = Entity.userCachedObjects[session].getData(Entity.Define.ITEM_CONTANIER)
+#         itemContanier.loadBasicInitDataFromDB(inventoryDB)
+#         itemContanier.loadValueFromDB(itemDB)
         
         Common.respHandler.mergeResp(accountInfo.getResp())
         Common.respHandler.mergeResp(itemContanier.getContainerResp())
