@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: gamedb
 -- ------------------------------------------------------
--- Server version	5.7.21-log
+-- Server version	5.7.22-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `account`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `account` (
   `iAccountId` bigint(8) unsigned NOT NULL,
-  `cName` varchar(45) NOT NULL,
+  `cName` varchar(45) CHARACTER SET utf8 NOT NULL,
   `iLevel` tinyint(1) NOT NULL DEFAULT '1',
   `iExp` int(10) unsigned NOT NULL DEFAULT '0',
   `iGameMoney` int(10) unsigned NOT NULL DEFAULT '9999',
@@ -36,7 +36,7 @@ CREATE TABLE `account` (
   `dLoginDate` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`iAccountId`),
   UNIQUE KEY `cName_UNIQUE` (`cName`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,7 +45,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (194621334355968257,'ouiouio',1,0,0,6,0,0,0,10,'2018-06-10 01:15:52'),(194621518905344513,'yrtyrtytr',1,0,0,4,0,0,0,10,'2018-06-10 01:16:26'),(194621799923712769,'iououoiu',1,0,0,0,0,0,0,10,'2018-06-16 02:51:17'),(194621879615489025,'gdfgdfgdfg',1,0,0,6,0,0,0,10,'2018-06-16 02:40:55'),(194622114496513281,'78978987',1,0,0,0,0,0,0,10,'2018-06-10 01:18:48'),(194623171461120257,'867867',1,0,0,5,0,0,0,10,'2018-06-10 01:23:01'),(194623347621888513,'gdfsgdsfgdfs',1,0,0,2,0,0,0,10,'2018-06-10 01:23:47'),(194625105035264769,'675675756',1,0,0,0,0,0,0,10,'2018-06-10 01:30:55'),(194627000860672257,'9879789',1,0,3499,5,0,0,0,10,'2018-06-15 19:57:53'),(194628569530368513,'432432432',1,0,0,0,0,0,0,10,'2018-06-16 12:03:56'),(194630578601984257,'765876867867',16,0,9700,6,0,14,0,10,'2018-06-16 01:24:19'),(194631262273536513,'3243241231',1,0,0,5,0,0,0,10,'2018-06-12 22:16:54');
+INSERT INTO `account` VALUES (194621334355968257,'ouiouio',1,0,0,6,0,0,0,10,'2018-06-10 01:15:52'),(194621518905344513,'yrtyrtytr',1,0,0,4,0,0,0,10,'2018-06-10 01:16:26'),(194621799923712769,'iououoiu',1,0,0,0,0,0,0,10,'2018-06-16 02:51:17'),(194621879615489025,'gdfgdfgdfg',1,0,0,6,0,0,0,10,'2018-06-16 02:40:55'),(194622114496513281,'78978987',1,0,0,0,0,0,0,10,'2018-06-10 01:18:48'),(194623171461120257,'867867',1,0,0,5,0,0,0,10,'2018-06-10 01:23:01'),(194623347621888513,'gdfsgdsfgdfs',1,0,0,2,0,0,0,10,'2018-06-10 01:23:47'),(194625105035264769,'675675756',1,0,0,0,0,0,0,10,'2018-06-10 01:30:55'),(194627000860672257,'9879789',1,0,3499,5,0,0,0,10,'2018-06-15 19:57:53'),(194628569530368513,'432432432',1,0,0,0,0,0,0,10,'2018-06-16 12:03:56'),(194630578601984257,'765876867867',16,0,9700,6,0,14,0,10,'2018-06-16 01:24:19'),(194631262273536513,'3243241231',1,0,0,5,0,0,0,10,'2018-06-12 22:16:54'),(196863600885760257,'테스트메일',1,0,9999,6,0,0,0,10,'2018-06-16 05:45:40'),(196863835766784513,'테스트맨',1,0,9999,5,0,0,0,10,'2018-06-16 05:46:36'),(196864729153536769,'abc',1,0,9999,0,0,0,0,10,'2018-06-16 05:50:09'),(196869212864512257,'야야야야',1,0,9999,0,0,0,0,10,'2018-06-16 06:07:58'),(196887441309696513,'mama',1,0,9999,3,0,0,0,10,'2018-06-16 07:20:24'),(196888372445184769,'YesMan',1,0,9999,3,0,0,0,9,'2018-06-16 07:24:06'),(196891077771265025,'NoMan',1,0,9999,4,0,0,0,8,'2018-06-16 07:34:51'),(196906210820097281,'HiMan',1,0,9999,7,0,0,0,10,'2018-06-16 08:34:59'),(196907137761281537,'HellowMan',1,0,9999,3,0,0,0,10,'2018-06-16 08:38:40'),(196911701164032257,'테스트룰루',1,0,9999,5,0,0,0,10,'2018-06-16 08:56:48'),(196912997203968513,'abcdef',1,0,9999,5,0,0,0,9,'2018-06-16 09:01:58'),(196915006275584769,'GoodMan',1,0,9999,2,0,0,0,9,'2018-06-16 09:09:56'),(196920307875840257,'한글유저임다',1,0,9999,4,0,0,0,9,'2018-06-16 09:31:00'),(196927924731904257,'21312321',1,0,9999,5,0,0,0,10,'2018-06-16 10:01:16');
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -58,7 +58,7 @@ DROP TABLE IF EXISTS `guild`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `guild` (
   `iguildIdx` bigint(20) NOT NULL AUTO_INCREMENT,
-  `cguildName` varchar(45) NOT NULL,
+  `cguildName` varchar(45) CHARACTER SET utf8 NOT NULL,
   `iguildMemberCount` smallint(10) NOT NULL DEFAULT '1',
   `iguildJoinType` tinyint(1) NOT NULL DEFAULT '0',
   `iguildLeaderId` bigint(20) NOT NULL DEFAULT '0',
@@ -69,7 +69,7 @@ CREATE TABLE `guild` (
   `dguildCreateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`iguildIdx`),
   UNIQUE KEY `cguildName_UNIQUE` (`cguildName`)
-) ENGINE=InnoDB AUTO_INCREMENT=2000000015 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2000000015 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,9 +91,9 @@ DROP TABLE IF EXISTS `guild_member`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `guild_member` (
   `iguildIdx` bigint(20) NOT NULL,
-  `iAccountId` varchar(45) NOT NULL,
+  `iAccountId` varchar(45) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`iAccountId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -120,7 +120,7 @@ CREATE TABLE `inventory` (
   `iSlot1` bigint(8) NOT NULL DEFAULT '0',
   PRIMARY KEY (`iIdx`),
   UNIQUE KEY `iAccountId_UNIQUE` (`iAccountId`)
-) ENGINE=InnoDB AUTO_INCREMENT=100000002 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=100000002 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -147,7 +147,7 @@ CREATE TABLE `item` (
   `iCount` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`iIdx`),
   KEY `index2` (`iAccountId`)
-) ENGINE=InnoDB AUTO_INCREMENT=300000005 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=300000005 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -171,15 +171,15 @@ CREATE TABLE `mailbox` (
   `iIdx` bigint(8) NOT NULL AUTO_INCREMENT,
   `iAccountId` bigint(8) NOT NULL,
   `iSenderAccountId` bigint(8) NOT NULL,
-  `cSender` varchar(45) NOT NULL,
-  `cTitle` varchar(50) NOT NULL,
-  `cBody` varchar(100) NOT NULL,
+  `cSender` varchar(45) CHARACTER SET utf8 NOT NULL,
+  `cTitle` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `cBody` varchar(100) CHARACTER SET utf8 NOT NULL,
   `dSendTime` datetime NOT NULL,
   `dExpireTime` datetime DEFAULT NULL,
   `iReadDone` tinyint(4) NOT NULL DEFAULT '0',
   `iMailType` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`iIdx`,`iAccountId`)
-) ENGINE=InnoDB AUTO_INCREMENT=700000031 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=700000037 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -188,7 +188,7 @@ CREATE TABLE `mailbox` (
 
 LOCK TABLES `mailbox` WRITE;
 /*!40000 ALTER TABLE `mailbox` DISABLE KEYS */;
-INSERT INTO `mailbox` VALUES (700000000,194627000860672257,194628569530368513,'9879789','테스트타이블','테스ㅡ바디','2018-06-11 23:25:55','2018-06-11 23:25:55',1,0),(700000001,194627000860672257,194628569530368513,'9879789','테스트타이블','테스ㅡ바디','2018-06-11 23:26:12','2018-06-11 23:26:12',1,0),(700000007,194630578601984257,194631262273536513,'3243241231','가입메일','가입요청해요','2018-06-14 00:40:00','2018-06-14 00:40:00',0,1),(700000010,194630578601984257,194630578601984257,'765876867867','가입요청','[765876867867]님이 길드에 가입요청을 하였습니다.','2018-06-14 23:17:39','2018-06-14 23:17:39',0,1),(700000011,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-14 23:22:12','2018-06-14 23:22:12',0,0),(700000012,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:13:05','2018-06-15 00:13:05',0,0),(700000015,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:18:26','2018-06-15 00:18:26',0,0),(700000016,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:19:05','2018-06-15 00:19:05',0,0),(700000017,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:20:51','2018-06-15 00:20:51',0,0),(700000018,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:22:22','2018-06-15 00:22:22',0,0),(700000019,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:24:43','2018-06-15 00:24:43',0,0),(700000021,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:25:54','2018-06-15 00:25:54',0,0),(700000022,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:26:59','2018-06-15 00:26:59',0,0),(700000025,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:34:37','2018-06-15 00:34:37',0,0),(700000026,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:36:36','2018-06-15 00:36:36',0,0),(700000027,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:37:36','2018-06-15 00:37:36',0,0),(700000028,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:40:50','2018-06-15 00:40:50',0,0),(700000029,194631262273536513,194621879615489025,'gdfgdfgdfg','가입정보','[gdfgdfgdfg]님이 길드에 가입을 하였습니다.','2018-06-16 02:41:04','2018-06-16 02:41:04',0,0),(700000030,194631262273536513,194621799923712769,'iououoiu','가입정보','[iououoiu]님이 길드에 가입을 하였습니다.','2018-06-16 02:51:56','2018-06-16 02:51:56',0,0);
+INSERT INTO `mailbox` VALUES (700000000,194627000860672257,194628569530368513,'9879789','테스트타이블','테스ㅡ바디','2018-06-11 23:25:55','2018-06-11 23:25:55',1,0),(700000001,194627000860672257,194628569530368513,'9879789','테스트타이블','테스ㅡ바디','2018-06-11 23:26:12','2018-06-11 23:26:12',1,0),(700000007,194630578601984257,194631262273536513,'3243241231','가입메일','가입요청해요','2018-06-14 00:40:00','2018-06-14 00:40:00',0,1),(700000010,194630578601984257,194630578601984257,'765876867867','가입요청','[765876867867]님이 길드에 가입요청을 하였습니다.','2018-06-14 23:17:39','2018-06-14 23:17:39',0,1),(700000011,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-14 23:22:12','2018-06-14 23:22:12',0,0),(700000012,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:13:05','2018-06-15 00:13:05',0,0),(700000015,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:18:26','2018-06-15 00:18:26',0,0),(700000016,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:19:05','2018-06-15 00:19:05',0,0),(700000017,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:20:51','2018-06-15 00:20:51',0,0),(700000018,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:22:22','2018-06-15 00:22:22',0,0),(700000019,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:24:43','2018-06-15 00:24:43',0,0),(700000021,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:25:54','2018-06-15 00:25:54',0,0),(700000022,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:26:59','2018-06-15 00:26:59',0,0),(700000025,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:34:37','2018-06-15 00:34:37',0,0),(700000026,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:36:36','2018-06-15 00:36:36',0,0),(700000027,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:37:36','2018-06-15 00:37:36',0,0),(700000028,194630578601984257,194630578601984257,'765876867867','가입정보','[765876867867]님이 길드에 가입을 하였습니다.','2018-06-15 00:40:50','2018-06-15 00:40:50',0,0),(700000029,196920307875840257,194621879615489025,'gdfgdfgdfg','가입정보','[gdfgdfgdfg]님이 길드에 가입을 하였습니다.','2018-06-16 02:41:04','2018-06-16 02:41:04',0,0),(700000030,194631262273536513,194621799923712769,'iououoiu','가입정보','[iououoiu]님이 길드에 가입을 하였습니다.','2018-06-16 02:51:56','2018-06-16 02:51:56',0,0),(700000031,196887441309696513,196888372445184769,'YesMan','Hello','Hi mama','2018-06-16 07:25:14','2018-06-16 07:25:14',0,0),(700000032,196888372445184769,196891077771265025,'NoMan','Hi YesMan','Hi Yes Man\nI\'m No Man','2018-06-16 07:37:37','2018-06-16 07:37:37',0,0),(700000033,196888372445184769,196891077771265025,'NoMan','Hi','No!','2018-06-16 07:51:03','2018-06-16 07:51:03',0,0),(700000034,196915006275584769,196912997203968513,'abcdef','123123123','123','2018-06-16 09:11:21','2018-06-16 09:11:21',0,0),(700000035,196912997203968513,196915006275584769,'GoodMan','Hi','Hi Man','2018-06-16 09:13:01','2018-06-16 09:13:01',0,0),(700000036,196915006275584769,196920307875840257,'한글유저임다','12213','123123213','2018-06-16 09:36:17','2018-06-16 09:36:17',0,0);
 /*!40000 ALTER TABLE `mailbox` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -196,6 +196,7 @@ UNLOCK TABLES;
 -- Dumping routines for database 'gamedb'
 --
 /*!50003 DROP PROCEDURE IF EXISTS `Game_Guild_Create` */;
+ALTER DATABASE `gamedb` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -239,7 +240,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `gamedb` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `Game_Guild_Exit` */;
+ALTER DATABASE `gamedb` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -275,7 +278,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `gamedb` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `Game_Guild_GetList` */;
+ALTER DATABASE `gamedb` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -309,7 +314,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `gamedb` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `Game_Guild_Join` */;
+ALTER DATABASE `gamedb` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -366,7 +373,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `gamedb` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `Game_Guild_Kick` */;
+ALTER DATABASE `gamedb` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -414,7 +423,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `gamedb` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `Game_Guild_Leave` */;
+ALTER DATABASE `gamedb` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -458,7 +469,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `gamedb` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `Game_Item_BuyProduct` */;
+ALTER DATABASE `gamedb` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -497,7 +510,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `gamedb` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `Game_Login` */;
+ALTER DATABASE `gamedb` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -531,7 +546,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `gamedb` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `Game_Mail_Write` */;
+ALTER DATABASE `gamedb` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -579,7 +596,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `gamedb` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `Game_Slot_Equip` */;
+ALTER DATABASE `gamedb` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -621,7 +640,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `gamedb` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `Game_Slot_UnEquip` */;
+ALTER DATABASE `gamedb` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -653,6 +674,7 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `gamedb` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -663,4 +685,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-16 14:40:52
+-- Dump completed on 2018-06-16 10:05:33

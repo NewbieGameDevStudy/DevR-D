@@ -10,6 +10,7 @@ import Entity.User
 from Route import Common
 from Entity import Define
 from Entity import serverCachedObject, userCachedObjects
+from test.test_threading_local import target
 
 class MailPostRead(Resource, Common.BaseRoute):
     def get(self):
@@ -58,9 +59,9 @@ class MailWrite(Resource, Common.BaseRoute):
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INPUT_PARAMS))
         
         senderAccountId = int(session)
-        targetNickName = args["targetNickName"]
-        title = args["title"]
-        body = args["body"]        
+        targetNickName = str(args["targetNickName"])
+        title = str(args["title"])
+        body = str(args["body"])        
         
         userObject = userCachedObjects[session]
         accountInfo = userObject.getData(Define.ACCOUNT_INFO)
@@ -92,19 +93,19 @@ class MailPostDone(Resource, Common.BaseRoute):
         if session is None:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
         
-        Route.parser.add_argument("mailId")
+        Route.parser.add_argument("mailIdx")
         args = Route.parser.parse_args()
         
-        if not args["mailId"]:
+        if not args["mailIdx"]:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INPUT_PARAMS))
         
         if not session in userCachedObjects:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INVALID_ACCESS))
         
-        readMailId = int(args["mailId"])
+        readMailIdx = int(args["mailIdx"])
         
         mailContanier = Entity.userCachedObjects[session].getData(Entity.Define.MAIL_CONTANIER)
-        mail = mailContanier.getMailById(readMailId)
+        mail = mailContanier.getMailById(readMailIdx)
         
         if mail is None:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_ITEM))
@@ -113,17 +114,17 @@ class MailPostDone(Resource, Common.BaseRoute):
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_ALREADY_READ_DONE))
         
         try:
-            mailDB = DB.dbConnection.customInsertQuery("update gamedb.mailBox SET ireadDone = 1 where iAccountId = %s and iIdx = %s" % (session, readMailId))
+            mailDB = DB.dbConnection.customInsertQuery("update gamedb.mailBox SET ireadDone = 1 where iAccountId = %s and iIdx = %s" % (session, readMailIdx))
         except Exception as e:
             print(str(e))
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_DB))
         
         mailContanier = Entity.userCachedObjects[session].getData(Entity.Define.MAIL_CONTANIER)        
-        mail = mailContanier.getMailById(readMailId)
+        mail = mailContanier.getMailById(readMailIdx)
         mail.readDone = 1
         mail.syncToResp()
                 
-        return Common.respHandler.customeResponse(Route.Define.OK_SUCCESS, {"readMailIdx":readMailId})
+        return Common.respHandler.customeResponse(Route.Define.OK_SUCCESS, {"readMailIdx":readMailIdx})
 
 
 class MailPostDelete(Resource, Common.BaseRoute):

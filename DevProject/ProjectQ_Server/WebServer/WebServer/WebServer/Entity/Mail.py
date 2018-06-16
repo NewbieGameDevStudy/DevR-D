@@ -34,8 +34,8 @@ class Mail(Common.BaseObjResp):
         self.readDone = loadDatas[7]
         self.mailType = loadDatas[8]
         
-        self.senderPortrait = loadDatas[9]
-        self.senderLv = loadDatas[10]
+        self.senderLv = loadDatas[9]
+        self.senderPortrait = loadDatas[10]
 
     def getResp(self):
         return self.ig_respDict

@@ -13,7 +13,7 @@ class DBConnection:
          
     def _getconn(self):
         try:
-            conn = pymysql.connect(host="localhost", user="root", password="1234567890", db="gamedb", charset='utf8')
+            conn = pymysql.connect(host="localhost", user="root", password="1234567890", db="gamedb", charset='utf8mb4')
         except:
             print("DB not Connect")
         return conn
