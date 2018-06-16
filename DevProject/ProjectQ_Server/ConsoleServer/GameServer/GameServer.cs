@@ -38,6 +38,7 @@ namespace GameServer
 
                 //서버 업데이트 목록
                 m_baseServer.Update(t);
+                Thread.Sleep(1);
             }
         }
     }

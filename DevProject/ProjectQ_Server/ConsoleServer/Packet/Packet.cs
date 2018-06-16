@@ -165,8 +165,10 @@ namespace Packet
         [ProtoMember(1)]
         public ulong AccountIDClient { get; set; }
         [ProtoMember(2)]
-        public string NickName { get; set; }
+        public ulong AccountIDServer { get; set; }
         [ProtoMember(3)]
+        public string NickName { get; set; }
+        [ProtoMember(4)]
         public int PortRaitNo { get; set; }
     }
 

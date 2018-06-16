@@ -88,7 +88,8 @@ namespace GameServer.MatchRoom
             {
                 NickName = player.PlayerData.name,
                 PortRaitNo = player.PlayerData.iPortrait,
-                AccountIDClient = player.AccountIDClient
+                AccountIDClient = player.AccountIDClient,
+                AccountIDServer = player.AccountID
             };
 
             foreach (var info in m_roomPlayerList)
@@ -99,7 +100,8 @@ namespace GameServer.MatchRoom
                 {
                     PortRaitNo = info.Value.PlayerData.iPortrait,
                     NickName = info.Value.PlayerData.name,
-                    AccountIDClient = info.Value.AccountIDClient
+                    AccountIDClient = info.Value.AccountIDClient,
+                    AccountIDServer = info.Value.AccountID
                 };
 
                 pks.m_memberList.Add(tempInfo);

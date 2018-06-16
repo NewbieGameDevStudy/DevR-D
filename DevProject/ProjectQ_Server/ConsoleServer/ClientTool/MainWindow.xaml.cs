@@ -85,9 +85,9 @@ namespace ClientTool
             //});
 
             var temp = new PK_CS_CANCEL_MATCHING
-            {
-                AccountIDClient = (ulong)tempRandom.Next(1, 100000)//id
-        };
+            {                
+                AccountIDClient = id
+            };
             client.SendPacket(temp);
         }
 
@@ -107,16 +107,19 @@ namespace ClientTool
 
             var temp = new PK_CS_READY_COMPLETE_FOR_GAME
             {
-                AccountIDClient = (ulong)tempRandom.Next(1, 100000),
-                // roomNo                
+                //AccountIDClient = (ulong)tempRandom.Next(1, 100000),
+                AccountIDClient = id
             };
         }
 
         public void Button_RoomEnter(object sender, RoutedEventArgs e)
         {
+            if (id == 0)
+                return;
+
             var temp = new PK_CS_ENTERROOM
             {
-                AccountIDClient = (ulong)tempRandom.Next(1, 100000)//id
+                AccountIDClient = id
         };
 
             client.SendPacket(temp);
@@ -130,6 +133,13 @@ namespace ClientTool
         private void Button_Disconnect(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void InputIDBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var temp = (TextBox)sender;
+            id = Convert.ToUInt64(temp.Text);
+            int b = 0;
         }
     }
 }

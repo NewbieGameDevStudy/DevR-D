@@ -26,7 +26,7 @@ namespace NetworkSocket
         public void InitServer(string ip, int port)
         {
             if (string.IsNullOrEmpty(ip))
-                ip = "127.0.0.1";
+                ip = "10.70.50.63";//ip = "127.0.0.1";
 
             m_localEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
 

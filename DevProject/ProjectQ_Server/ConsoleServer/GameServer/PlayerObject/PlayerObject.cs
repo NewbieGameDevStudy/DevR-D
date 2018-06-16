@@ -29,6 +29,9 @@ namespace GameServer.Player
             m_baseServer = baseServer;
 
             EnteredRoomNo = 0;
+
+            PlayerData = new PlayerData();
+            
             
             //TODO : 컴퍼넌트가 늘어난다면 별도의 Create로 분리하는것도 고려해볼것
             var moveComp = new MoveComponent(this);
