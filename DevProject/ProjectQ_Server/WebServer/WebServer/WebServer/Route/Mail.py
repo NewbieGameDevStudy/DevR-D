@@ -121,7 +121,7 @@ class MailPostDone(Resource, Common.BaseRoute):
         mail.readDone = 1
         mail.syncToResp()
                 
-        return Common.respHandler.customeResponse(Route.Define.OK_SUCCESS, {"readMailId":readMailId})
+        return Common.respHandler.customeResponse(Route.Define.OK_SUCCESS, {"readMailIdx":readMailId})
 
 
 class MailPostDelete(Resource, Common.BaseRoute):
@@ -150,7 +150,7 @@ class MailPostDelete(Resource, Common.BaseRoute):
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_DB))
         
         mailContanier.removeMailById(deleteMailId)
-        return Common.respHandler.customeResponse(Route.Define.OK_SUCCESS, {"deleteMailId":deleteMailId})
+        return Common.respHandler.customeResponse(Route.Define.OK_SUCCESS, {"deleteMailIdx":deleteMailId})
      
 
 class MailPostAccept(Resource, Common.BaseRoute):
