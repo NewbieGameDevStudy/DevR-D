@@ -32,7 +32,7 @@ CREATE TABLE `account` (
   `ibestRecord` int(10) unsigned NOT NULL DEFAULT '0',
   `iwinRecord` int(10) unsigned NOT NULL DEFAULT '0',
   `icontinueRecord` int(10) unsigned NOT NULL DEFAULT '0',
-  `idailyMailCount` smallint(1) NOT NULL DEFAULT '0',
+  `idailyMailCount` smallint(1) NOT NULL DEFAULT '10',
   `dLoginDate` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`iAccountId`),
   UNIQUE KEY `cName_UNIQUE` (`cName`)
@@ -45,7 +45,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (194621334355968257,'ouiouio',1,0,0,6,0,0,0,0,'2018-06-10 01:15:52'),(194621518905344513,'yrtyrtytr',1,0,0,4,0,0,0,0,'2018-06-10 01:16:26'),(194621799923712769,'iououoiu',1,0,0,0,0,0,0,0,'2018-06-16 02:51:17'),(194621879615489025,'gdfgdfgdfg',1,0,0,6,0,0,0,0,'2018-06-16 02:40:55'),(194622114496513281,'78978987',1,0,0,0,0,0,0,0,'2018-06-10 01:18:48'),(194623171461120257,'867867',1,0,0,5,0,0,0,0,'2018-06-10 01:23:01'),(194623347621888513,'gdfsgdsfgdfs',1,0,0,2,0,0,0,0,'2018-06-10 01:23:47'),(194625105035264769,'675675756',1,0,0,0,0,0,0,0,'2018-06-10 01:30:55'),(194627000860672257,'9879789',1,0,3499,5,0,0,0,0,'2018-06-15 19:57:53'),(194628569530368513,'432432432',1,0,0,0,0,0,0,0,'2018-06-16 12:03:56'),(194630578601984257,'765876867867',16,0,9700,6,0,14,0,0,'2018-06-16 01:24:19'),(194631262273536513,'3243241231',1,0,0,5,0,0,0,0,'2018-06-12 22:16:54');
+INSERT INTO `account` VALUES (194621334355968257,'ouiouio',1,0,0,6,0,0,0,10,'2018-06-10 01:15:52'),(194621518905344513,'yrtyrtytr',1,0,0,4,0,0,0,10,'2018-06-10 01:16:26'),(194621799923712769,'iououoiu',1,0,0,0,0,0,0,10,'2018-06-16 02:51:17'),(194621879615489025,'gdfgdfgdfg',1,0,0,6,0,0,0,10,'2018-06-16 02:40:55'),(194622114496513281,'78978987',1,0,0,0,0,0,0,10,'2018-06-10 01:18:48'),(194623171461120257,'867867',1,0,0,5,0,0,0,10,'2018-06-10 01:23:01'),(194623347621888513,'gdfsgdsfgdfs',1,0,0,2,0,0,0,10,'2018-06-10 01:23:47'),(194625105035264769,'675675756',1,0,0,0,0,0,0,10,'2018-06-10 01:30:55'),(194627000860672257,'9879789',1,0,3499,5,0,0,0,10,'2018-06-15 19:57:53'),(194628569530368513,'432432432',1,0,0,0,0,0,0,10,'2018-06-16 12:03:56'),(194630578601984257,'765876867867',16,0,9700,6,0,14,0,10,'2018-06-16 01:24:19'),(194631262273536513,'3243241231',1,0,0,5,0,0,0,10,'2018-06-12 22:16:54');
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -517,7 +517,7 @@ login:BEGIN
     SELECT dLoginDate INTO @loginTime FROM gamedb.account WHERE iaccountid = i_AccountId;
         
     IF @loginTime = 0 OR DATE(@loginTime) != DATE(Now()) THEN
-		UPDATE gamedb.account SET idailyMailCount = 0, dLoginDate = Now() WHERE iaccountid = i_AccountId;			
+		UPDATE gamedb.account SET idailyMailCount = 10, dLoginDate = Now() WHERE iaccountid = i_AccountId;			
 	ELSEIF DATE(@loginTime) != DATE(Now()) THEN    
 		UPDATE gamedb.account SET dLoginDate = Now() WHERE iaccountid = i_acccountId;	
     END IF;
@@ -566,8 +566,8 @@ mailwrite:BEGIN
     INSERT INTO gamedb.mailbox (iaccountid, isenderaccountid, csender, ctitle, cbody, dsendtime, dexpiretime)
 		VALUES (@targetAccountId, i_isenderAccountid, @senderNickName, i_ctitle, i_cbody, NOW(), NOW());
 	
-    IF @dailymailcount < 5 THEN
-		SET @dailymailcount := @dailymailcount + 1;
+    IF @dailymailcount > 0 THEN
+		SET @dailymailcount := @dailymailcount - 1;
     END IF;
     
     UPDATE gamedb.account SET igamemoney = i_igameMoney, idailymailcount = @dailymailcount WHERE iaccountid = i_isenderAccountid;
@@ -663,4 +663,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-16 12:09:28
+-- Dump completed on 2018-06-16 14:40:52

@@ -63,12 +63,12 @@ class MailWrite(Resource, Common.BaseRoute):
         userObject = userCachedObjects[session]
         accountInfo = userObject.getData(Define.ACCOUNT_INFO)
         
-        if accountInfo.dailyMailCount > Define.MAX_DAILY_MAIL_COUNT:
+        if accountInfo.dailyMailCount <= Define.MIN_DAILY_MAIL_COUNT:
             if accountInfo.gameMoney <= 100:
                 return Common.respHandler.getResponse(Route.Define.ERROR_NOT_ENOUGH_MONEY)
             accountInfo.gameMoney -= 100
         else:
-            accountInfo.dailyMailCount += 1
+            accountInfo.dailyMailCount -= 1
         
         o_error = 0
         try:

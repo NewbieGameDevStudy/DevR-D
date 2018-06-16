@@ -12,7 +12,7 @@ class Account(Common.BaseObjResp):
         self.bestRecord = 0
         self.winRecord = 0
         self.continueRecord = 0
-        self.dailyMailCount = 0
+        self.dailyMailCount = 10
         
         self.initRespCache()
     
