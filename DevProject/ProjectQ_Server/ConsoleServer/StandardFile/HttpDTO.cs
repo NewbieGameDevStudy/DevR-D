@@ -49,10 +49,10 @@ namespace HttpDTO
     {
         public int buyProductId;
         public int buyProductCount;
-
+      
     }
 
-    [HttpConnect(Method.PUT, "/mailPost/wrtie")]
+    [HttpConnect(Method.PUT, "/mailPost/write")]
     public class ReqMailPostWrite
     {
         public string targetNickName;
@@ -69,7 +69,13 @@ namespace HttpDTO
     [HttpConnect(Method.POST, "/mailPost/done")]
     public class ReqMailDone
     {
-        public ulong mailId;
+        public ulong mailIdx;
+    }
+
+    [HttpConnect(Method.POST, "/mailPost/delete")]
+    public class ReqMailDelete
+    {
+        public ulong mailIdx;
     }
 
     [HttpConnect(Method.GET, "/user/find")]
@@ -96,7 +102,7 @@ namespace HttpDTO
     [HttpConnect(Method.POST, "/guild/leave")]
     public class ReqGuildLeave
     {
-
+        
     }
 
     [HttpConnect(Method.POST, "/guild/kick")]
@@ -108,7 +114,7 @@ namespace HttpDTO
     [HttpConnect(Method.GET, "/guild/list")]
     public class ReqGuildList
     {
-
+        
     }
 
     //public class A {
@@ -179,8 +185,8 @@ namespace HttpDTO
         public ulong sendTime;
         public ulong exprireTime;
         public int readDone;
-        public int mailType;
-        public int senderPortrait;
+		public int mailType;
+		public int senderPortrait;
         public int senderLv;
 
     }
@@ -262,7 +268,12 @@ namespace HttpDTO
 
     public class DoneMail : ResponseBase
     {
-        public ulong readMailId;
+        public ulong readMailIdx;
+    }
+
+    public class DeleteMail : ResponseBase
+    {
+        public ulong deleteMailIdx;
     }
 
     public class FindUser : ResponseBase
@@ -287,7 +298,7 @@ namespace HttpDTO
 
     public class GuildLeave : ResponseBase
     {
-
+        
     }
 
     public class Guildkick : ResponseBase
@@ -326,7 +337,7 @@ namespace HttpDTO
         public const int OK_SHOP_BUY_PRODUCT = 3004;
         public const int ERROR_ALREADY_BUY_NO_STOCK_ITEM = 3005;
         public const int ERROR_REQUEST_SINGLE_ITEM = 3006;
-        public const int ERROR_ONLY_ONE_PURCHASE_AVAILABLE = 3007;
+		public const int ERROR_ONLY_ONE_PURCHASE_AVAILABLE = 3007;
 
         //Inventory
         public const int ERROR_ALREADY_EQUIP_ITEM = 4001;
@@ -345,7 +356,6 @@ namespace HttpDTO
         public const int ERROR_CURRENT_JOIN_GUILD = 7001;
         public const int ERROR_LOW_LEVEL = 7002;
         public const int ERROR_ALREADY_GUILDNAME = 7003;
-        public const int ERROR_NOT_CREATE_GUILD = 7004;
         public const int ERROR_NOT_CREATE_GUILD = 7004;
         public const int ERROR_NOT_FOUND_JOIN_GUILD = 7005;
         public const int ERROR_FULL_JOIN_GUILDMEMBER = 7006;
