@@ -1,3 +1,6 @@
 eclipse.preferences.version=1
+encoding//Route/Guild.py=utf8
 encoding//Route/Login.py=utf-8
+encoding//Route/Mail.py=utf8
+encoding//Route/User.py=utf8
 encoding//Route/__init__.py=utf-8

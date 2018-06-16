@@ -19,37 +19,42 @@ class MetaDataMgr(SingletonInstane):
         onlyfiles = [f for f in listdir(path) if isfile(join(path, f))]
         
         boolRegx = re.compile("TRUE", re.I)
-        intRegx = re.compile('[0-9]')
-        strRegx = re.compile('[a-zA-Z]')
+        intRegx = re.compile("(^[0-9]*$)")
+        strRegx = re.compile('[a-zA-Z]+')
         
         for fileName in onlyfiles:
-            keyStr = fileName.split('.')
-            self.metaDataDict[keyStr[0]] = {}
-            csvlist = self.metaDataDict[keyStr[0]]
-            file = './CsvDataTable/' + fileName
-            with open(file, 'r') as f:
-                reader_csv = csv.DictReader(f)
-                idx = 0 
-                for row in reader_csv:
-                    first = True             
-                    rowDict = {}
-                    for key, val in row.items():                        
-                        if first:
-                            idx = int(val)
-                            first = False
+            try:
+                keyStr = fileName.split('.')
+                self.metaDataDict[keyStr[0]] = {}
+                csvlist = self.metaDataDict[keyStr[0]]
+                file = './CsvDataTable/' + fileName
+                with open(file, 'r', encoding='utf-8-sig') as f:
+                    reader_csv = csv.DictReader(f)
+                    idx = 0 
+                    for row in reader_csv:
+                        first = True             
+                        rowDict = {}
+                        for key, val in row.items():                        
+                            if first:
+                                idx = int(val)
+                                first = False
+                                
+                            #bRegx = boolRegx.match(val)
                             
-                        #bRegx = boolRegx.match(val)
-                        
-                        iRegx = intRegx.match(val)
-                        if iRegx:
-                            rowDict[key] = int(val)
-                            continue
-#                         sRegx = strRegx.match(val)
-#                         if sRegx:
-                        rowDict[key] = val
+                            iRegx = intRegx.match(val)
+                            if iRegx:
+                                rowDict[key] = int(val)
+                                continue
+                            rowDict[key] = val
+#                             sRegx = strRegx.match(val)
+#                             if not sRegx:
+#                                 rowDict[key] = int(val)
                                                                                             
-                    csvlist[idx] = rowDict
-                    
+                        csvlist[idx] = rowDict
+            except Exception as e:
+                print(str(e))
+                print(fileName)
+                
     def getMetaData(self, metaStr, metaId):
         findDict = self.getMetaDatas(metaStr)
         if findDict is None:

@@ -1,6 +1,6 @@
-Index,QuestText,Result,GetExp,Difficult
-0,�Ϲݹ���1,TRUE,1,5
-1,�Ϲݹ���2,TRUE,2,4
-2,�Ϲݹ���3,FALSE,3,3
-3,�Ϲݹ���4,TRUE,4,2
-4,�Ϲݹ���5,FALSE,5,1
+﻿Index,QuestText,Result,GetExp,WrongInfo
+0,일반문제1,TRUE,1,설명임1
+1,일반문제2,TRUE,2,설명임2
+2,일반문제3,FALSE,3,설명임3
+3,일반문제4,TRUE,4,설명임4
+4,일반문제5,FALSE,5,설명임5

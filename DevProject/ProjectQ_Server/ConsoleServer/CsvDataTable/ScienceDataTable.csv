@@ -1,6 +1,6 @@
-Index,QuestText,Result,GetExp,Difficult
-0,°úÇÐ¹®Á¦1,TRUE,1,5
-1,°úÇÐ¹®Á¦2,TRUE,2,4
-2,°úÇÐ¹®Á¦3,FALSE,3,3
-3,°úÇÐ¹®Á¦4,TRUE,4,2
-4,°úÇÐ¹®Á¦5,FALSE,5,1
+ï»¿Index,QuestText,Result,GetExp,WrongInfo
+0,ê³¼í•™ë¬¸ì œ1,TRUE,1,ì„¤ëª…ìž„1
+1,ê³¼í•™ë¬¸ì œ2,TRUE,2,ì„¤ëª…ìž„2
+2,ê³¼í•™ë¬¸ì œ3,FALSE,3,ì„¤ëª…ìž„3
+3,ê³¼í•™ë¬¸ì œ4,TRUE,4,ì„¤ëª…ìž„4
+4,ê³¼í•™ë¬¸ì œ5,FALSE,5,ì„¤ëª…ìž„5

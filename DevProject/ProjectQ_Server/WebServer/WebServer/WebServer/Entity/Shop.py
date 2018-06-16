@@ -18,26 +18,34 @@ class ShopBase(object):
         return self.itemMetas[itemId]
     
     def buyProduct(self, buyProductId, buyProductCount, userObject):
-
         if not buyProductId in self.itemMetas:
-            return Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_ITEM)
+            return Common.respHandler.customeResponse(Route.Define.ERROR_NOT_FOUND_ITEM)
         
         buyItemInfo = self.itemMetas[buyProductId]
         accountInfo = userObject.getData(Define.ACCOUNT_INFO)
         
+        if buyProductCount <= 0:
+            return Common.respHandler.customeResponse(Route.Define.ERROR_INVALID_BUY_PRODUCT)
+        
+        if "Single" == buyItemInfo['ItemType']:
+            return Common.respHandler.customeResponse(Route.Define.ERROR_REQUEST_SINGLE_ITEM)
+        
         priceValue = buyItemInfo['Price']
         
-        if priceValue > accountInfo.gameMoney:
-            return Route.Define.ERROR_NOT_ENOUGH_MONEY
+        if (priceValue * buyProductCount) > accountInfo.gameMoney:
+            return Common.respHandler.customeResponse(Route.Define.ERROR_NOT_ENOUGH_MONEY)
         
         itemContainer = userObject.getData(ITEM_CONTANIER)
         
         #1 == no stock item, 0 == stock item
-        type = buyItemInfo['ItemType']
-        if type == 1:
+        typeStr = buyItemInfo['ItemType']
+        if typeStr == "Normal":
             findItem = itemContainer.getItemById(buyProductId)
             if not findItem is None: 
-                return Route.Define.ERROR_ALREADY_BUY_NO_STOCK_ITEM
+                return Common.respHandler.customeResponse(Route.Define.ERROR_ALREADY_BUY_NO_STOCK_ITEM)
+            
+            if buyProductCount > 1:
+                return Common.respHandler.customeResponse(Route.Define.ERROR_ONLY_ONE_PURCHASE_AVAILABLE)
             
         itemId = buyItemInfo['Index']
         out_ItemIdx = 0
@@ -47,11 +55,11 @@ class ShopBase(object):
             resultDB = DB.dbConnection.executeStoredProcedure("Game_Item_BuyProduct", (itemId, accountInfo.accountId, buyProductCount, priceValue, out_ItemIdx), (4, 4))
         except Exception as e:
             print(str(e))
-            return Route.Define.ERROR_DB
+            return Common.respHandler.customeResponse(Route.Define.ERROR_DB)
         
-        accountInfo.gameMoney -= priceValue
+        accountInfo.gameMoney = accountInfo.gameMoney - (priceValue * buyProductCount)
         accountInfo.syncToResp()
-        itemContainer.setItem(resultDB[1], itemId, buyProductCount)
+        itemContainer.setItem(resultDB[0], itemId, buyProductCount)
         
-        return Route.Define.OK_SHOP_BUY_PRODUCT
+        return Common.respHandler.customeResponse(Route.Define.OK_SHOP_BUY_PRODUCT, {"gameMoney" : accountInfo.gameMoney, "buyItemIdx" : resultDB[0], "buyItemId" : itemId, "buyItemCount":buyProductCount})
         

@@ -7,7 +7,7 @@ class Item(Common.BaseObjResp):
         self.itemIdx = 0
         self.itemId = 0        
         self.ig_metaDict = {}
-        self.itemType = 0 
+        self.itemType = "" 
         self.equip = 0
         self.count = 0
         self.initRespCache()

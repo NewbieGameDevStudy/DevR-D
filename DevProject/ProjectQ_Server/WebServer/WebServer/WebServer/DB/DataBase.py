@@ -13,7 +13,7 @@ class DBConnection:
          
     def _getconn(self):
         try:
-            conn = pymysql.connect(host="localhost", user="root", password="1234567890", db="gamedb", charset='utf8')
+            conn = pymysql.connect(host="localhost", user="root", password="1234567890", db="gamedb", charset='utf8mb4')
         except:
             print("DB not Connect")
         return conn
@@ -57,6 +57,7 @@ class DBConnection:
             conn.close()
             
     def _storedProcedure(self, storedProcedureFuncStr, params, outputParamRange):
+        print("call storedProcedure")
         try:
             conn = self._dbPool.connect()
             with conn.cursor() as cursor:
@@ -70,11 +71,15 @@ class DBConnection:
                         outputStr += (", @_%s_%d" % (storedProcedureFuncStr, index))
                     
                 #cursor.execute(outputStr)
-                result = cursor.fetchone()                
+                result = cursor.fetchone()
+                print(result)                
                 cursor.execute(outputStr)
                 outResult = cursor.fetchone()
+                print(outResult)
                 conn.commit()
-                return result + outResult
+                return outResult if result is None else (result, outResult)
+        except Exception as e:
+            print(str(e))
         finally:
             conn.close()  
     

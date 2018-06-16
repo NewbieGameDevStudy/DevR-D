@@ -31,9 +31,19 @@ namespace Packet
             return BitConverter.ToInt32(buffer, offset);
         }
 
+        public static int Deserializer_GetTotalLength(byte[] buffer)
+        {
+            return BitConverter.ToInt32(buffer, 0);
+        }
+
         public static int Deserializer_GetPacketID(byte[] buffer, int offset)
         {
             return BitConverter.ToInt32(buffer, offset + sizeof(Int32));
+        }
+
+        public static int Deserializer_GetPacketID(byte[] buffer)
+        {
+            return BitConverter.ToInt32(buffer, sizeof(Int32));
         }
 
         public static PK Deserializer_Packet<PK>(MemoryStream ms) where PK : PK_BASE

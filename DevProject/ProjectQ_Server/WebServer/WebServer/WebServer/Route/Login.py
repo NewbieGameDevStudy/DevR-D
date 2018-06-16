@@ -30,7 +30,7 @@ class Login(Resource, Common.BaseRoute):
         accountDB = DB.dbConnection.executeStoredProcedure("Game_Login", (session, o_error), (1, 1))
         #accountDB = DB.dbConnection.customSelectQuery("select * from gamedb.account where iAccountId = %s" % session)
         accountInfo = Entity.userCachedObjects[session].getData(Entity.Define.ACCOUNT_INFO)
-        accountInfo.loadValueFromDB(accountDB)
+        accountInfo.loadValueFromDB(accountDB[0])
         
         itemDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.item where iAccountId = %s" % session)
         inventoryDB = DB.dbConnection.customSelectQuery("select islot0, islot1 from gamedb.inventory where iAccountId = %s" % session)
@@ -38,9 +38,23 @@ class Login(Resource, Common.BaseRoute):
         itemContanier.loadBasicInitDataFromDB(inventoryDB)
         itemContanier.loadValueFromDB(itemDB)
         
-        mailDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.mailBox where iAccountId = %s" % session)
+        mailDB = DB.dbConnection.customeSelectListQuery("select M.iIdx, M.iSenderAccountId, M.cSender, M.cTitle, M.cBody, M.dSendTime, M.dExpireTime, M.iReadDone, M.iMailType, A.iLevel, A.iportrait \
+         from gamedb.mailBox AS M \
+         LEFT JOIN gamedb.account AS A \
+         ON M.iSenderAccountId = A.iAccountId \
+         WHERE M.iAccountId = %s" % session)
         mailContanier = Entity.userCachedObjects[session].getData(Entity.Define.MAIL_CONTANIER)        
         mailContanier.loadValueFromDB(mailDB)
+        
+        #guildDB = DB.dbConnection.customSelectQuery("select * from gamedb.mail")
+        guildMemberDB = DB.dbConnection.customeSelectListQuery("select * from gamedb.guild_member where iAccountId = %s" % session)
+        
+        if not guildMemberDB is None:
+            d = 0
+#         guildDB = DB.dbConnection.customSelectQuery("select islot0, islot1 from gamedb.inventory where iAccountId = %s" % session)
+#         itemContanier = Entity.userCachedObjects[session].getData(Entity.Define.ITEM_CONTANIER)
+#         itemContanier.loadBasicInitDataFromDB(inventoryDB)
+#         itemContanier.loadValueFromDB(itemDB)
         
         Common.respHandler.mergeResp(accountInfo.getResp())
         Common.respHandler.mergeResp(itemContanier.getContainerResp())
@@ -83,3 +97,15 @@ class Login(Resource, Common.BaseRoute):
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_CREATE_NOT_LOGIN))
         
         return jsonify(Common.respHandler.customeResponse(Route.Define.OK_CREATE_LOGIN, {"accountId":accountId}))
+    
+    
+    
+class LogOut(Resource, Common.BaseRoute):
+    def post(self):
+        session = self.getSession(request)
+        if session is None:
+            return
+            
+        if session in Entity.userCachedObjects:
+            del Entity.userCachedObjects[session]
+            print("logOut : %s" % session)

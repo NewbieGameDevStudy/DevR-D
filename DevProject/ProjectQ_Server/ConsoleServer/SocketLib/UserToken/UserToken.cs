@@ -31,7 +31,8 @@ namespace NetworkSocket
 
         public void OnReceive(byte[] buffer, int offset, int totalBytes)
         {
-            m_socketData.ReceiveBuffer(buffer, offset, totalBytes);
+            if (m_socketData.ReceiveBuffer(buffer, offset, totalBytes) == false)
+                return;
             lock (m_receiveQueue) {
                 //TODO : Clone 부하는??
                 m_receiveQueue.Enqueue(m_socketData.Clone() as SocketData);
@@ -65,15 +66,31 @@ namespace NetworkSocket
         public void OnSend(PK_BASE pks)
         {
             //TODO : 리펙토링이 필요함
-            var sendBuffer = m_socketData.SendBuffer(pks);
+            var sendBuffers = m_socketData.GetSendBuffer(pks);
+
             lock (m_sendQueue) {
-                if (m_sendQueue.Count <= 0) {
-                    m_sendQueue.Enqueue(sendBuffer);
+                if(m_sendQueue.Count <= 0) {
+                    foreach (var sendBuffer in sendBuffers)
+                        m_sendQueue.Enqueue(sendBuffer);
                     SendProcess();
                     return;
                 }
-                m_sendQueue.Enqueue(sendBuffer);
+
+                foreach (var sendBuffer in sendBuffers)
+                    m_sendQueue.Enqueue(sendBuffer);
             }
+
+            //var sendBuffer = m_socketData.SendBuffer(pks);
+
+
+            //lock (m_sendQueue) {
+            //    if (m_sendQueue.Count <= 0) {
+            //        m_sendQueue.Enqueue(sendBuffer);
+            //        SendProcess();
+            //        return;
+            //    }
+            //    m_sendQueue.Enqueue(sendBuffer);
+            //}
         }
 
         private void SendProcess()

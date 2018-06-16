@@ -1,3 +1,5 @@
+# coding=utf8
+
 from flask_restful import Resource
 from flask import jsonify, request, session
 
@@ -23,8 +25,8 @@ class UserFind(Resource, Common.BaseRoute):
         
         nickName = args["nickName"]
                 
-        findNickName = DB.dbConnection.customSelectQuery("select cname from gamedb.account where cname = %s" % nickName)
-        if not findNickName is None:
+        resultDB = DB.dbConnection.customSelectQuery("select cname from gamedb.account where cname = \"%s\"" % nickName)
+        if resultDB is None or len(resultDB) == 0:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_USER))
         
-        return jsonify(Common.respHandler.customeResponse(Route.Define.OK_SUCCESS, {"nickName" : findNickName}))
+        return jsonify(Common.respHandler.customeResponse(Route.Define.OK_SUCCESS, {"nickName" : resultDB[0]}))

@@ -103,7 +103,7 @@ class RespHandler(object):
     def errorResponse(self, responseCode):
         return {'responseCode':responseCode}
     
-    def customeResponse(self, responseCode, respDict): 
+    def customeResponse(self, responseCode, respDict = None): 
         dictResp = {}
         if not respDict is None:
             for resp in respDict:

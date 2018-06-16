@@ -13,6 +13,13 @@ class Mail(Common.BaseObjResp):
         self.body = ""
         self.sendTime = 0
         self.expireTime = 0
+        self.readDone = 0
+        self.mailType = 0
+        
+        #senderInfo
+        self.senderPortrait = 0
+        self.senderLv = 0
+        
         self.initRespCache()
     
     def loadValueFromDB(self, loadDatas):
@@ -24,6 +31,11 @@ class Mail(Common.BaseObjResp):
         
         self.sendTime = int(loadDatas[5].timestamp()) 
         self.expireTime = int(loadDatas[6].timestamp())
-             
+        self.readDone = loadDatas[7]
+        self.mailType = loadDatas[8]
+        
+        self.senderLv = loadDatas[9]
+        self.senderPortrait = loadDatas[10]
+
     def getResp(self):
         return self.ig_respDict

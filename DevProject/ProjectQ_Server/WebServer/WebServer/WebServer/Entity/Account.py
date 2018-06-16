@@ -12,12 +12,12 @@ class Account(Common.BaseObjResp):
         self.bestRecord = 0
         self.winRecord = 0
         self.continueRecord = 0
-        self.dailyMailCount = 0
+        self.dailyMailCount = 10
         
         self.initRespCache()
     
     def loadValueFromDB(self, updateList):
-        convertList = list(updateList)
+        convertList = updateList
         self.accountId = convertList[0]
         self.name = convertList[1]
         self.level = convertList[2]
@@ -27,7 +27,7 @@ class Account(Common.BaseObjResp):
         self.bestRecord = convertList[6]
         self.winRecord = convertList[7]
         self.continueRecord = convertList[8]
-        self.continueRecord = convertList[9]
+        self.dailyMailCount = convertList[9]
         
         self.initResp(convertList)
         
