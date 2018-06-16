@@ -1,3 +1,5 @@
+# coding=utf8
+
 from flask_restful import Resource
 from flask import jsonify, request, session
 
