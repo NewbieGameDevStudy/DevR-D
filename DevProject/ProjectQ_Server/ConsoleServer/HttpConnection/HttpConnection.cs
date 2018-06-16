@@ -55,5 +55,10 @@ namespace Http
         {
             m_restClient.ExecuteAsync(request, response);
         }
+
+        public void HttpExecute(RestRequest request)
+        {
+            m_restClient.Execute(request);
+        }
     }
 }

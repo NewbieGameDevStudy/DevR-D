@@ -104,7 +104,7 @@ class LogOut(Resource, Common.BaseRoute):
     def post(self):
         session = self.getSession(request)
         if session is None:
-            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
+            return
             
         if session in Entity.userCachedObjects:
             del Entity.userCachedObjects[session]

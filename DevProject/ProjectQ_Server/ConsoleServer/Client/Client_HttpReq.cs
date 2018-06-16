@@ -32,6 +32,18 @@ namespace BaseClient
             HttpConnection = new HttpConnection(string.Format("http://{0}:5000", ip));
         }
 
+        public void HttpDisconnect(ulong session)
+        {
+            var request = new RestRequest {
+                Method = Method.POST,
+                Resource = "/logout",
+                RequestFormat = DataFormat.Json
+            };
+
+            request.AddCookie("Session", session.ToString());
+            HttpConnection.HttpExecute(request);
+        }
+
         public void WebReqEnqueue<REQUEST, RESPONSE>(ulong session, REQUEST dto, Action<RESPONSE> callback)
         {
             var type = dto.GetType();
