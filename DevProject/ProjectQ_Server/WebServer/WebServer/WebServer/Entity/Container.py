@@ -195,4 +195,9 @@ class MailContainer(Common.BaseContainerResp):
             
         return None
     
+    def removeMailById(self, mailIdx):
+        if not mailIdx in self.ig_container:
+            return
+        
+        del self.ig_container[mailIdx]
     

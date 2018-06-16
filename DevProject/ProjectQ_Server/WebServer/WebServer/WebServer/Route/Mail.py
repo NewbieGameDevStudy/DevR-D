@@ -122,7 +122,36 @@ class MailPostDone(Resource, Common.BaseRoute):
         mail.syncToResp()
                 
         return Common.respHandler.customeResponse(Route.Define.OK_SUCCESS, {"readMailId":readMailId})
+
+
+class MailPostDelete(Resource, Common.BaseRoute):
+    def post(self):
+        session = self.getSession(request)
+        if session is None:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
         
+        if not session in userCachedObjects:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_SESSION))
+        
+        Route.parser.add_argument("mailIdx")
+        args = Route.parser.parse_args()
+        
+        if not args["mailIdx"]:
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INPUT_PARAMS))
+        
+        deleteMailId = int(args["mailIdx"])
+        userObject = userCachedObjects[session]
+        mailContanier = Entity.userCachedObjects[session].getData(Entity.Define.MAIL_CONTANIER)
+        
+        try:
+            mailDB = DB.dbConnection.customInsertQuery("DELETE FROM gamedb.mailbox WHERE iaccountId = %s AND iIdx = %s" % (session, deleteMailId))
+        except Exception as e:
+            print(str(e))
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_DB))
+        
+        mailContanier.removeMailById(deleteMailId)
+        return Common.respHandler.customeResponse(Route.Define.OK_SUCCESS, {"deleteMailId":deleteMailId})
+     
 
 class MailPostAccept(Resource, Common.BaseRoute):
     def post(self):
