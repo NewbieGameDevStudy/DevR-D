@@ -23,7 +23,7 @@ class UserFind(Resource, Common.BaseRoute):
         
         nickName = args["nickName"]
                 
-        findNickName = DB.dbConnection.customSelectQuery("select cname from gamedb.account where cname = %s" % nickName)
+        findNickName = DB.dbConnection.customSelectQuery("select cname from gamedb.account where cname = \"%s\"" % nickName)
         if not findNickName is None:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_NOT_FOUND_USER))
         
