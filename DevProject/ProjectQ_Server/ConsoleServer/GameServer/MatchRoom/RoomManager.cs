@@ -17,7 +17,7 @@ namespace GameServer.MatchRoom
 
         public RoomManager()
         {
-            
+
         }
         
         public void EnterWaitRoom(PlayerObject player)
@@ -113,6 +113,11 @@ namespace GameServer.MatchRoom
         public void MovePosition(byte roomNo, PlayerObject player)
         {
             m_roomList[roomNo]?.MovePosition(player);
+        }
+
+        public void PlayerAnswerReceive(byte roomNo, PK_CS_QUIZ_ANSWER.QuizAnswer answer, PlayerObject player)
+        {
+            m_roomList[roomNo]?.PlayerAnswerReceive(answer, player);
         }
 
         public void RoomUpdate(double deltaTime)

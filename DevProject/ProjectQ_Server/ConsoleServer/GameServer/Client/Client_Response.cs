@@ -40,6 +40,12 @@ namespace GameServer.ServerClient
             m_baseServer.RoomManager.MovePosition(pks.RoomNo, Player);
         }
 
+        void OnReceivePacket(PK_CS_QUIZ_ANSWER pks)
+        {
+            m_baseServer.RoomManager.PlayerAnswerReceive(pks.RoomNo, pks.Answer, Player);
+            m_baseServer.RoomManager.ReadyForGame(pks.RoomNo, Player);
+        }
+
         /*
         void OnReceivePacket(PK_CS_INPUT_POSITION pks)
         {

@@ -45,6 +45,21 @@ namespace Packet
         public float yPos { get; set; }
     }
 
+    [ProtoContract]
+    public class PK_CS_QUIZ_ANSWER : PK_BASE
+    {
+        public enum QuizAnswer
+        {
+            ANSWER_O,
+            ANSWER_X
+        };
+
+        [ProtoMember(1)]
+        public byte RoomNo { get; set; }
+        [ProtoMember(2)]
+        public QuizAnswer Answer { get; set; }
+    }
+
     /*
     [ProtoContract]
     public class PK_CS_INPUT_POSITION : PK_BASE
@@ -173,6 +188,33 @@ namespace Packet
         public float xPos { get; set; }
         [ProtoMember(4)]
         public float yPos { get; set; }
+    }
+
+    [ProtoContract]
+    public class PK_SC_QUIZ_TEXT : PK_BASE
+    {
+        [ProtoMember(1)]
+        public string strQuiz { get; set; }
+    }
+
+    [ProtoContract]
+    public class PK_SC_QUIZ_MOVE_END_TIME : PK_BASE
+    {
+        [ProtoMember(1)]
+        public byte QuizEndTimeDelay { get; set; }
+    }
+
+    [ProtoContract]
+    public class PK_SC_QUIZ_RESULT : PK_BASE
+    {
+        public enum QuizResult
+        {
+            ALIVE,
+            DEAD
+        };
+
+        [ProtoMember(1)]
+        public Dictionary<ulong, QuizResult> MemberQuizResult { get; set; }
     }
 
     [ProtoContract]
