@@ -22,7 +22,7 @@ namespace GameServer.ServerClient
             int a = 0;
         }
 
-        void onReceivePacket(PK_CS_CANCEL_MATCHING pks)
+        void OnReceivePacket(PK_CS_CANCEL_MATCHING pks)
         {
             if (Player.AccountIDClient != pks.AccountIDClient)
                 return;

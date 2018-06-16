@@ -18,7 +18,7 @@ namespace ClientTool
         DateTime prevTime;
         double deltaTime = 0;
         ulong id;
-        Random tempRandom = new Random(10000);
+        Random tempRandom = new Random();
 
         static GameRender.GameRender gameRender;
 
@@ -50,7 +50,7 @@ namespace ClientTool
 
             client = new Client();
             client.Init(client, "OnReceivePacket");
-            client.Connect();
+            client.Connect("10.70.50.63", 5050);
 
             m_updateTimer = new DispatcherTimer {
                 Interval = TimeSpan.FromMilliseconds(33)

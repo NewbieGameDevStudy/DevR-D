@@ -71,7 +71,6 @@ namespace GameServer.MatchRoom
 
         public void EnterRoom(PlayerObject player)
         {
-            Random portRait = new Random(100);
             if (m_roomPlayerList.ContainsValue(player))
             {
                 Console.WriteLine("RoomNo : {0}, Already in {0} ", RoomNo, player.AccountIDClient);
@@ -274,7 +273,7 @@ namespace GameServer.MatchRoom
                 }
                 bQuizSend = true;
                 QuizSendTime = deltaTime;
-                ResetPlayerReady();                
+                ResetPlayerReady();
             }
 
             if (bCountDown == false && deltaTime - QuizSendTime > QUIZ_END_DELAY)
@@ -297,12 +296,12 @@ namespace GameServer.MatchRoom
             {
                 bool isReadyComplete = CheckReady();
                 if (isReadyComplete)
-                {                    
+                {
                     // send result
                     var info = new PK_SC_QUIZ_RESULT
                     {
                         // 복사...?
-                        MemberQuizResult = m_PlayerQuizResult
+                        MemberQuizResult = new Dictionary<ulong, PK_SC_QUIZ_RESULT.QuizResult>(m_PlayerQuizResult)
                     };
 
                     foreach (var player in m_roomPlayerList)
