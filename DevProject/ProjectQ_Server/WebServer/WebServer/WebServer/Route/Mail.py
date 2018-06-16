@@ -78,7 +78,7 @@ class MailWrite(Resource, Common.BaseRoute):
             resultDB = DB.dbConnection.executeStoredProcedure("Game_Mail_Write", (targetNickName, senderAccountId, title, body, accountInfo.gameMoney, o_error), (5, 5))
         except Exception as e:
             print(str(e))
-            return Route.Define.ERROR_DB
+            return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_DB))
         
         o_error = resultDB[0]
         
