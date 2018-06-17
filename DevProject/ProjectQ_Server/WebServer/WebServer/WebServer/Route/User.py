@@ -60,12 +60,13 @@ class UserInfo(Resource, Common.BaseRoute):
     
 class UserInfos(Resource, Common.BaseRoute):
     def get(self):       
-        Route.parser.add_argument("accountIds", location=json)
+        Route.parser.add_argument("accountIds")
         args = Route.parser.parse_args()
         if not args["accountIds"]:
             return jsonify(Common.respHandler.errorResponse(Route.Define.ERROR_INPUT_PARAMS))
         
-        accountIds = args["accountIds"]
+        accountIdsStr = args["accountIds"]
+        accountIds = Common.respHandler.convertJsonToList(accountIdsStr)
         
         userInfos = {"userInfos":[]}
         for id in accountIds:
@@ -74,7 +75,7 @@ class UserInfos(Resource, Common.BaseRoute):
                 continue
             
             accountInfo = userCachedObjects[id].getData(Define.ACCOUNT_INFO)
-            userInfo = UserInfo(accountInfo)
+            userInfo = User.UserInfo(accountInfo)
             userInfos["userInfos"].append(userInfo.getResp())
                                                                 
         return jsonify(Common.respHandler.customeResponse(Route.Define.OK_SUCCESS, userInfos))

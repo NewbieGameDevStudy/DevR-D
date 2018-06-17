@@ -111,6 +111,10 @@ class RespHandler(object):
         
         dictResp['responseCode'] = responseCode
         return dictResp
+    
+    def convertJsonToList(self, jsonStr):
+        str2 = jsonStr[1:len(jsonStr) - 1]
+        return str2.split(",")
 
 respHandler = RespHandler()
         

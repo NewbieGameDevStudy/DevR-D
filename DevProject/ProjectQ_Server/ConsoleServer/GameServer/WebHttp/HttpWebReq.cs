@@ -1,12 +1,9 @@
 ﻿using Http;
 using Newtonsoft.Json;
 using RestSharp;
-using SimpleJson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameServer.WebHttp
 {
@@ -73,14 +70,12 @@ namespace GameServer.WebHttp
         void AddParameter(RestRequest request, string fieldName, object param)
         {
             if (typeof(Array).IsAssignableFrom(param.GetType())) {
-                JsonObject o = new JsonObject();
-
-
                 var json = JsonConvert.SerializeObject(param);
                 request.AddParameter(fieldName, json);
-            } else {
-                request.AddParameter(fieldName, param);
-            }
+                return;
+            } 
+
+            request.AddParameter(fieldName, param);
         }
 
         public void UpdateWebReq()
