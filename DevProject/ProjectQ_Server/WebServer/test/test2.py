@@ -86,6 +86,14 @@ class dictTest():
 #print(m)
 
 
-tupless = (1, )
+# tupless = (1, )
+# 
+# print(len(tupless))
 
-print(len(tupless))
+jsonStr = {"accountIds":"[1,2]"}
+
+str = jsonStr["accountIds"]
+str2 = str[1:len(str) - 1]
+s = str2.split(",")
+fdsafd = json.load(s)
+dd = 0

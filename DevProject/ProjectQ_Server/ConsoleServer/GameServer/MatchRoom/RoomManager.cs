@@ -45,7 +45,7 @@ namespace GameServer.MatchRoom
                 player.PlayerData.info.Exp = result.userInfo.exp;
 
                 m_waitingPlayerQueue.Enqueue(player);
-                Console.WriteLine("WaitUserCount {0}", m_waitingPlayerQueue.Count);
+                Console.WriteLine("WaitUserTotalCount : {0}, WaitEnterUserId : {1}", m_waitingPlayerQueue.Count, player.WebAccountId);
             });
         }
 
@@ -78,7 +78,7 @@ namespace GameServer.MatchRoom
 
             var room = m_sortedRoomList[0];
             room?.EnterRoom(player);
-            Console.WriteLine("RoomEnter {0} : User {0}", room.RoomNo, player.WebAccountId);
+            Console.WriteLine("RoomNum {0} : User {1}", room.RoomNo, player.WebAccountId);
             m_sortedRoomList.Clear();
         }
 
@@ -89,7 +89,7 @@ namespace GameServer.MatchRoom
             m_roomList.Add(tempRoom.RoomNo, tempRoom);            
             tempRoom.EnterRoom(player);
 
-            Console.WriteLine("Make New Room : {0} : User {0}", tempRoom.RoomNo, player.WebAccountId);
+            Console.WriteLine("Make New Room : {0}", tempRoom.RoomNo);
         }
 
         public void CancelMatching(PlayerObject player)

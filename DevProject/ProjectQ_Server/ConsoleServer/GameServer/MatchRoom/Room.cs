@@ -77,7 +77,7 @@ namespace GameServer.MatchRoom
         public void EnterRoom(PlayerObject player)
         {
             if (m_roomPlayerList.Contains(player)) {
-                Console.WriteLine("RoomNo : {0}, Already in {0} ", RoomNo, player.WebAccountId);
+                Console.WriteLine("RoomNo : {0}, Already in {1} ", RoomNo, player.WebAccountId);
                 return;
             }
 
@@ -107,6 +107,8 @@ namespace GameServer.MatchRoom
             m_roomPlayerList.Add(player);
             player.EnteredRoomNo = RoomNo;
             player.PlayerIndex = (byte)m_roomPlayerList.Count;
+
+            Console.WriteLine("RoomNum : {0}, TotalUserCount : {1}", RoomNo, m_roomPlayerList.Count);
         }
 
         public void MatchimgGame(double deltaTime)
