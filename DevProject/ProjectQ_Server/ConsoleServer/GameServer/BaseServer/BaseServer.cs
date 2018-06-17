@@ -1,11 +1,12 @@
 ﻿using GameServer.MatchRoom;
 using GameServer.ServerClient;
+using GameServer.WebHttp;
 using GuidGen;
 using Http;
 using MetaData;
-using MetaData.Data;
 using NetworkSocket;
 using Packet;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -14,15 +15,14 @@ namespace Server
     public class BaseServer
     {
         SocketLib m_serverSocket;
-        Guid m_guid;
+        GuidGen.Guid m_guid;
         PacketMethod m_packetMethod;
         Dictionary<int, Client> m_clientList = new Dictionary<int, Client>();
         Dictionary<int, Client> m_addClientList = new Dictionary<int, Client>();
-
-        int m_accountCount;
+        private int m_userHandle;
 
         public RoomManager RoomManager { get; private set; }
-        public HttpConnection HttpConnection { get; private set; }
+        public HttpWebReq HttpWebReq { get; private set; }
 
         public void InitServer(int port, byte machiedId)
         {
@@ -46,12 +46,12 @@ namespace Server
             }
 
             //var dd = MetaDataMgr.Inst.GetMetaData<AnimalDataTable>(2);
+            HttpWebReq = new HttpWebReq();
+            HttpWebReq.Connect("http://localhost", 5000);            
 
-            RoomManager = new RoomManager();
-            HttpConnection = new HttpConnection("http://localhost:5000");
+            RoomManager = new RoomManager(HttpWebReq);
 
-            m_guid = new Guid(machiedId);
-
+            m_guid = new GuidGen.Guid(machiedId);
         }
 
         public void RunServer()
@@ -62,28 +62,26 @@ namespace Server
         void AcceptClient(UserToken userToken)
         {
             lock (m_addClientList) {
-                Client client = new Client(this, userToken, m_accountCount) {
+                Client client = new Client(this, userToken, m_userHandle) {
                     PacketDispatch = PacketMethodDispatch
                 };
-                //Client client = new Client(this, userToken, m_guid.GuidCreate(), m_accountCount) {
-                //    PacketDispatch = PacketMethodDispatch
-                //};
-                m_addClientList.Add(m_accountCount, client);
-                m_accountCount++;
+                m_addClientList.Add(m_userHandle, client);
+                m_userHandle++;
             }
 
-            System.Console.WriteLine("접속된 클라이언트 수 : {0}", m_accountCount);
+            System.Console.WriteLine("접속된 클라이언트 수 : {0}", m_userHandle);
         }
 
         void CloseClient()
         {
-            Interlocked.Decrement(ref m_accountCount);
-            System.Console.WriteLine("접속된 클라이언트 수 : {0}", m_accountCount);
+            Interlocked.Decrement(ref m_userHandle);
+            System.Console.WriteLine("접속된 클라이언트 수 : {0}", m_userHandle);
         }
 
         public void Update(double deltaTime)
         {
             UpdateClient(deltaTime);
+            HttpWebReq.UpdateWebReq();
             RoomManager.Update(deltaTime);            
         }
 

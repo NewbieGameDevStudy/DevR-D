@@ -3,6 +3,8 @@ using Server;
 using System;
 using System.Collections.Generic;
 using Packet;
+using Http;
+using GameServer.WebHttp;
 
 namespace GameServer.MatchRoom
 {
@@ -15,9 +17,11 @@ namespace GameServer.MatchRoom
         const double WAIT_TIME_INTERVAL = 5;        // 대기 반감기
         const byte NEED_USER_COUNT = 100;           // 초기 필요 인원
 
-        public RoomManager()
+        public HttpWebReq WebReq { get; private set; }
+
+        public RoomManager(HttpWebReq webConnection)
         {
-            
+            WebReq = webConnection;
         }
         
         public void EnterWaitRoom(PlayerObject player)
@@ -29,11 +33,19 @@ namespace GameServer.MatchRoom
                 return;
             }
 
-            //웹서버 정보 요청.
+            var reqUserInfo = new ReqUserInfo {
+                accountId = player.WebAccountId,
+            };
 
+            WebReq.WebReqEnqueue(reqUserInfo, (UserInfo result) => {
+                player.PlayerData.info.Level = result.userInfo.level;
+                player.PlayerData.info.Name = result.userInfo.name;
+                player.PlayerData.info.Portrait = result.userInfo.portrait;
+                player.PlayerData.info.Exp = result.userInfo.exp;
 
-            m_waitingPlayerQueue.Enqueue(player);
-            Console.WriteLine("WaitUserCount {0}", m_waitingPlayerQueue.Count);
+                m_waitingPlayerQueue.Enqueue(player);
+                Console.WriteLine("WaitUserCount {0}", m_waitingPlayerQueue.Count);
+            });
         }
 
         public void FindMatchingRoom()
@@ -63,9 +75,30 @@ namespace GameServer.MatchRoom
                 return a.CurrentUserCount.CompareTo(b.CurrentUserCount);
             });
 
-            m_sortedRoomList[0]?.EnterRoom(player);
-            Console.WriteLine("RoomEnter {0} : User {0}", m_sortedRoomList[0].RoomNo, player.UserSequence);
-            m_sortedRoomList.Clear();
+
+            var roomNum = m_sortedRoomList[0].RoomNo;
+
+            if (!m_roomList.ContainsKey(roomNum)) {
+                Console.WriteLine("not found room : {0}", roomNum);
+                return;
+            }
+
+            var room = m_sortedRoomList[0];
+            var roomUserList = room.GetRoomPlayerObjects(player.Handle);
+
+            var reqUserInfo = new ReqUserInfos {
+                accountIds = new ulong[roomUserList.Count]
+            };
+
+            for(int i = 0; i < roomUserList.Count; ++i) {
+                reqUserInfo.accountIds[i] = roomUserList[i].WebAccountId;
+            }
+
+            WebReq.WebReqEnqueue(reqUserInfo, (UserInfos result) => {
+                m_sortedRoomList[0]?.EnterRoom(player);
+                Console.WriteLine("RoomEnter {0} : User {0}", m_sortedRoomList[0].RoomNo, player.WebAccountId);
+                m_sortedRoomList.Clear();
+            });
         }
 
         public void MakeNewRoom(PlayerObject player)
@@ -75,7 +108,7 @@ namespace GameServer.MatchRoom
             m_roomList.Add(tempRoom.RoomNo, tempRoom);            
             tempRoom.EnterRoom(player);
 
-            Console.WriteLine("Make New Room : {0} : User {0}", tempRoom.RoomNo, player.UserSequence);
+            Console.WriteLine("Make New Room : {0} : User {0}", tempRoom.RoomNo, player.WebAccountId);
         }
 
         public void CancelMatching(PlayerObject player)

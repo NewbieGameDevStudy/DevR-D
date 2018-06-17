@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Packet;
+using System.Linq;
 
 namespace GameServer.MatchRoom
 {
@@ -68,37 +69,37 @@ namespace GameServer.MatchRoom
             }
         }
 
+        public List<PlayerObject> GetRoomPlayerObjects(int handle)
+        {
+            return m_roomPlayerList.FindAll( x=> x.Handle != handle);
+        }
+
         public void EnterRoom(PlayerObject player)
         {
             if (m_roomPlayerList.Contains(player))
             {
-                Console.WriteLine("RoomNo : {0}, Already in {0} ", RoomNo, player.UserSequence);
+                Console.WriteLine("RoomNo : {0}, Already in {0} ", RoomNo, player.WebAccountId);
                 return;
             }
 
             // 신규 참가 인원 : 기존 방인원 정보 send
             // 기존 참가 인원 : 신규 인원 정보 send
-
             PK_SC_MATCHING_ROOM_INFO pks = new PK_SC_MATCHING_ROOM_INFO();
-            pks.m_memberList = new List<PK_SC_MATCHING_MEMBER_INFO>();
+            pks.memberList = new List<PK_SC_MATCHING_MEMBER_INFO>();
 
-            PK_SC_MATCHING_MEMBER_INFO newInfo = new PK_SC_MATCHING_MEMBER_INFO
-            {
-                strNickName = "test1",
-                portRaitNo = 1
-            };
+
 
             foreach (var info in m_roomPlayerList)
             {
-                info.Client?.SendPacket(newInfo);
+                //info.Client?.SendPacket(newInfo);
 
-                PK_SC_MATCHING_MEMBER_INFO tempInfo = new PK_SC_MATCHING_MEMBER_INFO
-                {
-                    strNickName = "info" + info.AccountID,           // info 닉네임
-                    portRaitNo = 2              // info 초상화
-                };
+                //PK_SC_MATCHING_MEMBER_INFO tempInfo = new PK_SC_MATCHING_MEMBER_INFO
+                //{
+                //    //strNickName = "info" + info.AccountID,           // info 닉네임
+                //    portRaitNo = 2              // info 초상화
+                //};
 
-                pks.m_memberList.Add(tempInfo);
+                //pks.memberList.Add(tempInfo);
             }
 
             player.Client?.SendPacket(pks);
@@ -197,7 +198,7 @@ namespace GameServer.MatchRoom
 
             foreach (var player in m_roomPlayerList)
             {
-                info.userSequence = player.UserSequence;
+                info.userSequence = player.WebAccountId;
                 player.Client?.SendPacket(info);
             }
         }
@@ -214,7 +215,7 @@ namespace GameServer.MatchRoom
             var info = new PK_SC_CANNOT_MATCHING_GAME
             {
                 type = PK_SC_CANNOT_MATCHING_GAME.MatchingErrorType.CANCEL_ROOM,
-                userSequence = player.UserSequence
+                userSequence = player.WebAccountId
             };
             player.Client?.SendPacket(info);
 

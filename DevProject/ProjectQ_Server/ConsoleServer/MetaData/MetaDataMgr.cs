@@ -69,8 +69,9 @@ namespace MetaData
                             cachedMetaDatas[csvType.Item1].Add((IBaseMeta)record);
                         } while (csv.Read());
 
-                    } catch {
+                    } catch(Exception e) {
                         Console.WriteLine("Error Parse MetaData : {0}", fileInfo.Name);
+                        Console.WriteLine("Exception : {0}", e.ToString());
                     }
 
                     Console.WriteLine("MetaData Load : {0}", fileInfo.Name);

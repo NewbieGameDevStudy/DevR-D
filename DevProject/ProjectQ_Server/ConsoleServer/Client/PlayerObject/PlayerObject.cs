@@ -25,6 +25,8 @@ namespace Player
             PlayerData = info;
             Handle = handle;
             RoomInObjList = new Dictionary<int, PlayerObject>();
+
+            //Client.SendPacket(new Packet.PK_CS_CLIENT_ACCOUNT)
         }
 
         public void Update(double deltaTime)

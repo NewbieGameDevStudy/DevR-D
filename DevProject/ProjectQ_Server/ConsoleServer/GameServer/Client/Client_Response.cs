@@ -4,27 +4,25 @@ namespace GameServer.ServerClient
 {
     public partial class Client
     {
+        void OnReceivePacket(PK_CS_CLIENT_ACCOUNT pks)
+        {
+            if (Player == null)
+                return;
+
+            Player.WebAccountId = pks.accountId;
+        }
+
         void OnReceivePacket(PK_CS_ENTERROOM pks)
         {
             if (Player == null)
                 return;
 
-            Player.UserSequence = pks.userSequence;
             m_baseServer.RoomManager.EnterWaitRoom(Player);
-        }
-
-        void OnReceivePacket(PK_CS_LONGPACKET_TEST pks)
-        {
-            if (Player == null)
-                return;
-
-            var d = pks.longData.Length;
-            int a = 0;
         }
 
         void onReceivePacket(PK_CS_CANCEL_MATCHING pks)
         {
-            if (Player.UserSequence != pks.userSequence)
+            if (Player.WebAccountId != pks.userSequence)
                 return;
 
             m_baseServer.RoomManager.CancelMatching(Player);
@@ -32,7 +30,7 @@ namespace GameServer.ServerClient
 
         void onReceivePacket(PK_CS_READY_COMPLETE_FOR_GAME pks)
         {
-            if (Player.UserSequence != pks.userSequence)
+            if (Player.WebAccountId != pks.userSequence)
                 return;
 
             //pks.roomNo;

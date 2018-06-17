@@ -55,7 +55,8 @@
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\Client_Response.cs" />
     <Compile Include="GameServer.cs" />
-    <Compile Include="HttpDTO\HttpDTO.cs" />
+    <Compile Include="WebHttp\HttpDTO.cs" />
+    <Compile Include="WebHttp\HttpWebReq.cs" />
     <Compile Include="MatchRoom\Room.cs" />
     <Compile Include="MatchRoom\RoomManager.cs" />
     <Compile Include="PlayerObject\Component\BaseComponent.cs" />

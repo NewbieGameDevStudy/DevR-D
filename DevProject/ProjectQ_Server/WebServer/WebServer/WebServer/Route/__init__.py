@@ -4,7 +4,7 @@ from Route.Login import Login, LogOut
 from Route.Shop import ShopBuyProduct
 from Route.Mail import MailPostRead, MailPostAccept, MailPostDone, MailWrite, MailPostDelete
 from Route.Slot import SlotEquip, SlotUnEquip
-from Route.User import UserFind
+from Route.User import UserFind, UserInfo, UserInfos
 from Route.Guild import GuildCreate, GuildLeave, GuildKick, GuildJoin, GuildList
 
 route_dict = { 
@@ -23,7 +23,11 @@ route_dict = {
     GuildJoin : '/guild/join',
     GuildLeave : '/guild/leave',
     GuildKick : '/guild/kick',
-    GuildList : '/guild/list'
+    GuildList : '/guild/list',
+    
+    #gameServer Response
+    UserInfo : '/gameserver/userInfo',
+    UserInfos : '/gameserver/userInfos'
 }
 
 parser = reqparse.RequestParser()

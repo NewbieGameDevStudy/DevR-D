@@ -5,10 +5,10 @@ namespace BaseClient
 {
     public partial class Client
     {
-        //void OnReceivePacket(PK_SC_PLAYERINFO_LOAD pks)
-        //{
-        //    Player.InitPlayerInfo(new PlayerData(pks.Level, pks.Exp), pks.handle);
-        //}
+        void OnReceivePacket(PK_SC_CLIENT_HANDLE pks)
+        {
+            Player.InitPlayerInfo(new PlayerData(1, 1), pks.serverHandle);
+        }
 
         //void OnReceivePacket(PK_SC_OBJECTS_INFO pks)
         //{
