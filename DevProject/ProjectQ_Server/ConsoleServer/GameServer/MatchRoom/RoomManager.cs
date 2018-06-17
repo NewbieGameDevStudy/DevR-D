@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Packet;
 using Http;
 using GameServer.WebHttp;
+using System.Linq;
 
 namespace GameServer.MatchRoom
 {
@@ -75,30 +76,10 @@ namespace GameServer.MatchRoom
                 return a.CurrentUserCount.CompareTo(b.CurrentUserCount);
             });
 
-
-            var roomNum = m_sortedRoomList[0].RoomNo;
-
-            if (!m_roomList.ContainsKey(roomNum)) {
-                Console.WriteLine("not found room : {0}", roomNum);
-                return;
-            }
-
             var room = m_sortedRoomList[0];
-            var roomUserList = room.GetRoomPlayerObjects(player.Handle);
-
-            var reqUserInfo = new ReqUserInfos {
-                accountIds = new ulong[roomUserList.Count]
-            };
-
-            for(int i = 0; i < roomUserList.Count; ++i) {
-                reqUserInfo.accountIds[i] = roomUserList[i].WebAccountId;
-            }
-
-            WebReq.WebReqEnqueue(reqUserInfo, (UserInfos result) => {
-                m_sortedRoomList[0]?.EnterRoom(player);
-                Console.WriteLine("RoomEnter {0} : User {0}", m_sortedRoomList[0].RoomNo, player.WebAccountId);
-                m_sortedRoomList.Clear();
-            });
+            room?.EnterRoom(player);
+            Console.WriteLine("RoomEnter {0} : User {0}", room.RoomNo, player.WebAccountId);
+            m_sortedRoomList.Clear();
         }
 
         public void MakeNewRoom(PlayerObject player)

@@ -76,36 +76,36 @@ namespace GameServer.MatchRoom
 
         public void EnterRoom(PlayerObject player)
         {
-            if (m_roomPlayerList.Contains(player))
-            {
+            if (m_roomPlayerList.Contains(player)) {
                 Console.WriteLine("RoomNo : {0}, Already in {0} ", RoomNo, player.WebAccountId);
                 return;
             }
 
-            // 신규 참가 인원 : 기존 방인원 정보 send
-            // 기존 참가 인원 : 신규 인원 정보 send
             PK_SC_MATCHING_ROOM_INFO pks = new PK_SC_MATCHING_ROOM_INFO();
             pks.memberList = new List<PK_SC_MATCHING_MEMBER_INFO>();
 
+            foreach (var prevUser in m_roomPlayerList) {
+                prevUser.Client.SendPacket(new PK_SC_MATCHING_MEMBER_INFO {
+                    handle = player.Handle,
+                    level = player.PlayerData.info.Level,
+                    exp = player.PlayerData.info.Exp,
+                    name = player.PlayerData.info.Name,
+                    portrait = player.PlayerData.info.Portrait,
+                });
 
-
-            foreach (var info in m_roomPlayerList)
-            {
-                //info.Client?.SendPacket(newInfo);
-
-                //PK_SC_MATCHING_MEMBER_INFO tempInfo = new PK_SC_MATCHING_MEMBER_INFO
-                //{
-                //    //strNickName = "info" + info.AccountID,           // info 닉네임
-                //    portRaitNo = 2              // info 초상화
-                //};
-
-                //pks.memberList.Add(tempInfo);
+                pks.memberList.Add(new PK_SC_MATCHING_MEMBER_INFO {
+                    handle = prevUser.Handle,
+                    level = prevUser.PlayerData.info.Level,
+                    exp = prevUser.PlayerData.info.Exp,
+                    name = prevUser.PlayerData.info.Name,
+                    portrait = prevUser.PlayerData.info.Portrait,
+                });
             }
 
             player.Client?.SendPacket(pks);
 
             m_roomPlayerList.Add(player);
-            player.EnteredRoomNo = this.RoomNo;
+            player.EnteredRoomNo = RoomNo;
             player.PlayerIndex = (byte)m_roomPlayerList.Count;
         }
 
