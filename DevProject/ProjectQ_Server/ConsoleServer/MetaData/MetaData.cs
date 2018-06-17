@@ -38,6 +38,7 @@ namespace MetaData.Data
     public class BaseItemMeta : IBaseMeta
     {
         public int Index { get; set; }
+        public string Name { get; set; }
         public string Desc { get; set; }
         public string ItemType { get; set; }
         public int Price { get; set; }
@@ -113,11 +114,12 @@ namespace MetaData.Data
         public ItemMapping()
         {
             Map(m => m.Index).Index(0);
-            Map(m => m.Desc).Index(1);
-            Map(m => m.ItemType).Index(2);
-            Map(m => m.Price).Index(3);
-            Map(m => m.GetExp).Index(4);
-            Map(m => m.UseType).ConvertUsing(row => row.GetField<string>(5) == "Multi" ? true : false);
+            Map(m => m.Name).Index(1);
+            Map(m => m.Desc).Index(2);
+            Map(m => m.ItemType).Index(3);
+            Map(m => m.Price).Index(4);
+            Map(m => m.GetExp).Index(5);
+            Map(m => m.UseType).ConvertUsing(row => row.GetField<string>(6) == "Multi" ? true : false);
         }
     }
 
