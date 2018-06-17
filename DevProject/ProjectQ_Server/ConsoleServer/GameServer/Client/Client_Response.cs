@@ -4,39 +4,53 @@ namespace GameServer.ServerClient
 {
     public partial class Client
     {
+        void OnReceivePacket(PK_CS_CLIENT_ACCOUNT pks)
+        {
+            if (Player == null)
+                return;
+
+            Player.WebAccountId = pks.accountId;
+        }
+
         void OnReceivePacket(PK_CS_ENTERROOM pks)
         {
             if (Player == null)
                 return;
 
-            Player.UserSequence = pks.userSequence;
             m_baseServer.RoomManager.EnterWaitRoom(Player);
         }
 
-        void OnReceivePacket(PK_CS_LONGPACKET_TEST pks)
+        void OnReceivePacket(PK_CS_CANCEL_MATCHING pks)
         {
-            if (Player == null)
+            if (Player.WebAccountId != pks.accountId)
                 return;
-
-            var d = pks.longData.Length;
-            int a = 0;
-        }
-
-        void onReceivePacket(PK_CS_CANCEL_MATCHING pks)
-        {
-            if (Player.UserSequence != pks.userSequence)
-                return;
-
+            
             m_baseServer.RoomManager.CancelMatching(Player);
         }
 
-        void onReceivePacket(PK_CS_READY_COMPLETE_FOR_GAME pks)
+        void OnReceivePacket(PK_CS_READY_COMPLETE_FOR_GAME pks)
         {
-            if (Player.UserSequence != pks.userSequence)
+            if (Player.WebAccountId != pks.accountId)
                 return;
 
-            //pks.roomNo;
-            //pks.userSequence;
+            m_baseServer.RoomManager.ReadyForGame(pks.RoomNo, Player);
+        }
+
+        void OnReceivePacket(PK_CS_MOVE_POSITION pks)
+        {
+            if (Player.WebAccountId != pks.accountId)
+                return;
+
+            Player.PlayerData.Xpos = pks.xPos;
+            Player.PlayerData.Ypos = pks.yPos;
+
+            m_baseServer.RoomManager.MovePosition(pks.RoomNo, Player);
+        }
+
+        void OnReceivePacket(PK_CS_QUIZ_ANSWER pks)
+        {
+            m_baseServer.RoomManager.PlayerAnswerReceive(pks.RoomNo, pks.Answer, Player);
+            m_baseServer.RoomManager.ReadyForGame(pks.RoomNo, Player);
         }
 
         /*

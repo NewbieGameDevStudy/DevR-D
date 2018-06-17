@@ -4,8 +4,8 @@ Created on 2018. 5. 13.
 @author: namoeye
 '''
 from Entity.Define import ACCOUNT_INFO, ITEM_CONTANIER, MAIL_CONTANIER, GUILD_CONTANIER
-
 from Entity import Container, Account, Guild
+from Route import Common
 
 class UserObject(object):
     def __init__(self):
@@ -29,6 +29,17 @@ class UserObject(object):
             return self.cachedDict[dataType]
         return None
     
+        
+class UserInfo(Common.BaseObjResp):
+    def __init__(self, accountInfo):
+        super(UserInfo, self).__init__()
+        self.accountId = accountInfo.accountId
+        self.name = accountInfo.name
+        self.level = accountInfo.level
+        self.exp = accountInfo.exp
+        self.portrait = accountInfo.portrait
+        
+        self.initRespCache()    
 
-            
-
+    def getResp(self):
+        return self.ig_respDict

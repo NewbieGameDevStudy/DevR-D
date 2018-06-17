@@ -13,21 +13,22 @@ namespace GameServer.ServerClient
         BaseServer m_baseServer;
 
         //public ulong AccountId { get; private set; }
-        public int AccountCount { get; private set; }
-        public HttpConnection HttpConnection { get; }
+        public int Handle { get; private set; }
         public PlayerObject Player { get; private set; }
         public Action<int, object, object[]> PacketDispatch;
 
-        public Client(BaseServer baseServer, UserToken userToken, int m_accountCount)
+        public Client(BaseServer baseServer, UserToken userToken, int handle)
         {
             m_baseServer = baseServer;
-            HttpConnection = baseServer.HttpConnection;
             m_userToken = userToken;
-            userToken.ReceiveDispatch = ReceiveDispatch;            
-            AccountCount = m_accountCount;
+            userToken.ReceiveDispatch = ReceiveDispatch;
+            Handle = handle;
 
             Player = new PlayerObject(this, m_baseServer);
-            Player.LoadPlayerInfo();
+
+            SendPacket(new PK_SC_CLIENT_HANDLE {
+                serverHandle = handle,
+            });
         }
 
         public void Update(double deltaTime)

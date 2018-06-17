@@ -40,14 +40,14 @@ namespace BaseClient
             IsConnected = true;
 
             ////툴에서 사용하는 것
-            //Player = new PlayerObject();
-            //Player.SetClient(this);
+            Player = new PlayerObject();
+            Player.SetClient(this);
         }
 
         public void Update(double deltaTime)
         {
             m_userToken?.ReceiveProcess();
-            //Player?.Update(deltaTime);
+            Player?.Update(deltaTime);
             HttpReqUpdate();
         }
 

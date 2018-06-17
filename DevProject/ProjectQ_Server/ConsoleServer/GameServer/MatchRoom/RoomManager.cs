@@ -3,6 +3,9 @@ using Server;
 using System;
 using System.Collections.Generic;
 using Packet;
+using Http;
+using GameServer.WebHttp;
+using System.Linq;
 
 namespace GameServer.MatchRoom
 {
@@ -15,9 +18,11 @@ namespace GameServer.MatchRoom
         const double WAIT_TIME_INTERVAL = 5;        // 대기 반감기
         const byte NEED_USER_COUNT = 100;           // 초기 필요 인원
 
-        public RoomManager()
+        public HttpWebReq WebReq { get; private set; }
+
+        public RoomManager(HttpWebReq webConnection)
         {
-            
+            WebReq = webConnection;
         }
         
         public void EnterWaitRoom(PlayerObject player)
@@ -29,11 +34,19 @@ namespace GameServer.MatchRoom
                 return;
             }
 
-            //웹서버 정보 요청.
+            var reqUserInfo = new ReqUserInfo {
+                accountId = player.WebAccountId,
+            };
 
+            WebReq.WebReqEnqueue(reqUserInfo, (UserInfo result) => {
+                player.PlayerData.info.Level = result.userInfo.level;
+                player.PlayerData.info.Name = result.userInfo.name;
+                player.PlayerData.info.Portrait = result.userInfo.portrait;
+                player.PlayerData.info.Exp = result.userInfo.exp;
 
-            m_waitingPlayerQueue.Enqueue(player);
-            Console.WriteLine("WaitUserCount {0}", m_waitingPlayerQueue.Count);
+                m_waitingPlayerQueue.Enqueue(player);
+                Console.WriteLine("WaitUserTotalCount : {0}, WaitEnterUserId : {1}", m_waitingPlayerQueue.Count, player.WebAccountId);
+            });
         }
 
         public void FindMatchingRoom()
@@ -64,29 +77,56 @@ namespace GameServer.MatchRoom
             });
 
             m_sortedRoomList[0]?.EnterRoom(player);
-            Console.WriteLine("RoomEnter {0} : User {0}", m_sortedRoomList[0].RoomNo, player.UserSequence);
+            Console.WriteLine("RoomEnter {0} : UserID {1}", m_sortedRoomList[0].RoomNo, player.WebAccountId);
             m_sortedRoomList.Clear();
         }
 
         public void MakeNewRoom(PlayerObject player)
         {
-            Room tempRoom = new Room(WAIT_TIME_INTERVAL, NEED_USER_COUNT);
-            tempRoom.RoomNo = (byte)(m_roomList.Count + 1);
-            m_roomList.Add(tempRoom.RoomNo, tempRoom);            
+            Room tempRoom = new Room(WAIT_TIME_INTERVAL, NEED_USER_COUNT)
+            {
+                RoomNo = (byte)(m_roomList.Count + 1)
+            };
+            
+            m_roomList.Add(tempRoom.RoomNo, tempRoom);
             tempRoom.EnterRoom(player);
 
-            Console.WriteLine("Make New Room : {0} : User {0}", tempRoom.RoomNo, player.UserSequence);
+            Console.WriteLine("Make New Room : {0} : UserID {0}", tempRoom.RoomNo, player.WebAccountId);
         }
 
         public void CancelMatching(PlayerObject player)
         {
-           // 대기중 취소
+            // 대기중 취소
+            foreach (var member in m_waitingPlayerQueue)
+            {
+                if (member.WebAccountId == player.WebAccountId)
+                {
+                    // Queue에서 어떻게 제거한다..?
+                }
+            }
 
-           // 방에서 취소
-
+            // 방에서 취소
+            m_roomList[player.EnteredRoomNo]?.RemoveUserFromRoom(player);
+            
            // 이미 처리됨
+           // PlayerManager 에서 처리
         }
-        
+
+        public void ReadyForGame(byte roomNo, PlayerObject player)
+        {
+            m_roomList[roomNo]?.ReadyForGame(player);
+        }
+
+        public void MovePosition(byte roomNo, PlayerObject player)
+        {
+            m_roomList[roomNo]?.MovePosition(player);
+        }
+
+        public void PlayerAnswerReceive(byte roomNo, PK_CS_QUIZ_ANSWER.QuizAnswer answer, PlayerObject player)
+        {
+            m_roomList[roomNo]?.PlayerAnswerReceive(answer, player);
+        }
+
         public void RoomUpdate(double deltaTime)
         {
             foreach (var tempRoom in m_roomList.Values)

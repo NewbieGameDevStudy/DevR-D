@@ -47,7 +47,7 @@ namespace GameServer.Player
             player.Client?.SendPacket(new PK_SC_CANNOT_MATCHING_GAME
             {
                 type = eErrorType,
-                userSequence = player.UserSequence
+                accountId = player.WebAccountId
             });
         }
 

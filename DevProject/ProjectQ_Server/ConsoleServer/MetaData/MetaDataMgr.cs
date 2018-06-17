@@ -21,7 +21,7 @@ namespace MetaData
             }
         }
 
-        Dictionary<Type, List<IBaseMeta>> cachedMetaDatas = new Dictionary<Type, List<IBaseMeta>>();
+        Dictionary<Type, List<IBaseMeta>> cachedMetaDatas = new Dictionary<Type, List<IBaseMeta>>();        
 
         public void InitMetaData(string namespaceStr, string path)
         {
@@ -69,8 +69,9 @@ namespace MetaData
                             cachedMetaDatas[csvType.Item1].Add((IBaseMeta)record);
                         } while (csv.Read());
 
-                    } catch {
+                    } catch(Exception e) {
                         Console.WriteLine("Error Parse MetaData : {0}", fileInfo.Name);
+                        Console.WriteLine("Exception : {0}", e.ToString());
                     }
 
                     Console.WriteLine("MetaData Load : {0}", fileInfo.Name);
@@ -84,6 +85,14 @@ namespace MetaData
             var objectList = cachedMetaDatas[type];
             var find = objectList.Find(x => x.Index == id);
             return (T)find;
+        }
+
+        public int GetMetaDataSize<T>()
+        {
+            var type = typeof(T);
+            var objectList = cachedMetaDatas[type];
+
+            return objectList.Count;
         }
     }
 }
