@@ -15,9 +15,8 @@ namespace GameServer.Player
         public PlayerData PlayerData { get; private set; }
         public ulong WebAccountId { get; set; }
         public int Handle => Client.Handle;
-
-        public byte EnteredRoomNo { get; set; }             // 게임 참가 방번호
         public byte PlayerIndex { get; set; }               // 방에서 몇번째로 들어왔는지
+        public byte EnteredRoomNo { get; set; }                 // 게임 참가 방번호
 
         BaseServer m_baseServer;
 

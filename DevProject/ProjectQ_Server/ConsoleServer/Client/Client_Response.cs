@@ -1,5 +1,6 @@
 ﻿using Packet;
 using Player;
+using System;
 
 namespace BaseClient
 {
@@ -10,34 +11,52 @@ namespace BaseClient
             Player.InitPlayerInfo(new PlayerData(1, 1), pks.serverHandle);
         }
 
-        //void OnReceivePacket(PK_SC_OBJECTS_INFO pks)
-        //{
-        //    foreach (var obj in pks.m_objectList) {
-        //        if (obj.handle == Player.Handle) {
-        //            Player.PlayerData.SetCurrentPosition(new Util.Vec2(obj.position.xPos, obj.position.yPos));
-        //            Player.isEnterComplete = true;
-        //            continue;
-        //        }
+        void OnReceivePacket(PK_SC_CANNOT_MATCHING_GAME pks)
+        {
+            if (pks == null)
+                return;
 
-        //        var otherObj = new PlayerObject();
-        //        otherObj.InitPlayerInfo(new PlayerData(obj.info.Level, obj.info.Exp), obj.handle);
-        //        otherObj.PlayerData.SetCurrentPosition(new Util.Vec2(obj.position.xPos, obj.position.yPos));
-        //        Player.AddRoomInObject(obj.handle, otherObj);
-        //    }
-        //}
+            string strTemp = "";
+            switch (pks.type)
+            {
+                case PK_SC_CANNOT_MATCHING_GAME.MatchingErrorType.CANCEL_ROOM:
+                    strTemp = "CANCEL_ROOM";
+                    break;
+                case PK_SC_CANNOT_MATCHING_GAME.MatchingErrorType.CANCEL_WAIT:
+                    strTemp = "CANCEL_ROOM";
+                    break;
+                case PK_SC_CANNOT_MATCHING_GAME.MatchingErrorType.MAX_WAIT_TIME:
+                    strTemp = "CANCEL_ROOM";
+                    break;
+                case PK_SC_CANNOT_MATCHING_GAME.MatchingErrorType.PLAYER_OVERLAPPED:
+                    strTemp = "CANCEL_ROOM";
+                    break;
+                default:
+                    break;
+            }
 
-        //void OnReceivePacket(PK_SC_OBJECTS_POSITION pks)
-        //{
-        //    foreach (var obj in pks.m_objectList) {
-        //        if (obj.handle == Player.Handle)
-        //            continue;
+            Console.WriteLine(strTemp, "{0}", pks.accountId);
+            // disconnect;
+        }
 
-        //        if (!Player.RoomInObjList.ContainsKey(obj.handle))
-        //            continue;
+        void OnReceivePacket(PK_SC_MATCHING_ROOM_INFO pks)
+        {
+            if (pks == null || pks.memberList == null)
+                return;
 
-        //        var otherObj = Player.RoomInObjList[obj.handle];
-        //        otherObj.PlayerData.SetTargetPosition(obj.xPos, obj.yPos);
-        //    }
-        //}
+            foreach (var member in pks.memberList)
+            {
+                Console.WriteLine("{0}", member.handle);
+            }
+        }
+
+        void OnReceivePacket(PK_SC_READY_FOR_GAME pks)
+        {
+            if (pks == null)
+                return;
+
+            //pks.roomNo
+            Console.WriteLine("Room Ready : {0}", pks.RoomNo);
+        }
     }
 }

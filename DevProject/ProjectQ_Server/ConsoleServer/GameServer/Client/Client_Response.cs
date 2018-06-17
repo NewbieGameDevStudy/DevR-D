@@ -20,21 +20,37 @@ namespace GameServer.ServerClient
             m_baseServer.RoomManager.EnterWaitRoom(Player);
         }
 
-        void onReceivePacket(PK_CS_CANCEL_MATCHING pks)
+        void OnReceivePacket(PK_CS_CANCEL_MATCHING pks)
         {
-            if (Player.WebAccountId != pks.userSequence)
+            if (Player.WebAccountId != pks.accountId)
                 return;
-
+            
             m_baseServer.RoomManager.CancelMatching(Player);
         }
 
-        void onReceivePacket(PK_CS_READY_COMPLETE_FOR_GAME pks)
+        void OnReceivePacket(PK_CS_READY_COMPLETE_FOR_GAME pks)
         {
-            if (Player.WebAccountId != pks.userSequence)
+            if (Player.WebAccountId != pks.accountId)
                 return;
 
-            //pks.roomNo;
-            //pks.userSequence;
+            m_baseServer.RoomManager.ReadyForGame(pks.RoomNo, Player);
+        }
+
+        void OnReceivePacket(PK_CS_MOVE_POSITION pks)
+        {
+            if (Player.WebAccountId != pks.accountId)
+                return;
+
+            Player.PlayerData.Xpos = pks.xPos;
+            Player.PlayerData.Ypos = pks.yPos;
+
+            m_baseServer.RoomManager.MovePosition(pks.RoomNo, Player);
+        }
+
+        void OnReceivePacket(PK_CS_QUIZ_ANSWER pks)
+        {
+            m_baseServer.RoomManager.PlayerAnswerReceive(pks.RoomNo, pks.Answer, Player);
+            m_baseServer.RoomManager.ReadyForGame(pks.RoomNo, Player);
         }
 
         /*

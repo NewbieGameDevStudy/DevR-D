@@ -76,31 +76,57 @@ namespace GameServer.MatchRoom
                 return a.CurrentUserCount.CompareTo(b.CurrentUserCount);
             });
 
-            var room = m_sortedRoomList[0];
-            room?.EnterRoom(player);
-            Console.WriteLine("RoomNum {0} : User {1}", room.RoomNo, player.WebAccountId);
+            m_sortedRoomList[0]?.EnterRoom(player);
+            Console.WriteLine("RoomEnter {0} : UserID {1}", m_sortedRoomList[0].RoomNo, player.WebAccountId);
             m_sortedRoomList.Clear();
         }
 
         public void MakeNewRoom(PlayerObject player)
         {
-            Room tempRoom = new Room(WAIT_TIME_INTERVAL, NEED_USER_COUNT);
-            tempRoom.RoomNo = (byte)(m_roomList.Count + 1);
-            m_roomList.Add(tempRoom.RoomNo, tempRoom);            
+            Room tempRoom = new Room(WAIT_TIME_INTERVAL, NEED_USER_COUNT)
+            {
+                RoomNo = (byte)(m_roomList.Count + 1)
+            };
+            
+            m_roomList.Add(tempRoom.RoomNo, tempRoom);
             tempRoom.EnterRoom(player);
 
-            Console.WriteLine("Make New Room : {0}", tempRoom.RoomNo);
+            Console.WriteLine("Make New Room : {0} : UserID {0}", tempRoom.RoomNo, player.WebAccountId);
         }
 
         public void CancelMatching(PlayerObject player)
         {
-           // 대기중 취소
+            // 대기중 취소
+            foreach (var member in m_waitingPlayerQueue)
+            {
+                if (member.WebAccountId == player.WebAccountId)
+                {
+                    // Queue에서 어떻게 제거한다..?
+                }
+            }
 
-           // 방에서 취소
-
+            // 방에서 취소
+            m_roomList[player.EnteredRoomNo]?.RemoveUserFromRoom(player);
+            
            // 이미 처리됨
+           // PlayerManager 에서 처리
         }
-        
+
+        public void ReadyForGame(byte roomNo, PlayerObject player)
+        {
+            m_roomList[roomNo]?.ReadyForGame(player);
+        }
+
+        public void MovePosition(byte roomNo, PlayerObject player)
+        {
+            m_roomList[roomNo]?.MovePosition(player);
+        }
+
+        public void PlayerAnswerReceive(byte roomNo, PK_CS_QUIZ_ANSWER.QuizAnswer answer, PlayerObject player)
+        {
+            m_roomList[roomNo]?.PlayerAnswerReceive(answer, player);
+        }
+
         public void RoomUpdate(double deltaTime)
         {
             foreach (var tempRoom in m_roomList.Values)

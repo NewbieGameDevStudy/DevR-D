@@ -26,16 +26,44 @@ namespace Packet
     public class PK_CS_CANCEL_MATCHING : PK_BASE            // 매칭 취소
     {
         [ProtoMember(1)]
-        public ulong userSequence { get; set; }
+        public ulong accountId { get; set; }
     }
 
     [ProtoContract]
     public class PK_CS_READY_COMPLETE_FOR_GAME : PK_BASE
     {
         [ProtoMember(1)]
-        public byte roomNo { get; set; }
+        public byte RoomNo { get; set; }
         [ProtoMember(2)]
-        public ulong userSequence { get; set; }
+        public ulong accountId { get; set; }
+    }
+
+    [ProtoContract]
+    public class PK_CS_MOVE_POSITION : PK_BASE
+    {
+        [ProtoMember(1)]
+        public byte RoomNo { get; set; }
+        [ProtoMember(2)]
+        public ulong accountId { get; set; }
+        [ProtoMember(3)]
+        public float xPos { get; set; }
+        [ProtoMember(4)]
+        public float yPos { get; set; }
+    }
+
+    [ProtoContract]
+    public class PK_CS_QUIZ_ANSWER : PK_BASE
+    {
+        public enum QuizAnswer
+        {
+            ANSWER_O,
+            ANSWER_X
+        };
+
+        [ProtoMember(1)]
+        public byte RoomNo { get; set; }
+        [ProtoMember(2)]
+        public QuizAnswer Answer { get; set; }
     }
 
     //서버 -> 클라이언트 패킷
@@ -64,6 +92,31 @@ namespace Packet
     }
 
     [ProtoContract]
+    public class PK_SC_OBJECTS_POSITION : PK_BASE
+    {
+        [ProtoMember(1)]
+        public List<PK_SC_TARGET_POSITION> m_objectList { get; set; }
+    }
+
+    [ProtoContract]
+    public class PK_SC_TARGET_POSITION : PK_BASE
+    {
+        [ProtoMember(1)]
+        public int handle { get; set; }
+        [ProtoMember(2)]
+        public float xPos { get; set; }
+        [ProtoMember(3)]
+        public float yPos { get; set; }
+    }
+
+    [ProtoContract]
+    public class PK_SC_CLIENT_SERVER_ID : PK_BASE
+    {
+        [ProtoMember(1)]
+        public ulong AccountIDServer { get; set; }
+    }
+
+    [ProtoContract]
     public class PK_SC_CANNOT_MATCHING_GAME : PK_BASE           // 매칭 캔슬
     {
         public enum MatchingErrorType
@@ -77,16 +130,16 @@ namespace Packet
         [ProtoMember(1)]
         public MatchingErrorType type { get; set; }
         [ProtoMember(2)]
-        public ulong userSequence { get; set; }
+        public ulong accountId { get; set; }
     }
 
     [ProtoContract]
     public class PK_SC_READY_FOR_GAME : PK_BASE                 // 게임 시작 준비
     {
         [ProtoMember(1)]
-        public int gameUserCount { get; set; }
+        public int GameUserCount { get; set; }
         [ProtoMember(2)]
-        public byte roomNo { get; set; }
+        public byte RoomNo { get; set; }
     }
 
     [ProtoContract]
@@ -109,5 +162,52 @@ namespace Packet
     {
         [ProtoMember(1)]
         public List<PK_SC_MATCHING_MEMBER_INFO> memberList { get; set; }
+    }
+
+    [ProtoContract]
+    public class PK_SC_MOVE_POSITION : PK_BASE
+    {
+        [ProtoMember(1)]
+        public byte RoomNo { get; set; }
+        [ProtoMember(2)]
+        public ulong AccountIDClient { get; set; }
+        [ProtoMember(3)]
+        public float xPos { get; set; }
+        [ProtoMember(4)]
+        public float yPos { get; set; }
+    }
+
+    [ProtoContract]
+    public class PK_SC_QUIZ_TEXT : PK_BASE
+    {
+        [ProtoMember(1)]
+        public string strQuiz { get; set; }
+    }
+
+    [ProtoContract]
+    public class PK_SC_QUIZ_MOVE_END_TIME : PK_BASE
+    {
+        [ProtoMember(1)]
+        public byte QuizEndTimeDelay { get; set; }
+    }
+
+    [ProtoContract]
+    public class PK_SC_QUIZ_RESULT : PK_BASE
+    {
+        public enum QuizResult
+        {
+            ALIVE,
+            DEAD
+        };
+
+        [ProtoMember(1)]
+        public Dictionary<ulong, QuizResult> MemberQuizResult { get; set; }
+    }
+
+    [ProtoContract]
+    public class PK_SC_GAME_END : PK_BASE
+    {
+        [ProtoMember(1)]
+        public byte Rank { get; set; }
     }
 }

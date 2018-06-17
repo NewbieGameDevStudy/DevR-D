@@ -9,6 +9,7 @@ namespace Player
         public Client Client { get; private set; }
         public PlayerData PlayerData { get; private set; }
         public int Handle { get; private set; }
+        public byte RoomNo { get; private set; }
 
         public Dictionary<int, PlayerObject> RoomInObjList { get; private set; }
 
@@ -44,6 +45,11 @@ namespace Player
         public void AddRoomInObject(int handle, PlayerObject obj)
         {
             RoomInObjList.Add(handle, obj);
+        }
+
+        public void SetRoomNo(byte roomNo)
+        {
+            RoomNo = roomNo;
         }
     }
 }

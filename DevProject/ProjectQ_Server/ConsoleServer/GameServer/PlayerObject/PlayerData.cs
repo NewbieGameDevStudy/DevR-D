@@ -12,6 +12,9 @@ namespace GameServer.Player
             public int Exp { get; set; }
         }
 
+        public float Xpos { get; set; }
+        public float Ypos { get; set; }
+
         // inven
         public int Slot0 { get; set; }
         public int Slot1 { get; set; }

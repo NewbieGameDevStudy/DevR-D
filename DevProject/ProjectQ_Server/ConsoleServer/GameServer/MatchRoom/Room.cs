@@ -14,6 +14,8 @@ namespace GameServer.MatchRoom
         // 매칭 제한시간...?
 
         const byte GAME_MAX_WAIT_TIME = 10;
+        const byte QUIZ_COUNT_DOWN = 5;
+        const double QUIZ_END_DELAY = 10;
         public enum RoomState
         {
             ROOM_WAITING,
@@ -25,6 +27,7 @@ namespace GameServer.MatchRoom
         public byte RoomNo { get; set; }
 
         public byte GameNeedUserCount { get; private set; }
+        public double GameWaitTime { get; private set; }
         public RoomState CurrentRoomState { get; private set; }
         public int CurrentUserCount
         {
@@ -34,50 +37,43 @@ namespace GameServer.MatchRoom
             }
         }
 
-        double GameWaitTime;
+        
         double WaitElapsedTime;
         double CheckedTime;
 
         byte WaitMaxLimitCount;
 
-        List<PlayerObject> m_roomPlayerList = new List<PlayerObject>();
-        List<bool> m_readyForGame = new List<bool>();
+        // Quiz
+        double QuizSendTime;        
+        bool bQuizSend;
+        bool bCountDown;
+
+        Dictionary<ulong, PlayerObject> m_roomPlayerList = new Dictionary<ulong, PlayerObject>();
+        Dictionary<ulong, PK_SC_QUIZ_RESULT.QuizResult> m_PlayerQuizResult = new Dictionary<ulong, PK_SC_QUIZ_RESULT.QuizResult>();
+        Dictionary<ulong, bool> m_readyForGame = new Dictionary<ulong, bool>();
 
         public Room(double waitTime, byte gameNeedUserCount)
         {
             m_roomPlayerList.Clear();
             m_readyForGame.Clear();
-
             this.GameWaitTime = waitTime;
             this.GameNeedUserCount = gameNeedUserCount;
-
             RoomNo = 0;
-
             WaitElapsedTime = 0;
             CheckedTime = 0;
-            CurrentRoomState = Room.RoomState.ROOM_WAITING;
-
+            CurrentRoomState = RoomState.ROOM_WAITING;
             WaitMaxLimitCount = 0;
-        }
 
-        public void ResetRoomPlayerListIndex()
-        {
-            int iIndex = m_roomPlayerList.Count;
-            for (int i = 0; i < iIndex; ++i)
-            {
-                m_roomPlayerList[i].PlayerIndex = (byte)(i + 1);
-            }
-        }
-
-        public List<PlayerObject> GetRoomPlayerObjects(int handle)
-        {
-            return m_roomPlayerList.FindAll( x=> x.Handle != handle);
+            // Quiz
+            QuizSendTime = 0;
+            bQuizSend = false;
+            bCountDown = false;
         }
 
         public void EnterRoom(PlayerObject player)
         {
-            if (m_roomPlayerList.Contains(player)) {
-                Console.WriteLine("RoomNo : {0}, Already in {1} ", RoomNo, player.WebAccountId);
+            if (m_roomPlayerList.ContainsKey(player.WebAccountId)) {
+                Console.WriteLine("RoomNo : {0}, Already in {0} ", RoomNo, player.WebAccountId);
                 return;
             }
 
@@ -85,7 +81,7 @@ namespace GameServer.MatchRoom
             pks.memberList = new List<PK_SC_MATCHING_MEMBER_INFO>();
 
             foreach (var prevUser in m_roomPlayerList) {
-                prevUser.Client.SendPacket(new PK_SC_MATCHING_MEMBER_INFO {
+                prevUser.Value.Client.SendPacket(new PK_SC_MATCHING_MEMBER_INFO {
                     handle = player.Handle,
                     level = player.PlayerData.info.Level,
                     exp = player.PlayerData.info.Exp,
@@ -94,21 +90,37 @@ namespace GameServer.MatchRoom
                 });
 
                 pks.memberList.Add(new PK_SC_MATCHING_MEMBER_INFO {
-                    handle = prevUser.Handle,
-                    level = prevUser.PlayerData.info.Level,
-                    exp = prevUser.PlayerData.info.Exp,
-                    name = prevUser.PlayerData.info.Name,
-                    portrait = prevUser.PlayerData.info.Portrait,
+                    handle = prevUser.Value.Handle,
+                    level = prevUser.Value.PlayerData.info.Level,
+                    exp = prevUser.Value.PlayerData.info.Exp,
+                    name = prevUser.Value.PlayerData.info.Name,
+                    portrait = prevUser.Value.PlayerData.info.Portrait,
                 });
             }
 
             player.Client?.SendPacket(pks);
 
-            m_roomPlayerList.Add(player);
+            m_roomPlayerList.Add(player.WebAccountId, player);
             player.EnteredRoomNo = RoomNo;
             player.PlayerIndex = (byte)m_roomPlayerList.Count;
 
             Console.WriteLine("RoomNum : {0}, TotalUserCount : {1}", RoomNo, m_roomPlayerList.Count);
+        }
+
+        public void PlayerAnswerReceive(PK_CS_QUIZ_ANSWER.QuizAnswer answer, PlayerObject player)
+        {
+            // 보낸 문제가 어떤 문제인지..?
+            if (m_PlayerQuizResult.ContainsKey(player.WebAccountId))
+                return;
+
+            PK_SC_QUIZ_RESULT.QuizResult resultType = PK_SC_QUIZ_RESULT.QuizResult.ALIVE;
+            Random temp = new Random(2000);
+            if (temp.Next(0, 1) == 1)
+            {
+                resultType = PK_SC_QUIZ_RESULT.QuizResult.DEAD;
+            }
+
+            m_PlayerQuizResult.Add(player.WebAccountId, resultType);
         }
 
         public void MatchimgGame(double deltaTime)
@@ -116,10 +128,40 @@ namespace GameServer.MatchRoom
             if (m_roomPlayerList.Count >= GameNeedUserCount)
             {
                 CurrentRoomState = Room.RoomState.ROOM_READY_GAME;
-                System.Console.WriteLine("Match! : Need - {0}, User - {0}", GameNeedUserCount, m_roomPlayerList.Count);
+                
+                foreach (var player in m_roomPlayerList)
+                {
+                    m_readyForGame.Add(player.Key, false);
+                }
 
+                System.Console.WriteLine("Match! : Need - {0}, User - {0}", GameNeedUserCount, m_roomPlayerList.Count);
+                
                 // 게임 시작 준비
-                ReadyForGame();
+                ReadyForGameCheck();
+            }
+        }
+
+        bool CheckReady()
+        {
+            bool isReadyComplete = false;
+            foreach (var ready in m_readyForGame)
+            {
+                if (ready.Value == false)
+                {
+                    isReadyComplete = false;
+                    break;
+                }
+                isReadyComplete = true;
+            }
+
+            return isReadyComplete;
+        }
+
+        void ResetPlayerReady()
+        {
+            foreach (var key in m_readyForGame.Keys)
+            {
+                m_readyForGame[key] = false;
             }
         }
 
@@ -149,23 +191,22 @@ namespace GameServer.MatchRoom
                 break;
                 case RoomState.ROOM_READY_GAME:
                 {
-                    bool isReady = false;
-                    foreach (var playerAccept in m_readyForGame)
+                    bool isReadyComplete = CheckReady();
+                    if (isReadyComplete)
                     {
-                        if (playerAccept == false)
-                        {
-                            break;
-                        }
-                        isReady = true;
-                    }
-
-                    if (isReady)
                         CurrentRoomState = RoomState.ROOM_PLAYING;
+                        ResetPlayerReady();
+                    }                        
                 }
                 break;
                 case RoomState.ROOM_PLAYING:
                 {
-                    
+                    ProcessGamePlaying(deltaTime);
+                    if (m_roomPlayerList.Count == 1)
+                    {
+                        // Game End
+                        GameEndProcess();
+                    }
                 }
                 break;
                 case RoomState.ROOM_GAME_ENDED:
@@ -176,17 +217,17 @@ namespace GameServer.MatchRoom
             }
         }
 
-        void ReadyForGame()
+        void ReadyForGameCheck()
         {
             var info = new PK_SC_READY_FOR_GAME
             {
-                gameUserCount = this.m_roomPlayerList.Count,
-                roomNo = this.RoomNo
+                GameUserCount = this.m_roomPlayerList.Count,
+                RoomNo = this.RoomNo
             };
 
             foreach (var player in m_roomPlayerList)
             {
-                player.Client?.SendPacket(info);
+                player.Value.Client?.SendPacket(info);
             }
         }
 
@@ -200,16 +241,141 @@ namespace GameServer.MatchRoom
 
             foreach (var player in m_roomPlayerList)
             {
-                info.userSequence = player.WebAccountId;
-                player.Client?.SendPacket(info);
+                info.accountId = player.Value.WebAccountId;
+                player.Value.Client?.SendPacket(info);
             }
+
+            ClearRoomData();
+        }
+
+        void ProcessGamePlaying(double deltaTime)
+        {
+            if (bQuizSend == false)
+            {
+                bool isReadyComplete = CheckReady();                
+                if (isReadyComplete == false)
+                    return;
+                
+                // send Quiz
+                var info = new PK_SC_QUIZ_TEXT
+                {
+                    strQuiz = "test"
+                };
+
+                foreach (var player in m_roomPlayerList)
+                {
+                    player.Value.Client?.SendPacket(info);
+                }
+                bQuizSend = true;
+                QuizSendTime = deltaTime;
+                ResetPlayerReady();
+            }
+
+            if (bCountDown == false && deltaTime - QuizSendTime > QUIZ_END_DELAY)
+            {
+                // send count down.
+                var info = new PK_SC_QUIZ_MOVE_END_TIME
+                {
+                    QuizEndTimeDelay = QUIZ_COUNT_DOWN
+                };
+
+                foreach (var player in m_roomPlayerList)
+                {
+                    player.Value.Client?.SendPacket(info);
+                }
+                bCountDown = true;
+            }
+
+            // 퀴즈 답 확인 대기.
+            if (bCountDown)
+            {
+                bool isReadyComplete = CheckReady();
+                if (isReadyComplete)
+                {
+                    // send result
+                    var info = new PK_SC_QUIZ_RESULT
+                    {
+                        // 복사...?
+                        MemberQuizResult = new Dictionary<ulong, PK_SC_QUIZ_RESULT.QuizResult>(m_PlayerQuizResult)
+                    };
+
+                    foreach (var player in m_roomPlayerList)
+                    {
+                        player.Value.Client?.SendPacket(info);
+                        if (m_PlayerQuizResult.ContainsKey(player.Key))
+                        {
+                            if (m_PlayerQuizResult[player.Key] == PK_SC_QUIZ_RESULT.QuizResult.DEAD)
+                            {
+                                GameEndProcess(player.Value);
+                                RemoveUserFromRoom(player.Value);
+                            }
+                        }
+                    }
+
+                    // 탈락자 처리
+                    
+                    //
+                    ResetPlayerReady();
+                    bQuizSend = false;
+                    bCountDown = false;
+                }
+            }            
+        }
+
+        public void MovePosition(PlayerObject player)
+        {
+            if (m_roomPlayerList.ContainsValue(player) == false)
+                return;
+
+            var info = new PK_SC_MOVE_POSITION
+            {
+                AccountIDClient = player.WebAccountId,
+                RoomNo = player.EnteredRoomNo,
+                xPos = player.PlayerData.Xpos,
+                yPos = player.PlayerData.Ypos
+            };
+
+            foreach (var tempPlayer in m_roomPlayerList)
+            {
+                tempPlayer.Value.Client?.SendPacket(info);
+            }            
+        }
+
+        public void GameEndProcess(PlayerObject player = null)
+        {
+            var info = new PK_SC_GAME_END
+            {
+                Rank = (byte)m_roomPlayerList.Count,
+            };
+
+            // 퀴즈 탈락자
+            if (player != null)
+            {
+                player.Client?.SendPacket(info);
+                m_roomPlayerList.Remove(player.WebAccountId);
+            }
+            else
+            {
+                //방 종료
+                foreach (var tempPlayer in m_roomPlayerList)
+                {
+                    tempPlayer.Value.Client?.SendPacket(info);
+                }
+                ClearRoomData();
+            }
+        }
+
+        public void ReadyForGame(PlayerObject player)
+        {
+            if (m_readyForGame.ContainsKey(player.WebAccountId))
+                m_readyForGame[player.WebAccountId] = true;
         }
 
         public void RemoveUserFromRoom(PlayerObject player)
         {
-            m_roomPlayerList.Remove(player);
+            m_roomPlayerList.Remove(player.WebAccountId);
+            m_readyForGame.Remove(player.WebAccountId);
             player.EnteredRoomNo = 0;
-            player.PlayerIndex = 0;
 
             // 다른 인원들한테 방 나간 사람 보내줌.
             // 방 나간 인원한테는 그냥 보내줌.
@@ -217,28 +383,31 @@ namespace GameServer.MatchRoom
             var info = new PK_SC_CANNOT_MATCHING_GAME
             {
                 type = PK_SC_CANNOT_MATCHING_GAME.MatchingErrorType.CANCEL_ROOM,
-                userSequence = player.WebAccountId
+                accountId = player.WebAccountId
             };
             player.Client?.SendPacket(info);
 
             foreach (var user in m_roomPlayerList)
             {
-                user.Client?.SendPacket(info);
+                user.Value.Client?.SendPacket(info);
             }
-            
-            ResetRoomPlayerListIndex();
         }
 
         public void ClearRoomData()
         {
-            this.GameWaitTime = 0;
-            this.GameNeedUserCount = 0;
+            // RoomManager 와 맞춰야됨
+            this.GameWaitTime = 5;
+            this.GameNeedUserCount = 100;
             WaitElapsedTime = 0;
             CheckedTime = 0;
             CurrentRoomState = Room.RoomState.ROOM_WAITING;
             WaitMaxLimitCount = 0;
             m_roomPlayerList.Clear();
             m_readyForGame.Clear();
+            // Quiz
+            QuizSendTime = 0;
+            bQuizSend = false;
+            bCountDown = false;
         }
     }
 }
