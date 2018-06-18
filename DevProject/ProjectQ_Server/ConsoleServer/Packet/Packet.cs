@@ -66,29 +66,14 @@ namespace Packet
         public QuizAnswer Answer { get; set; }
     }
 
+    //------------------------------------------------------------------------------------------------
+
     //서버 -> 클라이언트 패킷
     [ProtoContract]
     public class PK_SC_CLIENT_HANDLE : PK_BASE
     {
         [ProtoMember(1)]
         public int serverHandle { get; set; }
-    }
-
-    [ProtoContract]
-    public class PK_SC_ : PK_BASE           // 매칭 캔슬
-    {
-        public enum MatchingErrorType
-        {
-            PLAYER_OVERLAPPED,                  // 중복 매칭 시도
-            MAX_WAIT_TIME,                      // 대기 시간 초과 (현재 2명이므로 1명이서 초과시간 대기)
-            CANCEL_WAIT,                        // 대기실에서 방 찾는중 취소
-            CANCEL_ROOM                         // 방에 입장후 경기 시작전 취소
-        }
-
-        [ProtoMember(1)]
-        public MatchingErrorType type { get; set; }
-        [ProtoMember(2)]
-        public ulong userSequence { get; set; }
     }
 
     [ProtoContract]

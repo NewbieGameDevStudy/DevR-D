@@ -38,6 +38,7 @@ namespace GameServer.MatchRoom
                 accountId = player.WebAccountId,
             };
 
+            /*
             WebReq.WebReqEnqueue(reqUserInfo, (UserInfo result) => {
                 player.PlayerData.info.Level = result.userInfo.level;
                 player.PlayerData.info.Name = result.userInfo.name;
@@ -46,7 +47,8 @@ namespace GameServer.MatchRoom
 
                 m_waitingPlayerQueue.Enqueue(player);
                 Console.WriteLine("WaitUserTotalCount : {0}, WaitEnterUserId : {1}", m_waitingPlayerQueue.Count, player.WebAccountId);
-            });
+            });*/
+            Console.WriteLine("WaitTotalUser : {0}, WaitEnterUserID : {1}", m_waitingPlayerQueue.Count, player.WebAccountId);
         }
 
         public void FindMatchingRoom()
